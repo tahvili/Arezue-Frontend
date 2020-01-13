@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:arezue/utils/images.dart';
 import 'package:arezue/utils/texts.dart';
+import 'package:arezue/utils/navigate.dart';
 import 'dart:async';
 
 void splashScreen() => runApp(MaterialApp(
@@ -17,7 +18,7 @@ class _SplashScreenState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 5),() => print("Splash Done"));
+    Timer(Duration(seconds: 5),() => Navigate.Intro(context));
   }
   @override
   Widget build(BuildContext context){
