@@ -9,7 +9,6 @@ bool leading = true;
 void main() => runApp(Launcher());
 
 var routes = <String, WidgetBuilder>{
-  "/home": (BuildContext context) => Home(),
   "/intro": (BuildContext context) => Intro(),
 };
 

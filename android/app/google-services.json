@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "327867480594",
+    "firebase_url": "https://kiuloper-arezue.firebaseio.com",
+    "project_id": "kiuloper-arezue",
+    "storage_bucket": "kiuloper-arezue.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327867480594:android:bbcf7d1820ae4c36f4b6cb",
+        "android_client_info": {
+          "package_name": "arezue.com.arezue"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "327867480594-1p3javqqsnuo5d7dvt405fa616oob7ca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "arezue.com.arezue",
+            "certificate_hash": "0710c70503cc45804a48ae8845e2fcf67989ae42"
+          }
+        },
+        {
+          "client_id": "327867480594-1hbf89pgfstdf887li8e2g8sep49av8p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3azZJLg44-x1hbDlmDejU3Nxb9Lb9H0E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "327867480594-1hbf89pgfstdf887li8e2g8sep49av8p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
