@@ -19,4 +19,21 @@ class ArezueTexts {
 
   static String Signin = "Sign in";
   static String CreateAccount = "Create Account";
+  static String Create = "Create";
+  static String employer = "Employer?";
+  static String employee = "Employee?";
+
+  static String name = "Name";
+  static String email = "Email";
+  static String password = "Password";
+  static String company = "Company";
+  static String forgotPassword = "Forgot password?";
+
+  static String signInHeader = "Welcome Back!" ;
+  static String signInSlogan = "The magic of Arezue awaits...";
+  static String employeeRegistrationHeader = "Create Your Future";
+  static String employerRegistrationHeader = "Hiring Simplified";
+  static String employeeSlogan = "Your story begins with a wish...";
+  static String employerSlogan = "A smooth hiring process is what we want...";
+  static String existingAccount = "Already have an account? Sign in";
 }
