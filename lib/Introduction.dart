@@ -1,3 +1,5 @@
+import 'package:arezue/jobseeker/Registration.dart';
+import 'package:arezue/login_page.dart';
 import 'package:arezue/utils/images.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:flutter/material.dart';
@@ -32,22 +34,21 @@ final List child = map<Widget>(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-        Image.asset(i),
-        Padding(
-          padding: new EdgeInsets.fromLTRB(40, 30, 40, 0),
-          child:
-      Text(
-          SlideTexts[index],
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: ArezueColors.IntroTextColor,
-            fontSize: 24,
-            fontFamily: 'Arezue',
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-    ),
-      ]),
+            Image.asset(i),
+            Padding(
+              padding: new EdgeInsets.fromLTRB(40, 30, 40, 0),
+              child: Text(
+                SlideTexts[index],
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: ArezueColors.IntroTextColor,
+                  fontSize: 24,
+                  fontFamily: 'Arezue',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ]),
     );
   },
 ).toList();
@@ -112,47 +113,61 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
         ),
       ),
       Positioned(
-        bottom:20,
+        bottom: 20,
         child: new Container(
           width: MediaQuery.of(context).size.width,
           child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children:<Widget>[
-            RaisedButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
                   side: BorderSide(color: ArezueColors.IntroTextColor),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EmployeeRegistration()),
+                  );
+                },
+                padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
+                color: ArezueColors.IntroBackgroundColor,
+                child: Text(ArezueTexts.CreateAccount,
+                    style: TextStyle(
+                      color: ArezueColors.IntroTextColor,
+                      fontSize: 18,
+                      fontFamily: 'Arezue',
+                      fontWeight: FontWeight.w400,
+                    )),
               ),
-              onPressed: () {
-                // Navigator.of(context).pushNamed();
-              },
-              padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
-              color: ArezueColors.IntroBackgroundColor,
-              child: Text(ArezueTexts.CreateAccount, style: TextStyle(color: ArezueColors.IntroTextColor, fontSize: 18,
-                fontFamily: 'Arezue',
-                fontWeight: FontWeight.w400,)),
-            ),
-    Padding(
-    padding: EdgeInsets.symmetric(horizontal: 8.0),),
-            RaisedButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
-                side: BorderSide(color: ArezueColors.IntroTextColor),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
               ),
-              onPressed: () {
-                // Navigator.of(context).pushNamed();
-              },
-              padding: EdgeInsets.fromLTRB(35, 10, 35, 10),
-              color: ArezueColors.IntroTextColor,
-              child: Text(ArezueTexts.Signin, style: TextStyle(color: ArezueColors.IntroBackgroundColor, fontSize: 18,
-                fontFamily: 'Arezue',
-                fontWeight: FontWeight.w400,)),
-            ),
-    ],
-
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  side: BorderSide(color: ArezueColors.IntroTextColor),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                padding: EdgeInsets.fromLTRB(35, 10, 35, 10),
+                color: ArezueColors.IntroTextColor,
+                child: Text(ArezueTexts.Signin,
+                    style: TextStyle(
+                      color: ArezueColors.IntroBackgroundColor,
+                      fontSize: 18,
+                      fontFamily: 'Arezue',
+                      fontWeight: FontWeight.w400,
+                    )),
+              ),
+            ],
+          ),
         ),
-    ),
       ),
     ]);
   }
