@@ -1,33 +1,33 @@
-import 'package:arezue/Employer/Registration.dart';
 import 'package:arezue/login_page.dart';
 import 'package:arezue/utils/texts.dart';
+import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-class EmployeeRegistration extends StatefulWidget {
+class EmployerRegistration extends StatefulWidget {
   static String tag = 'employee-registration-page';
   @override
-  _EmployeeRegistrationState createState() => new _EmployeeRegistrationState();
+  _EmployerRegistrationState createState() => new _EmployerRegistrationState();
 }
 
-class _EmployeeRegistrationState extends State<EmployeeRegistration> {
-  TextStyle style = TextStyle(color: Colors.white);
+class _EmployerRegistrationState extends State<EmployerRegistration> {
+  TextStyle style = TextStyle(color: ArezueColors.outSecondaryColor);
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    final welcome_text = Text(ArezueTexts.employeeRegistrationHeader,
+    final welcomeText = Text(ArezueTexts.employerRegistrationHeader,
         textAlign: TextAlign.center,
         style: new TextStyle(
-          color: Colors.white,
+          color: ArezueColors.outSecondaryColor,
           fontSize: 30,
           fontFamily: 'Arezue',
         ));
 
-    final slogan_text = Padding(
-        padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 60),
+    final sloganText = Padding(
+        padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 100),
         child: Text(ArezueTexts.employeeSlogan,
             textAlign: TextAlign.center,
             style: new TextStyle(
-              color: Colors.white,
+              color: ArezueColors.highGreyColor,
               fontSize: 16,
               fontFamily: 'Arezue',
             )));
@@ -38,22 +38,69 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
         keyboardType: TextInputType.text,
         autofocus: false,
         style: style,
-        cursorColor: Colors.white,
-//      validator: (String value) {
-//        return value.contains('@') ? null : 'Enter a valid email';
-//      },
+        cursorColor: ArezueColors.outSecondaryColor,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return ArezueTexts.nameError;
+          }
+          return null;
+        },
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.account_circle, color: Colors.white),
+          prefixIcon:
+              Icon(Icons.account_circle, color: ArezueColors.highGreyColor),
           hintText: ArezueTexts.name,
-          hintStyle: TextStyle(color: Colors.white),
+          filled: true,
+          fillColor: ArezueColors.lowGreyColor,
+          hintStyle: TextStyle(color: ArezueColors.highGreyColor),
           contentPadding: EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 12.0),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
-            borderSide: BorderSide(color: Colors.white, width: 2),
+            borderSide: BorderSide(color: ArezueColors.transparent, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
-            borderSide: BorderSide(color: Colors.white, width: 2),
+            borderSide: BorderSide(color: ArezueColors.highGreyColor, width: 1),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: Colors.red, width: 1),
+          ),
+        ),
+      ),
+    );
+
+    final company = Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 12),
+      child: TextFormField(
+        keyboardType: TextInputType.text,
+        autofocus: false,
+        style: style,
+        cursorColor: ArezueColors.outSecondaryColor,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return ArezueTexts.companyError;
+          }
+          return null;
+        },
+        decoration: InputDecoration(
+          prefixIcon:
+              Icon(Icons.business_center, color: ArezueColors.highGreyColor),
+          hintText: ArezueTexts.company,
+          filled: true,
+          fillColor: ArezueColors.lowGreyColor,
+          hintStyle: TextStyle(color: ArezueColors.highGreyColor),
+          contentPadding: EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 12.0),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: ArezueColors.transparent, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: ArezueColors.highGreyColor, width: 1),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: Colors.red, width: 1),
           ),
         ),
       ),
@@ -65,27 +112,34 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
         style: style,
-        cursorColor: Colors.white,
+        cursorColor: ArezueColors.outSecondaryColor,
         validator: (String value) {
           if (value.isEmpty) {
-            return "Please enter an email";
+            return ArezueTexts.emailError;
           } else if (!value.contains('@')) {
-            return "Please enter a valid email";
+            return ArezueTexts.emailValidError;
           }
           return null;
         },
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.alternate_email, color: Colors.white),
+          prefixIcon:
+              Icon(Icons.alternate_email, color: ArezueColors.highGreyColor),
           hintText: ArezueTexts.email,
-          hintStyle: TextStyle(color: Colors.white),
+          filled: true,
+          fillColor: ArezueColors.lowGreyColor,
+          hintStyle: TextStyle(color: ArezueColors.highGreyColor),
           contentPadding: EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 12.0),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
-            borderSide: BorderSide(color: Colors.white, width: 2),
+            borderSide: BorderSide(color: ArezueColors.transparent, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
-            borderSide: BorderSide(color: Colors.white, width: 2),
+            borderSide: BorderSide(color: ArezueColors.highGreyColor, width: 1),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: Colors.red, width: 1),
           ),
         ),
       ),
@@ -101,51 +155,55 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
       child: TextFormField(
         autofocus: false,
         style: style,
-        cursorColor: Colors.white,
+        cursorColor: ArezueColors.outSecondaryColor,
         //initialValue: 'some password',
         obscureText: true,
         validator: (value) {
           if (value.isEmpty) {
-            return 'Please enter a Password';
+            return ArezueTexts.passwordError;
           } else if (value.length <= 8) {
-            return 'Make sure the Password is atleast 8 characters ';
+            return ArezueTexts.passwordShort;
           }
           return null;
         },
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.lock, color: Colors.white),
+          prefixIcon: Icon(Icons.lock, color: ArezueColors.highGreyColor),
 //        style: TextStyle(color: Colors.white),
           hintText: ArezueTexts.password,
-          hintStyle: TextStyle(color: Colors.white),
+          filled: true,
+          fillColor: ArezueColors.lowGreyColor,
+          hintStyle: TextStyle(color: ArezueColors.highGreyColor),
           contentPadding: EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 12.0),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
-            borderSide: BorderSide(color: Colors.white, width: 2),
+            borderSide: BorderSide(color: ArezueColors.transparent, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
-            borderSide: BorderSide(color: Colors.white, width: 2),
+            borderSide: BorderSide(color: ArezueColors.highGreyColor, width: 1),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: Colors.red, width: 1),
           ),
         ),
       ),
     );
 
-    final employerButton = Padding(
+    final jobSeekerButton = Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
+          side: BorderSide(color: ArezueColors.outSecondaryColor),
         ),
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => EmployerRegistration()),
-          );
+          Navigator.pop(context);
         },
-        padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
-        color: Colors.white,
-        child:
-            Text(ArezueTexts.employer, style: TextStyle(color: Colors.black)),
+        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+        color: ArezueColors.outPrimaryColor,
+        child: Text(ArezueTexts.employee,
+            style: TextStyle(color: ArezueColors.outSecondaryColor)),
       ),
     );
 
@@ -162,17 +220,17 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
                 .showSnackBar(SnackBar(content: Text('Processing Data')));
           }
         },
-        padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
-        color: Colors.white,
-        child: Text(ArezueTexts.Create,
-            style: TextStyle(color: Colors.black, fontSize: 16)),
+        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+        color: ArezueColors.outSecondaryColor,
+        child: Text(ArezueTexts.create,
+            style: TextStyle(color: ArezueColors.outPrimaryColor)),
       ),
     );
 
     final signInLabel = FlatButton(
       child: Text(
         ArezueTexts.existingAccount,
-        style: TextStyle(color: Colors.white, fontSize: 16),
+        style: TextStyle(color: ArezueColors.outSecondaryColor, fontSize: 16),
       ),
       onPressed: () {
         Navigator.push(
@@ -185,17 +243,19 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
     return Form(
       key: _formKey,
       child: Stack(
+//      theme: ThemeData(primaryColor: Colors.black, accentColor: Colors.white),
         children: <Widget>[
           Scaffold(
-            backgroundColor: Colors.black,
+            backgroundColor: ArezueColors.outPrimaryColor,
             body: Center(
               child: ListView(
                 shrinkWrap: true,
                 padding: EdgeInsets.only(left: 24.0, right: 24.0),
                 children: <Widget>[
-                  welcome_text,
-                  slogan_text,
+                  welcomeText,
+                  sloganText,
                   name,
+                  company,
                   email,
                   SizedBox(height: 8.0),
                   password,
@@ -205,7 +265,7 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        employerButton,
+                        jobSeekerButton,
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0),
                         ),

@@ -1,20 +1,21 @@
-import 'package:arezue/jobseeker/registration.dart';
+import 'package:arezue/Employer/registration.dart';
+import 'package:arezue/login_page.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  static String tag = 'login-page';
+class EmployeeRegistration extends StatefulWidget {
+  static String tag = 'employee-registration-page';
   @override
-  _LoginPageState createState() => new _LoginPageState();
+  _EmployeeRegistrationState createState() => new _EmployeeRegistrationState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
+class _EmployeeRegistrationState extends State<EmployeeRegistration> {
   TextStyle style = TextStyle(color: ArezueColors.outSecondaryColor);
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    final welcomeText = Text(ArezueTexts.signInHeader,
+    final welcomeText = Text(ArezueTexts.employeeRegistrationHeader,
         textAlign: TextAlign.center,
         style: new TextStyle(
           color: ArezueColors.outSecondaryColor,
@@ -24,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final sloganText = Padding(
         padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 100),
-        child: Text(ArezueTexts.signInSlogan,
+        child: Text(ArezueTexts.employeeSlogan,
             textAlign: TextAlign.center,
             style: new TextStyle(
               color: ArezueColors.highGreyColor,
@@ -32,19 +33,59 @@ class _LoginPageState extends State<LoginPage> {
               fontFamily: 'Arezue',
             )));
 
-    final email = Padding(
+    final name = Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 12),
+      child: TextFormField(
+        keyboardType: TextInputType.text,
+        autofocus: false,
+        style: style,
+        cursorColor: ArezueColors.outSecondaryColor,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return ArezueTexts.nameError;
+          }
+          return null;
+        },
+        decoration: InputDecoration(
+          prefixIcon: Icon(Icons.account_circle, color: ArezueColors.highGreyColor),
+            hintText: ArezueTexts.name,
+            filled: true,
+            fillColor: ArezueColors.lowGreyColor,
+          hintStyle: TextStyle(color: ArezueColors.highGreyColor),
+          contentPadding:EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 12.0),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: ArezueColors.transparent, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: ArezueColors.highGreyColor, width: 1),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: Colors.red, width: 1),
+          ),
+        ),
+      ),
+    );
+
+    final email = Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 5),
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
         style: style,
         cursorColor: ArezueColors.outSecondaryColor,
         validator: (String value) {
-          return value.contains('@') ? null : ArezueTexts.emailError;
+          if (value.isEmpty) {
+            return ArezueTexts.emailError;
+          } else if (!value.contains('@')) {
+            return ArezueTexts.emailValidError;
+          }
+          return null;
         },
         decoration: InputDecoration(
-          prefixIcon:
-              Icon(Icons.alternate_email, color: ArezueColors.highGreyColor),
+          prefixIcon: Icon(Icons.alternate_email, color: ArezueColors.highGreyColor),
           hintText: ArezueTexts.email,
           filled: true,
           fillColor: ArezueColors.lowGreyColor,
@@ -77,17 +118,19 @@ class _LoginPageState extends State<LoginPage> {
         autofocus: false,
         style: style,
         cursorColor: ArezueColors.outSecondaryColor,
+        //initialValue: 'some password',
+        obscureText: true,
         validator: (value) {
           if (value.isEmpty) {
             return ArezueTexts.passwordError;
-          } else if (value.length <= 8) {
+          } else if (value.length <= 8){
             return ArezueTexts.passwordShort;
           }
           return null;
         },
-        obscureText: true,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.lock, color: ArezueColors.highGreyColor),
+//        style: TextStyle(color: Colors.white),
           hintText: ArezueTexts.password,
           filled: true,
           fillColor: ArezueColors.lowGreyColor,
@@ -109,46 +152,55 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final loginButton = Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 110.0),
+    final employerButton = Padding(
+      padding: EdgeInsets.symmetric(vertical: 16.0),
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: BorderSide(color: ArezueColors.outSecondaryColor),
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => EmployerRegistration()),
+          );
+        },
+        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+        color: ArezueColors.outPrimaryColor,
+        child:
+            Text(ArezueTexts.employer, style: TextStyle(color: ArezueColors.outSecondaryColor)),
+      ),
+    );
+
+    final createButton = Padding(
+      padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () {
-          // Validate returns true if the form is valid, or false
-          // otherwise.
           if (_formKey.currentState.validate()) {
             // If the form is valid, display a Snackbar.
             Scaffold.of(context)
                 .showSnackBar(SnackBar(content: Text('Processing Data')));
           }
         },
-        padding: EdgeInsets.all(12),
+        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
         color: ArezueColors.outSecondaryColor,
-        child: Text(ArezueTexts.signin,
-            style:
-                TextStyle(color: ArezueColors.outPrimaryColor, fontSize: 16)),
+        child: Text(ArezueTexts.create,
+            style: TextStyle(color: ArezueColors.outPrimaryColor)),
       ),
     );
 
-    final forgotLabel = FlatButton(
+    final signInLabel = FlatButton(
       child: Text(
-        ArezueTexts.forgotPassword,
-        style: TextStyle(color: ArezueColors.highGreyColor, fontSize: 16),
-      ),
-      onPressed: () {},
-    );
-
-    final signUpLabel = FlatButton(
-      child: Text(
-        ArezueTexts.registerPrompt,
+        ArezueTexts.existingAccount,
         style: TextStyle(color: ArezueColors.outSecondaryColor, fontSize: 16),
       ),
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => EmployeeRegistration()),
+          MaterialPageRoute(builder: (context) => LoginPage()),
         );
       },
     );
@@ -166,20 +218,24 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   welcomeText,
                   sloganText,
+                  name,
                   email,
                   SizedBox(height: 8.0),
                   password,
                   SizedBox(height: 24.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      forgotLabel,
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 3.0),
-                      ),
-                    ],
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        employerButton,
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        ),
+                        createButton
+                      ],
+                    ),
                   ),
-                  loginButton,
                 ],
               ),
             ),
@@ -188,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 40.0),
-                child: signUpLabel,
+                child: signInLabel,
               )),
         ],
       ),

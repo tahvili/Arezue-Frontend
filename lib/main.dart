@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:arezue/splashScreen.dart';
-import 'package:arezue/Introduction.dart';
-import 'package:arezue/jobseeker/main.dart';
+import 'package:arezue/introduction.dart';
 
 bool leading = true;
 
@@ -16,11 +15,11 @@ class Launcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme:
-        ThemeData(primaryColor: ArezueColors.IntroBackgroundColor, accentColor: ArezueColors.IntroTextColor),
-      debugShowCheckedModeBanner: false,
-      home: Splash(),
-        routes: routes
-    );
+        theme: ThemeData(
+            primaryColor: ArezueColors.outPrimaryColor,
+            accentColor: ArezueColors.outSecondaryColor),
+        debugShowCheckedModeBanner: false,
+        home: Splash(),
+        routes: routes);
   }
 }
