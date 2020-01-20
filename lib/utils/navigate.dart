@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Navigate {
-
-  static void Home(BuildContext context) {
+  static void home(BuildContext context) {
     Navigator.pushNamed(context, "/home");
   }
 
-  static void Intro(BuildContext context) {
+  static void intro(BuildContext context) {
     Navigator.pushNamed(context, "/intro");
   }
 }

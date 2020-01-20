@@ -6,8 +6,8 @@ import 'package:arezue/utils/navigate.dart';
 import 'dart:async';
 
 void splashScreen() => runApp(MaterialApp(
-  home: Splash(),
-));
+      home: Splash(),
+    ));
 
 class Splash extends StatefulWidget {
   @override
@@ -18,29 +18,29 @@ class _SplashScreenState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 5),() => Navigate.Intro(context));
+    Timer(Duration(seconds: 5), () => Navigate.intro(context));
   }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return new Scaffold(
-        backgroundColor: ArezueColors.IntroBackgroundColor,
+        backgroundColor: ArezueColors.outPrimaryColor,
         body: Center(
             child: Container(
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    ArezueImages.Logo,
-                    Text(ArezueTexts.CompanyNameLowerCase,
-                        style: new TextStyle(
-                          color: ArezueColors.IntroTextColor,
-                          fontSize: 50,
-                          fontFamily: 'Arezue',
-                          fontWeight: FontWeight.w300,
-                        )),
-                  ],
-                )))
-    );
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            ArezueImages.logo,
+            Text(ArezueTexts.companyNameLowerCase,
+                style: new TextStyle(
+                  color: ArezueColors.outSecondaryColor,
+                  fontSize: 50,
+                  fontFamily: 'Arezue',
+                  fontWeight: FontWeight.w300,
+                )),
+          ],
+        ))));
   }
 }

@@ -1,33 +1,30 @@
 import 'package:arezue/jobseeker/Registration.dart';
 import 'package:arezue/login_page.dart';
-import 'package:arezue/utils/images.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:flutter/material.dart';
-import 'package:arezue/utils/navigate.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:arezue/utils/navigate.dart';
 
-final List<String> Slides = [
-  '',
-  ArezueTexts.Slide01,
-  ArezueTexts.Slide02,
-  ArezueTexts.Slide03,
-  ArezueTexts.Slide04
+final List<String> slides = [
+  ArezueTexts.slide00,
+  ArezueTexts.slide01,
+  ArezueTexts.slide02,
+  ArezueTexts.slide03,
+  ArezueTexts.slide04
 ];
 
-final List<String> SlideTexts = [
-  ArezueTexts.Slide00_Text,
-  ArezueTexts.Slide01_Text,
-  ArezueTexts.Slide02_Text,
-  ArezueTexts.Slide03_Text,
-  ArezueTexts.Slide04_Text
+final List<String> slideTexts = [
+  ArezueTexts.slide00Text,
+  ArezueTexts.slide01Text,
+  ArezueTexts.slide02Text,
+  ArezueTexts.slide03Text,
+  ArezueTexts.slide04Text,
 ];
 
-final Widget placeholder = Container(color: ArezueColors.IntroBackgroundColor);
+final Widget placeholder = Container(color: ArezueColors.outPrimaryColor);
 
 final List child = map<Widget>(
-  Slides,
+  slides,
   (index, i) {
     return Container(
       child: Column(
@@ -38,10 +35,10 @@ final List child = map<Widget>(
             Padding(
               padding: new EdgeInsets.fromLTRB(40, 30, 40, 0),
               child: Text(
-                SlideTexts[index],
+                slideTexts[index],
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: ArezueColors.IntroTextColor,
+                  color: ArezueColors.outSecondaryColor,
                   fontSize: 24,
                   fontFamily: 'Arezue',
                   fontWeight: FontWeight.w400,
@@ -95,7 +92,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: map<Widget>(
-              Slides,
+              slides,
               (index, url) {
                 return Container(
                   width: 10.0,
@@ -123,19 +120,20 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
               RaisedButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
-                  side: BorderSide(color: ArezueColors.IntroTextColor),
+                  side: BorderSide(color: ArezueColors.outSecondaryColor),
                 ),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EmployeeRegistration()),
+                    MaterialPageRoute(
+                        builder: (context) => EmployeeRegistration()),
                   );
                 },
                 padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
-                color: ArezueColors.IntroBackgroundColor,
-                child: Text(ArezueTexts.CreateAccount,
+                color: ArezueColors.outPrimaryColor,
+                child: Text(ArezueTexts.createAccount,
                     style: TextStyle(
-                      color: ArezueColors.IntroTextColor,
+                      color: ArezueColors.outSecondaryColor,
                       fontSize: 18,
                       fontFamily: 'Arezue',
                       fontWeight: FontWeight.w400,
@@ -147,7 +145,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
               RaisedButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
-                  side: BorderSide(color: ArezueColors.IntroTextColor),
+                  side: BorderSide(color: ArezueColors.outSecondaryColor),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -156,10 +154,10 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                   );
                 },
                 padding: EdgeInsets.fromLTRB(35, 10, 35, 10),
-                color: ArezueColors.IntroTextColor,
-                child: Text(ArezueTexts.Signin,
+                color: ArezueColors.outSecondaryColor,
+                child: Text(ArezueTexts.signin,
                     style: TextStyle(
-                      color: ArezueColors.IntroBackgroundColor,
+                      color: ArezueColors.outPrimaryColor,
                       fontSize: 18,
                       fontFamily: 'Arezue',
                       fontWeight: FontWeight.w400,
@@ -180,7 +178,7 @@ class Intro extends StatelessWidget {
 
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: ArezueColors.IntroBackgroundColor,
+        backgroundColor: ArezueColors.outPrimaryColor,
         body: ListView(
           children: <Widget>[
             Padding(
