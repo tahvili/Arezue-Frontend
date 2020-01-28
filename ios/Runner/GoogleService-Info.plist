@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>327867480594-t9fmaoukg5cf0as6nfe8ehebqc77s6am.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.327867480594-t9fmaoukg5cf0as6nfe8ehebqc77s6am</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>327867480594-1p3javqqsnuo5d7dvt405fa616oob7ca.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD7gqemMlGBfcuouY8Nf9eGYSheLyZFd7A</string>
+	<key>GCM_SENDER_ID</key>
+	<string>327867480594</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>arezue.com.arezue</string>
+	<key>PROJECT_ID</key>
+	<string>kiuloper-arezue</string>
+	<key>STORAGE_BUCKET</key>
+	<string>kiuloper-arezue.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:327867480594:ios:155858267dd42a46f4b6cb</string>
+	<key>DATABASE_URL</key>
+	<string>https://kiuloper-arezue.firebaseio.com</string>
+</dict>
+</plist>
