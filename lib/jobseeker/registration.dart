@@ -1,8 +1,29 @@
-import 'package:arezue/Employer/registration.dart';
+import 'package:arezue/HomePage.dart';
+import 'package:arezue/auth.dart';
+import 'package:arezue/employer/registration.dart';
 import 'package:arezue/login_page.dart';
+import 'package:arezue/provider.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:arezue/utils/colors.dart';
+import 'package:arezue/validations.dart';
 import 'package:flutter/material.dart';
+
+class JobseekerIntermediate extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final Auth auth = Provider.of(context).auth;
+    return StreamBuilder<String>(
+      stream: auth.OnAuthStateChanged,
+      builder: (context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          final bool loggedIn = snapshot.hasData;
+          return loggedIn ? HomePage() : EmployeeRegistration();
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+}
 
 class EmployeeRegistration extends StatefulWidget {
   static String tag = 'employee-registration-page';
@@ -11,8 +32,37 @@ class EmployeeRegistration extends StatefulWidget {
 }
 
 class _EmployeeRegistrationState extends State<EmployeeRegistration> {
+  String _email,_password;
+  FormType _formType = FormType.register;
   TextStyle style = TextStyle(color: ArezueColors.outSecondaryColor);
   final _formKey = GlobalKey<FormState>();
+
+  bool validate() {
+    final form = _formKey.currentState;
+    form.save();
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void submit() async {
+    if (validate()) {
+      try {
+        final auth = Provider.of(context).auth;
+        String userId = await auth.createUserWithEmailAndPassword(
+          _email,
+          _password,
+        );
+        print('Registered in $userId');
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final welcomeText = Text(ArezueTexts.employeeRegistrationHeader,
@@ -75,15 +125,9 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
         style: style,
+        onSaved: (value) => _email = value,
         cursorColor: ArezueColors.outSecondaryColor,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return ArezueTexts.emailError;
-          } else if (!value.contains('@')) {
-            return ArezueTexts.emailValidError;
-          }
-          return null;
-        },
+        validator: EmailValidator.validate,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.alternate_email, color: ArezueColors.highGreyColor),
           hintText: ArezueTexts.email,
@@ -118,19 +162,11 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
         autofocus: false,
         style: style,
         cursorColor: ArezueColors.outSecondaryColor,
-        //initialValue: 'some password',
+        validator: PasswordValidator.validate,
         obscureText: true,
-        validator: (value) {
-          if (value.isEmpty) {
-            return ArezueTexts.passwordError;
-          } else if (value.length <= 8){
-            return ArezueTexts.passwordShort;
-          }
-          return null;
-        },
+        onSaved: (value) => _password = value,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.lock, color: ArezueColors.highGreyColor),
-//        style: TextStyle(color: Colors.white),
           hintText: ArezueTexts.password,
           filled: true,
           fillColor: ArezueColors.lowGreyColor,
@@ -162,7 +198,7 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => EmployerRegistration()),
+            MaterialPageRoute(builder: (context) => EmployerIntermediate()),
           );
         },
         padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
@@ -178,13 +214,7 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            // If the form is valid, display a Snackbar.
-            Scaffold.of(context)
-                .showSnackBar(SnackBar(content: Text('Processing Data')));
-          }
-        },
+        onPressed: submit,
         padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
         color: ArezueColors.outSecondaryColor,
         child: Text(ArezueTexts.create,
@@ -200,7 +230,7 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
+          MaterialPageRoute(builder: (context) => Intermediate()),
         );
       },
     );

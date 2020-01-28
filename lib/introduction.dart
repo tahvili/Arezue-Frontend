@@ -150,7 +150,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => Intermediate()),
                   );
                 },
                 padding: EdgeInsets.fromLTRB(35, 10, 35, 10),
