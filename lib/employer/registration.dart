@@ -1,5 +1,6 @@
 import 'package:arezue/HomePage.dart';
 import 'package:arezue/auth.dart';
+import 'package:arezue/jobseeker/HomePage.dart';
 import 'package:arezue/login_page.dart';
 import 'package:arezue/provider.dart';
 import 'package:arezue/utils/texts.dart';
@@ -16,7 +17,7 @@ class EmployerIntermediate extends StatelessWidget {
       builder: (context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           final bool loggedIn = snapshot.hasData;
-          return loggedIn ? HomePage() : EmployerRegistration();
+          return loggedIn ? JobseekerHomePage() : EmployerRegistration();
         }
         return CircularProgressIndicator();
       },
