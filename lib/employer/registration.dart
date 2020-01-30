@@ -1,7 +1,30 @@
+import 'package:arezue/HomePage.dart';
+import 'package:arezue/auth.dart';
+import 'package:arezue/jobseeker/HomePage.dart';
 import 'package:arezue/login_page.dart';
+import 'package:arezue/provider.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:arezue/utils/colors.dart';
+import 'package:arezue/validations.dart';
 import 'package:flutter/material.dart';
+
+class EmployerIntermediate extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final Auth auth = Provider.of(context).auth;
+    return StreamBuilder<String>(
+      stream: auth.OnAuthStateChanged,
+      builder: (context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          final bool loggedIn = snapshot.hasData;
+          return loggedIn ? JobseekerHomePage() : EmployerRegistration();
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+}
+
 
 class EmployerRegistration extends StatefulWidget {
   static String tag = 'employee-registration-page';
@@ -10,8 +33,37 @@ class EmployerRegistration extends StatefulWidget {
 }
 
 class _EmployerRegistrationState extends State<EmployerRegistration> {
+  String _email,_password;
+  FormType _formType = FormType.register;
   TextStyle style = TextStyle(color: ArezueColors.outSecondaryColor);
   final _formKey = GlobalKey<FormState>();
+
+  bool validate() {
+    final form = _formKey.currentState;
+    form.save();
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void submit() async {
+    if (validate()) {
+      try {
+        final auth = Provider.of(context).auth;
+          String userId = await auth.createUserWithEmailAndPassword(
+            _email,
+            _password,
+          );
+          print('Registered in $userId');
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final welcomeText = Text(ArezueTexts.employerRegistrationHeader,
@@ -113,14 +165,8 @@ class _EmployerRegistrationState extends State<EmployerRegistration> {
         autofocus: false,
         style: style,
         cursorColor: ArezueColors.outSecondaryColor,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return ArezueTexts.emailError;
-          } else if (!value.contains('@')) {
-            return ArezueTexts.emailValidError;
-          }
-          return null;
-        },
+        onSaved: (value) => _email = value,
+        validator: EmailValidator.validate,
         decoration: InputDecoration(
           prefixIcon:
               Icon(Icons.alternate_email, color: ArezueColors.highGreyColor),
@@ -156,19 +202,11 @@ class _EmployerRegistrationState extends State<EmployerRegistration> {
         autofocus: false,
         style: style,
         cursorColor: ArezueColors.outSecondaryColor,
-        //initialValue: 'some password',
+        onSaved: (value) => _password = value,
+        validator: PasswordValidator.validate,
         obscureText: true,
-        validator: (value) {
-          if (value.isEmpty) {
-            return ArezueTexts.passwordError;
-          } else if (value.length <= 8) {
-            return ArezueTexts.passwordShort;
-          }
-          return null;
-        },
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.lock, color: ArezueColors.highGreyColor),
-//        style: TextStyle(color: Colors.white),
           hintText: ArezueTexts.password,
           filled: true,
           fillColor: ArezueColors.lowGreyColor,
@@ -213,13 +251,7 @@ class _EmployerRegistrationState extends State<EmployerRegistration> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            // If the form is valid, display a Snackbar.
-            Scaffold.of(context)
-                .showSnackBar(SnackBar(content: Text('Processing Data')));
-          }
-        },
+        onPressed: submit,
         padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
         color: ArezueColors.outSecondaryColor,
         child: Text(ArezueTexts.create,
@@ -243,7 +275,6 @@ class _EmployerRegistrationState extends State<EmployerRegistration> {
     return Form(
       key: _formKey,
       child: Stack(
-//      theme: ThemeData(primaryColor: Colors.black, accentColor: Colors.white),
         children: <Widget>[
           Scaffold(
             backgroundColor: ArezueColors.outPrimaryColor,

@@ -1,7 +1,29 @@
+import 'package:arezue/HomePage.dart';
+import 'package:arezue/jobseeker/HomePage.dart';
 import 'package:arezue/jobseeker/registration.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:arezue/provider.dart';
+import 'package:arezue/auth.dart';
+import 'package:arezue/validations.dart';
+
+class Intermediate extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final Auth auth = Provider.of(context).auth;
+    return StreamBuilder<String>(
+      stream: auth.OnAuthStateChanged,
+      builder: (context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          final bool loggedIn = snapshot.hasData;
+          return loggedIn ? JobseekerHomePage() : LoginPage();
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+}
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
@@ -10,10 +32,39 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String _email, _password;
   final _formKey = GlobalKey<FormState>();
   TextStyle style = TextStyle(color: ArezueColors.outSecondaryColor);
+
+  bool validate() {
+    final form = _formKey.currentState;
+    form.save();
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void submit() async {
+    if (validate()) {
+      try {
+        final auth = Provider.of(context).auth;
+        String userId = await auth.signInWithEmailAndPassword(
+          _email,
+          _password,
+        );
+        print('Signed in $userId');
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Auth auth = Provider.of(context).auth;
     final welcomeText = Text(ArezueTexts.signInHeader,
         textAlign: TextAlign.center,
         style: new TextStyle(
@@ -38,10 +89,9 @@ class _LoginPageState extends State<LoginPage> {
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
         style: style,
+        onSaved: (value) => _email = value,
         cursorColor: ArezueColors.outSecondaryColor,
-        validator: (String value) {
-          return value.contains('@') ? null : ArezueTexts.emailError;
-        },
+        validator: EmailValidator.validate,
         decoration: InputDecoration(
           prefixIcon:
               Icon(Icons.alternate_email, color: ArezueColors.highGreyColor),
@@ -76,15 +126,9 @@ class _LoginPageState extends State<LoginPage> {
       child: TextFormField(
         autofocus: false,
         style: style,
+        onSaved: (value) => _password = value,
         cursorColor: ArezueColors.outSecondaryColor,
-        validator: (value) {
-          if (value.isEmpty) {
-            return ArezueTexts.passwordError;
-          } else if (value.length <= 8) {
-            return ArezueTexts.passwordShort;
-          }
-          return null;
-        },
+        validator: PasswordValidator.validate,
         obscureText: true,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.lock, color: ArezueColors.highGreyColor),
@@ -115,15 +159,7 @@ class _LoginPageState extends State<LoginPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        onPressed: () {
-          // Validate returns true if the form is valid, or false
-          // otherwise.
-          if (_formKey.currentState.validate()) {
-            // If the form is valid, display a Snackbar.
-            Scaffold.of(context)
-                .showSnackBar(SnackBar(content: Text('Processing Data')));
-          }
-        },
+        onPressed: submit,
         padding: EdgeInsets.all(12),
         color: ArezueColors.outSecondaryColor,
         child: Text(ArezueTexts.signin,
@@ -148,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => EmployeeRegistration()),
+          MaterialPageRoute(builder: (context) => JobseekerIntermediate()),
         );
       },
     );
