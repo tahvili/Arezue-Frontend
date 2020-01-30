@@ -1,12 +1,7 @@
-import 'package:arezue/HomePage.dart';
-import 'package:arezue/jobseeker/HomePage.dart';
-import 'package:arezue/jobseeker/registration.dart';
-import 'package:arezue/utils/texts.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/provider.dart';
 import 'package:arezue/auth.dart';
-import 'package:arezue/validations.dart';
 
 class SettingsPage extends StatefulWidget {
   @override

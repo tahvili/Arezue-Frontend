@@ -17,7 +17,7 @@ class Launcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      auth: Auth(),
+      auth: Auth() ,
       child: MaterialApp(
           theme: ThemeData(
               primaryColor: ArezueColors.outPrimaryColor,
