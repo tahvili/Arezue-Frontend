@@ -1,14 +1,7 @@
-import 'package:arezue/HomePage.dart';
 import 'package:arezue/Settings.dart';
-import 'package:arezue/introduction.dart' as prefix0;
-import 'package:arezue/jobseeker/registration.dart';
-import 'package:arezue/utils/texts.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:arezue/provider.dart';
-import 'package:arezue/auth.dart';
 import 'package:flutter/widgets.dart';
-//import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
 class JobseekerHomePage extends StatefulWidget {
   @override
@@ -16,7 +9,7 @@ class JobseekerHomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<JobseekerHomePage> {
-  @override
+
   final middleSection = Container(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
       decoration: BoxDecoration(
@@ -109,6 +102,7 @@ class _HomePageState extends State<JobseekerHomePage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(200.0),
         child: AppBar(
+          leading: Container(),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(48.0),
             child: Row(

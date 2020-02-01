@@ -1,4 +1,5 @@
-import 'package:arezue/HomePage.dart';
+import 'package:http/http.dart' as http;
+import 'package:arezue/ResetPassword.dart';
 import 'package:arezue/jobseeker/HomePage.dart';
 import 'package:arezue/jobseeker/registration.dart';
 import 'package:arezue/utils/texts.dart';
@@ -55,7 +56,16 @@ class _LoginPageState extends State<LoginPage> {
           _email,
           _password,
         );
-        print('Signed in $userId');
+//        String url = "http://utmuser3-223.wireless.utoronto.ca:3000/api/init";
+//        var response = await http.post(url, body:{"firebaseID":userId});
+//        print('Response status: ${response.statusCode}');
+//        print('Response body: ${response.body}');
+//        print('Signed in $userId');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => JobseekerHomePage(),
+              fullscreenDialog: true),
+        );
       } catch (e) {
         print(e);
       }
@@ -173,7 +183,13 @@ class _LoginPageState extends State<LoginPage> {
         ArezueTexts.forgotPassword,
         style: TextStyle(color: ArezueColors.highGreyColor, fontSize: 16),
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ResetPasswordPage(),
+              fullscreenDialog: true),
+        );
+      }
     );
 
     final signUpLabel = FlatButton(
@@ -184,49 +200,53 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => JobseekerIntermediate()),
+          MaterialPageRoute(builder: (context) => JobseekerIntermediate(),
+              fullscreenDialog: true),
         );
       },
     );
 
-    return Form(
-      key: _formKey,
-      child: Stack(
-        children: <Widget>[
-          Scaffold(
-            backgroundColor: ArezueColors.outPrimaryColor,
-            body: Center(
-              child: ListView(
-                shrinkWrap: true,
-                padding: EdgeInsets.only(left: 24.0, right: 24.0),
-                children: <Widget>[
-                  welcomeText,
-                  sloganText,
-                  email,
-                  SizedBox(height: 8.0),
-                  password,
-                  SizedBox(height: 24.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      forgotLabel,
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 3.0),
-                      ),
-                    ],
-                  ),
-                  loginButton,
-                ],
+    return MaterialApp(
+
+      home: Form(
+        key: _formKey,
+        child: Stack(
+          children: <Widget>[
+            Scaffold(
+              backgroundColor: ArezueColors.outPrimaryColor,
+              body: Center(
+                child: ListView(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                  children: <Widget>[
+                    welcomeText,
+                    sloganText,
+                    email,
+                    SizedBox(height: 8.0),
+                    password,
+                    SizedBox(height: 24.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        forgotLabel,
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 3.0),
+                        ),
+                      ],
+                    ),
+                    loginButton,
+                  ],
+                ),
               ),
             ),
-          ),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 40.0),
-                child: signUpLabel,
-              )),
-        ],
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 40.0),
+                  child: signUpLabel,
+                )),
+          ],
+        ),
       ),
     );
   }

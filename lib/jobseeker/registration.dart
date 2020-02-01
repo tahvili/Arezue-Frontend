@@ -1,4 +1,3 @@
-import 'package:arezue/HomePage.dart';
 import 'package:arezue/auth.dart';
 import 'package:arezue/jobseeker/HomePage.dart';
 import 'package:arezue/employer/registration.dart';
@@ -8,6 +7,7 @@ import 'package:arezue/utils/texts.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:arezue/validations.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class JobseekerIntermediate extends StatelessWidget {
   @override
@@ -33,7 +33,7 @@ class EmployeeRegistration extends StatefulWidget {
 }
 
 class _EmployeeRegistrationState extends State<EmployeeRegistration> {
-  String _email,_password;
+  String _email, _password, _name;
   FormType _formType = FormType.register;
   TextStyle style = TextStyle(color: ArezueColors.outSecondaryColor);
   final _formKey = GlobalKey<FormState>();
@@ -53,9 +53,17 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
     if (validate()) {
       try {
         final auth = Provider.of(context).auth;
-        String userId = await auth.createUserWithEmailAndPassword(
-          _email,
+        String userId = await auth.createUserWithEmailAndPassword(_name, _email,
           _password,
+        );
+//        String url = "http://utmuser3-223.wireless.utoronto.ca:3000/api/jobseekers/create";
+//        var response = await http.post(url, body:{"name" :_name,"email":_email,"firebaseID":userId});
+//        print('Response status: ${response.statusCode}');
+//        print('Response body: ${response.body}');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginPage(), fullscreenDialog: true),
         );
         print('Registered in $userId');
       } catch (e) {
@@ -90,20 +98,17 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
         keyboardType: TextInputType.text,
         autofocus: false,
         style: style,
+        onSaved: (value) => _name = value,
         cursorColor: ArezueColors.outSecondaryColor,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return ArezueTexts.nameError;
-          }
-          return null;
-        },
+        validator: NameValidator.validate,
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.account_circle, color: ArezueColors.highGreyColor),
-            hintText: ArezueTexts.name,
-            filled: true,
-            fillColor: ArezueColors.lowGreyColor,
+          prefixIcon:
+              Icon(Icons.account_circle, color: ArezueColors.highGreyColor),
+          hintText: ArezueTexts.name,
+          filled: true,
+          fillColor: ArezueColors.lowGreyColor,
           hintStyle: TextStyle(color: ArezueColors.highGreyColor),
-          contentPadding:EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 12.0),
+          contentPadding: EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 12.0),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
             borderSide: BorderSide(color: ArezueColors.transparent, width: 1),
@@ -204,8 +209,8 @@ class _EmployeeRegistrationState extends State<EmployeeRegistration> {
         },
         padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
         color: ArezueColors.outPrimaryColor,
-        child:
-            Text(ArezueTexts.employer, style: TextStyle(color: ArezueColors.outSecondaryColor)),
+        child: Text(ArezueTexts.employer,
+            style: TextStyle(color: ArezueColors.outSecondaryColor)),
       ),
     );
 

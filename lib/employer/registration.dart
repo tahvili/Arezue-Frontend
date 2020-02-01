@@ -1,4 +1,3 @@
-import 'package:arezue/HomePage.dart';
 import 'package:arezue/auth.dart';
 import 'package:arezue/jobseeker/HomePage.dart';
 import 'package:arezue/login_page.dart';
@@ -33,7 +32,7 @@ class EmployerRegistration extends StatefulWidget {
 }
 
 class _EmployerRegistrationState extends State<EmployerRegistration> {
-  String _email,_password;
+  String _email,_password,_name;
   FormType _formType = FormType.register;
   TextStyle style = TextStyle(color: ArezueColors.outSecondaryColor);
   final _formKey = GlobalKey<FormState>();
@@ -53,7 +52,7 @@ class _EmployerRegistrationState extends State<EmployerRegistration> {
     if (validate()) {
       try {
         final auth = Provider.of(context).auth;
-          String userId = await auth.createUserWithEmailAndPassword(
+          String userId = await auth.createUserWithEmailAndPassword(_name,
             _email,
             _password,
           );
@@ -90,13 +89,9 @@ class _EmployerRegistrationState extends State<EmployerRegistration> {
         keyboardType: TextInputType.text,
         autofocus: false,
         style: style,
+        onSaved: (value) => _name = value,
         cursorColor: ArezueColors.outSecondaryColor,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return ArezueTexts.nameError;
-          }
-          return null;
-        },
+        validator: NameValidator.validate,
         decoration: InputDecoration(
           prefixIcon:
               Icon(Icons.account_circle, color: ArezueColors.highGreyColor),

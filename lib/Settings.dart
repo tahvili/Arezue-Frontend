@@ -1,3 +1,4 @@
+import 'package:arezue/login_page.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/provider.dart';
@@ -168,6 +169,10 @@ class _SettingsPageState extends State<SettingsPage> {
           try {
             Auth auth = Provider.of(context).auth;
             await auth.signOut();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
           } catch (e) {
             print(e);
           }
