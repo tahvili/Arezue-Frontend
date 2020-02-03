@@ -1,4 +1,4 @@
-import 'package:arezue/jobseeker/Registration.dart';
+import 'package:arezue/jobseeker/registration.dart';
 import 'package:arezue/login_page.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:flutter/material.dart';
