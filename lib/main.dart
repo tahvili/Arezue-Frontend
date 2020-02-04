@@ -16,15 +16,25 @@ var routes = <String, WidgetBuilder>{
 class Launcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      auth: Auth() ,
-      child: MaterialApp(
+    return MaterialApp(
           theme: ThemeData(
               primaryColor: ArezueColors.outPrimaryColor,
               accentColor: ArezueColors.outSecondaryColor),
           debugShowCheckedModeBanner: false,
-          home: Splash(),
-          routes: routes),
+          home: Splash(auth: new Auth()),
+          routes: routes
     );
+
+
+//    return Provider(
+//      auth: Auth() ,
+//      child: MaterialApp(
+//          theme: ThemeData(
+//              primaryColor: ArezueColors.outPrimaryColor,
+//              accentColor: ArezueColors.outSecondaryColor),
+//          debugShowCheckedModeBanner: false,
+//          home: Splash(),
+//          routes: routes),
+//    );
   }
 }

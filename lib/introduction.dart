@@ -1,4 +1,4 @@
-import 'package:arezue/jobseeker/registration.dart';
+import 'package:arezue/auth.dart';
 import 'package:arezue/login_page.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:flutter/material.dart';
@@ -58,13 +58,34 @@ List<T> map<T>(List list, Function handler) {
   return result;
 }
 
+
+
 class CarouselWithIndicator extends StatefulWidget {
+  CarouselWithIndicator({Key key, this.auth, this.onSignIn}) : super(key: key);
+
+  final BaseAuth auth;
+  final VoidCallback onSignIn;
+
   @override
   _CarouselWithIndicatorState createState() => _CarouselWithIndicatorState();
 }
 
+//enum AuthStatus {
+//  notSignedIn,
+//  signedIn,
+//}
+
+
 class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
   int _current = 0;
+
+//  AuthStatus authStatus = AuthStatus.notSignedIn;
+//
+//  void _updateAuthStatus(AuthStatus status) {
+//    setState(() {
+//      authStatus = status;
+//    });
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +147,11 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => EmployeeRegistration()),
+                        builder: (context) => new LoginPage(
+                              auth: widget.auth,
+                              onSignIn: widget.onSignIn,
+                              formType: FormType.jobseekerRegister,
+                            )),
                   );
                 },
                 padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
@@ -150,7 +175,12 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Intermediate()),
+                    MaterialPageRoute(
+                        builder: (context) => LoginPage(
+                              auth: widget.auth,
+                              onSignIn: widget.onSignIn,
+                              formType: FormType.login,
+                            )),
                   );
                 },
                 padding: EdgeInsets.fromLTRB(35, 10, 35, 10),
@@ -172,6 +202,11 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
 }
 
 class Intro extends StatelessWidget {
+  Intro({Key key, this.auth, this.onSignIn}) : super(key: key);
+
+  final BaseAuth auth;
+  final VoidCallback onSignIn;
+
   @override
   Widget build(BuildContext context) {
     //Manually operated Carousel
@@ -184,7 +219,10 @@ class Intro extends StatelessWidget {
             Padding(
                 padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                 child: Column(children: [
-                  CarouselWithIndicator(),
+                  CarouselWithIndicator(
+                    auth: auth,
+                    onSignIn: onSignIn,
+                  ),
                 ])),
           ],
         ),

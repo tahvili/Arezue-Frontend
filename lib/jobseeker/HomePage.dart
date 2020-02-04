@@ -1,9 +1,14 @@
 import 'package:arezue/Settings.dart';
+import 'package:arezue/auth.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class JobseekerHomePage extends StatefulWidget {
+  JobseekerHomePage({this.auth, this.onSignOut});
+  final BaseAuth auth;
+  final VoidCallback onSignOut;
+
   @override
   _HomePageState createState() => new _HomePageState();
 }
@@ -121,7 +126,10 @@ class _HomePageState extends State<JobseekerHomePage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SettingsPage()),
+                      MaterialPageRoute(builder: (context) => SettingsPage(
+                        auth: widget.auth, onSignOut: widget.onSignOut,
+                      )
+                      ),
                     );
                   },
                 ),
