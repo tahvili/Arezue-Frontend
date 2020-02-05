@@ -5,6 +5,10 @@ import 'package:arezue/provider.dart';
 import 'package:arezue/auth.dart';
 
 class SettingsPage extends StatefulWidget {
+
+  SettingsPage({this.auth, this.onSignOut});
+  final BaseAuth auth;
+  final VoidCallback onSignOut;
   @override
   _SettingsPageState createState() => new _SettingsPageState();
 }
@@ -16,6 +20,16 @@ class _SettingsPageState extends State<SettingsPage> {
     fontFamily: 'Arezue',
     fontWeight: FontWeight.w400,
   );
+
+  void _signOut() async {
+    try {
+      await widget.auth.signOut();
+      widget.onSignOut();
+    } catch (e) {
+      print(e);
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,18 +179,18 @@ class _SettingsPageState extends State<SettingsPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        onPressed: () async {
-          try {
-            Auth auth = Provider.of(context).auth;
-            await auth.signOut();
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-            );
-          } catch (e) {
-            print(e);
-          }
-        },
+        onPressed: _signOut, //() async {
+//          try {
+//            Auth auth = Provider.of(context).auth;
+//            await auth.signOut();
+//            Navigator.push(
+//              context,
+//              MaterialPageRoute(builder: (context) => LoginPage()),
+//            );
+//          } catch (e) {
+//            print(e);
+//          }
+//        },
         padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
         color: ArezueColors.outSecondaryColor,
         child: Text('Sign out',

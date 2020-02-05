@@ -6,6 +6,7 @@ class Navigate {
   }
 
   static void intro(BuildContext context) {
+
     Navigator.pushNamed(context, "/intro");
   }
 }
