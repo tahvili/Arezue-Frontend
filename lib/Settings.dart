@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:arezue/provider.dart';
 import 'package:arezue/auth.dart';
 
+enum AuthStatus {
+  notSignedIn,
+  signedIn,
+}
+
 class SettingsPage extends StatefulWidget {
 
   SettingsPage({this.auth, this.onSignOut});
@@ -14,12 +19,15 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+
+  AuthStatus authStatus = AuthStatus.notSignedIn;
   TextStyle textStyle = TextStyle(
     color: ArezueColors.outPrimaryColor,
     fontSize: 18,
     fontFamily: 'Arezue',
     fontWeight: FontWeight.w400,
   );
+
 
   void _signOut() async {
     try {
@@ -29,6 +37,12 @@ class _SettingsPageState extends State<SettingsPage> {
       print(e);
     }
 
+  }
+
+  void _updateAuthStatus(AuthStatus status) {
+    if(this.mounted){setState(() {
+      authStatus = status;
+    });}
   }
 
   @override
@@ -179,7 +193,23 @@ class _SettingsPageState extends State<SettingsPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        onPressed: _signOut, //() async {
+        onPressed:() {
+          _signOut();
+//          Navigator.pop(context);
+          //Navigator.popUntil(context, (route) => route.isFirst);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.push(
+          context,
+          MaterialPageRoute(
+          builder: (context) => LoginPage(
+          auth: widget.auth,
+          onSignIn: () => _updateAuthStatus(AuthStatus.signedIn),
+          formType: FormType.login,
+          )),
+          );
+          },
+        //() async {
 //          try {
 //            Auth auth = Provider.of(context).auth;
 //            await auth.signOut();

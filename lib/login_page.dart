@@ -3,6 +3,7 @@ import 'package:arezue/utils/colors.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:arezue/validations.dart';
 import 'package:flutter/material.dart';
+import 'package:arezue/jobseeker/HomePage.dart';
 import 'auth.dart';
 
 
@@ -16,10 +17,14 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => new _LoginPageState(formType: this.formType);
 }
 
-enum FormType { login, employerRegister, jobseekerRegister }
-
+enum FormType { login, employerRegister, jobseekerRegister, forgot}
+enum AuthStatus {
+  notSignedIn,
+  signedIn,
+}
 class _LoginPageState extends State<LoginPage> {
   _LoginPageState({this.formType});
+  AuthStatus authStatus = AuthStatus.notSignedIn;
   FormType formType;
   static final _formKey = new GlobalKey<FormState>();
   TextStyle style = TextStyle(color: ArezueColors.outSecondaryColor);
@@ -27,6 +32,8 @@ class _LoginPageState extends State<LoginPage> {
   String _email;
   String _name;
   String _password;
+
+  String userId;
 //  FormType _formType = FormType.login;
 //  change(form);'
 
@@ -51,14 +58,27 @@ class _LoginPageState extends State<LoginPage> {
     return false;
   }
 
+  void _updateAuthStatus(AuthStatus status) {
+    setState(() {
+      authStatus = status;
+    });
+  }
+
   void validateAndSubmit() async {
     if (validateAndSave()) {
       try {
-        String userId = formType == FormType.login
+        userId = formType == FormType.login
             ? await widget.auth.signInWithEmailAndPassword(_email, _password)
             : await widget.auth.createUserWithEmailAndPassword(_name, _email, _password);
         setState(() {
-          _authHint = 'Signed In\n\nUser id: $userId';
+          _authHint = 'Signed In';
+          Navigator.pop(context);
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) => JobseekerHomePage(
+                auth: widget.auth,
+                onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn)
+            ), fullscreenDialog: true),
+          );
         });
         widget.onSignIn();
       } catch (e) {
@@ -74,10 +94,28 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void forgotSubmit() async {
+    if (validateAndSave()) {
+      try {
+        await widget.auth.sendPasswordResetEmail(_email);
+        _authHint = "A password reset link has been sent to $_email";
+        onPressed: () {
+//        Navigator.push(
+//          context,
+//          MaterialPageRoute(builder: (context) => Intermediate()),
+//        );
+          moveToLogin();
+        };
+      } catch (e) {
+        print(e);
+        //_warning = e.message
+      }
+    }
+  }
+
   void moveToJobseekerRegister() {
     _formKey.currentState.reset();
     setState(() {
-      print("HEy");
       formType = FormType.jobseekerRegister;
       _authHint = '';
     });
@@ -95,6 +133,14 @@ class _LoginPageState extends State<LoginPage> {
     _formKey.currentState.reset();
     setState(() {
       formType = FormType.login;
+      _authHint = '';
+    });
+  }
+
+  void moveToForgotPassword() {
+    _formKey.currentState.reset();
+    setState(() {
+      formType = FormType.forgot;
       _authHint = '';
     });
   }
@@ -132,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () {
           moveToEmployerRegister();
         },
-        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+        padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
         color: ArezueColors.outPrimaryColor,
         child: Text(ArezueTexts.employer,
             style: TextStyle(color: ArezueColors.outSecondaryColor)),
@@ -151,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
  //         submit();
 //          _showVerifyEmailDialog();
           validateAndSubmit,
-        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+        padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
         color: ArezueColors.outSecondaryColor,
         child: Text(ArezueTexts.create,
             style: TextStyle(color: ArezueColors.outPrimaryColor)),
@@ -357,12 +403,50 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () {
           moveToJobseekerRegister();
         },
-        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+        padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
         color: ArezueColors.outPrimaryColor,
         child: Text(ArezueTexts.employee,
             style: TextStyle(color: ArezueColors.outSecondaryColor)),
       ),
     );
+  }
+
+  Widget backLabel() {
+    return FlatButton(
+      child: Text(
+        ArezueTexts.back,
+        style: TextStyle(color: ArezueColors.outSecondaryColor, fontSize: 16),
+      ),
+      onPressed: () {
+//        Navigator.push(
+//          context,
+//          MaterialPageRoute(builder: (context) => Intermediate()),
+//        );
+        moveToLogin();
+      },
+    );
+  }
+
+  Widget loginForgotPasswordText() {
+    return Text(ArezueTexts.forgotPasswordHeader,
+        textAlign: TextAlign.center,
+        style: new TextStyle(
+          color: ArezueColors.outSecondaryColor,
+          fontSize: 30,
+          fontFamily: 'Arezue',
+        ));
+  }
+
+  Widget loginForgotText() {
+    return Padding(
+        padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 100),
+        child: Text(ArezueTexts.forgotPasswordSlogan,
+            textAlign: TextAlign.center,
+            style: new TextStyle(
+              color: ArezueColors.highGreyColor,
+              fontSize: 16,
+              fontFamily: 'Arezue',
+            )));
   }
 
   Widget loginWelcomeText() {
@@ -388,6 +472,23 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
+  Widget forgotButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 110.0),
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        onPressed: forgotSubmit,
+        padding: EdgeInsets.all(12),
+        color: ArezueColors.outSecondaryColor,
+        child: Text(ArezueTexts.submit,
+            style:
+            TextStyle(color: ArezueColors.outPrimaryColor, fontSize: 16)),
+      ),
+    );
+  }
+
   Widget loginButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 110.0),
@@ -395,7 +496,9 @@ class _LoginPageState extends State<LoginPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        onPressed: validateAndSubmit,
+        onPressed: (){
+          validateAndSubmit();
+        },
         padding: EdgeInsets.all(12),
         color: ArezueColors.outSecondaryColor,
         child: Text(ArezueTexts.signin,
@@ -411,14 +514,9 @@ class _LoginPageState extends State<LoginPage> {
           ArezueTexts.forgotPassword,
           style: TextStyle(color: ArezueColors.highGreyColor, fontSize: 16),
         ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ResetPasswordPage(),
-                fullscreenDialog: true),
-          );
-        });
+      onPressed: () {
+        moveToForgotPassword();
+      },);
   }
 
   Widget signUpLabel() {
@@ -455,6 +553,20 @@ class _LoginPageState extends State<LoginPage> {
           loginButton(),
           signUpLabel(),
         ];
+      case FormType.forgot:
+        return [
+          loginForgotPasswordText(),
+          loginForgotText(),
+          email(),
+          SizedBox(height: 24.0),
+          forgotButton(),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(top: 40.0),
+                child: backLabel(),
+              )),
+        ];
       case FormType.employerRegister:
         return [
           employerWelcomeText(),
@@ -467,22 +579,26 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(height: 24.0),
           Container(
             width: MediaQuery.of(context).size.width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                jobSeekerButton(),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
-                ),
-                createButton(),
-                Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 40.0),
-                      child: signInLabel(),
-                    )),
-              ],
-            ),
+            child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  jobSeekerButton(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6.0),
+                  ),
+                  createButton(),
+                ],
+              ),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 40.0),
+                    child: signInLabel(),
+                  )),
+            ],
+          ),
           ),
         ];
       case FormType.jobseekerRegister:
@@ -496,18 +612,23 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(height: 24.0),
           Container(
             width: MediaQuery.of(context).size.width,
-            child: Row(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                employerButton(),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      employerButton(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6.0),
+                      ),
+                      createButton(),
+                      ],
                 ),
-                createButton(),
                 Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 40.0),
+                      padding: EdgeInsets.only(top: 40.0),
                       child: signInLabel(),
                     )),
               ],

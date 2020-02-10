@@ -33,13 +33,13 @@ final List child = map<Widget>(
           children: <Widget>[
             Image.asset(i),
             Padding(
-              padding: new EdgeInsets.fromLTRB(40, 30, 40, 0),
+              padding: new EdgeInsets.fromLTRB(30, 30, 30, 0),
               child: Text(
                 slideTexts[index],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: ArezueColors.outSecondaryColor,
-                  fontSize: 24,
+                  fontSize: 22,
                   fontFamily: 'Arezue',
                   fontWeight: FontWeight.w400,
                 ),
@@ -144,6 +144,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                   side: BorderSide(color: ArezueColors.outSecondaryColor),
                 ),
                 onPressed: () {
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -173,6 +174,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                   side: BorderSide(color: ArezueColors.outSecondaryColor),
                 ),
                 onPressed: () {
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(

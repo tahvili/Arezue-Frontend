@@ -53,6 +53,7 @@ flutter:
     - assets/Slideshow/slide02.png
     - assets/Slideshow/slide03.png
     - assets/Slideshow/slide04.png
+    - assets/profile.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
