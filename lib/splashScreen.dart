@@ -5,15 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:arezue/utils/images.dart';
 import 'package:arezue/utils/texts.dart';
-import 'package:arezue/utils/navigate.dart';
 import 'dart:async';
 
-void splashScreen() => runApp(MaterialApp(
-      home: Splash(),
-    ));
-
 class Splash extends StatefulWidget {
-
   Splash({Key key, this.auth}) : super(key: key);
   final BaseAuth auth;
 
@@ -29,6 +23,7 @@ enum AuthStatus {
 class _SplashScreenState extends State<Splash> {
 
   AuthStatus authStatus = AuthStatus.notSignedIn;
+  Timer timer;
   @override
   void initState() {
     super.initState();
@@ -39,19 +34,22 @@ class _SplashScreenState extends State<Splash> {
         print(authStatus);
       });
     });
-
-    Timer(Duration(seconds: 5), () => {
-      check()
-    });
+    timer = new Timer(Duration(seconds: 5), () => check());
 
     //Timer(Duration(seconds: 5), () => Navigate.intro(context));
 //    Timer(Duration(seconds: 5), () => Navigator.push(context, building(context) ));
 //    Timer(Duration(seconds: 5), () => Navigate.intro(context));
   }
 
+  @override
+  void dispose() {
+    timer.cancel();
+  }
+
   Widget check(){
     switch (authStatus) {
         case AuthStatus.notSignedIn:
+          Navigator.pop(context);
           Navigator.push(context,
             MaterialPageRoute(builder: (context) => Intro(
               auth: widget.auth,
@@ -61,11 +59,12 @@ class _SplashScreenState extends State<Splash> {
           break;
 
         case AuthStatus.signedIn:
+          Navigator.pop(context);
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => JobseekerHomePage(
+            MaterialPageRoute(builder: (context) => JobseekerHomePage(
               auth: widget.auth,
-              onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn)
-              ), fullscreenDialog: true),
+              onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn),
+            ), fullscreenDialog: true),
           );
           break;
       }
@@ -96,7 +95,17 @@ class _SplashScreenState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return view();
-
+//    return MaterialApp(
+//      initialRoute: '/',
+//      routes: <String, WidgetBuilder>{
+//        '/': (context) => view(),
+//        '/account': (context) => JobseekerHomePage(auth: widget.auth,onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn)),
+//        '/carousel': (context) => Intro(
+//          auth: widget.auth,
+//          onSignIn: () => _updateAuthStatus(AuthStatus.signedIn),
+//        ),
+//      },
+//    );
   }
 
 

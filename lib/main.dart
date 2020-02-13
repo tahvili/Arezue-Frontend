@@ -9,11 +9,8 @@ bool leading = true;
 
 void main() => runApp(Launcher());
 
-var routes = <String, WidgetBuilder>{
-  "/intro": (BuildContext context) => Intro(),
-};
-
 class Launcher extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,9 +19,7 @@ class Launcher extends StatelessWidget {
               accentColor: ArezueColors.outSecondaryColor),
           debugShowCheckedModeBanner: false,
           home: Splash(auth: new Auth()),
-          routes: routes
     );
-
 
 //    return Provider(
 //      auth: Auth() ,
@@ -37,4 +32,5 @@ class Launcher extends StatelessWidget {
 //          routes: routes),
 //    );
   }
+
 }
