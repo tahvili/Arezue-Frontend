@@ -1,14 +1,15 @@
-import 'package:arezue/ResetPassword.dart';
+import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:arezue/validations.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/jobseeker/HomePage.dart';
-import 'auth.dart';
-
+import 'services/auth.dart';
+import 'package:arezue/loading.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.auth, this.onSignIn, this.formType}) : super(key: key);
+  LoginPage({Key key, this.auth, this.onSignIn, this.formType})
+      : super(key: key);
   final FormType formType;
   final BaseAuth auth;
   final VoidCallback onSignIn;
@@ -17,35 +18,23 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => new _LoginPageState(formType: this.formType);
 }
 
-enum FormType { login, employerRegister, jobseekerRegister, forgot}
+enum FormType { login, employerRegister, jobseekerRegister, forgot }
 enum AuthStatus {
   notSignedIn,
   signedIn,
 }
+
 class _LoginPageState extends State<LoginPage> {
+  Requests request = new Requests(); //instance of http class
   _LoginPageState({this.formType});
   AuthStatus authStatus = AuthStatus.notSignedIn;
   FormType formType;
   static final _formKey = new GlobalKey<FormState>();
   TextStyle style = TextStyle(color: ArezueColors.outSecondaryColor);
 
-  String _email;
-  String _name;
-  String _password;
-
+  String _email, _name, _password, _company, _errorMessage;
+  bool loading;
   String userId;
-//  FormType _formType = FormType.login;
-//  change(form);'
-
-//  void change(String form){
-//    if(form == "login"){
-//      _formType = FormType.login;
-//
-//    }else if(form == "jobseeker"){
-//      _formType = FormType.jobseekerRegister;
-//    }
-//  }
-
   String _authHint = '';
 
   bool validateAndSave() {
@@ -64,28 +53,78 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _errorMessage = " ";
+    loading = false;
+  }
+
   void validateAndSubmit() async {
+    setState(() {
+      loading = true;
+      _errorMessage = "";
+    });
     if (validateAndSave()) {
+      print(formType);
       try {
-        userId = formType == FormType.login
-            ? await widget.auth.signInWithEmailAndPassword(_email, _password)
-            : await widget.auth.createUserWithEmailAndPassword(_name, _email, _password);
+        if (formType == FormType.login) {
+          if (await widget.auth.signInWithEmailAndPassword(_email, _password) !=
+              null) {
+            //setState(() => loading = true);
+            setState(() {
+              _authHint = 'Signed In';
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => JobseekerHomePage(
+                        auth: widget.auth,
+                        onSignOut: () =>
+                            _updateAuthStatus(AuthStatus.notSignedIn)),
+                    fullscreenDialog: true),
+              );
+            });
+            widget.onSignIn();
+          }
+//          else
+//            {
+//            setState(() {
+//              loading = false;
+//              _errorMessage = 'Could not sign in with those credentials';
+//            });
+//          }
+        } else if (formType == FormType.jobseekerRegister) {
+          if (await widget.auth.createUserWithEmailAndPassword(
+                  _name, _email, _password, null, "jobseeker") !=
+              null) {
+            _showVerifyEmailSentDialog();
+          }
+        } else if (formType == FormType.employerRegister) {
+          if (await widget.auth.createUserWithEmailAndPassword(
+                  _name, _email, _password, _company, "employer") !=
+              null) {
+            _showVerifyEmailSentDialog();
+          }
+        }
+//          else
+//            {
+//            setState(() {
+//              loading = false;
+//              _errorMessage = 'Please supply a valid email';
+//            });
+//          }
         setState(() {
-          _authHint = 'Signed In';
-          Navigator.pop(context);
-          Navigator.push(context,
-            MaterialPageRoute(builder: (context) => JobseekerHomePage(
-                auth: widget.auth,
-                onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn)
-            ), fullscreenDialog: true),
-          );
+          loading = false;
         });
-        widget.onSignIn();
       } catch (e) {
-        setState(() {
-          _authHint = 'Sign In Error\n\n${e.toString()}';
-        });
         print(e);
+        setState(() {
+          loading = false;
+          _authHint = 'Sign In Error\n\n${e.toString()}';
+          _errorMessage = e.message;
+        });
       }
     } else {
       setState(() {
@@ -97,25 +136,30 @@ class _LoginPageState extends State<LoginPage> {
   void forgotSubmit() async {
     if (validateAndSave()) {
       try {
-        await widget.auth.sendPasswordResetEmail(_email);
-        _authHint = "A password reset link has been sent to $_email";
-        onPressed: () {
-//        Navigator.push(
-//          context,
-//          MaterialPageRoute(builder: (context) => Intermediate()),
-//        );
-          moveToLogin();
-        };
+        if (await widget.auth.sendPasswordResetEmail(_email) != null) {
+          //setState(() => loading = true);
+          _showPasswordResetSentDialog();
+        } else {
+          setState(() {
+            loading = false;
+            _errorMessage = 'Please supply a valid email';
+          });
+        }
       } catch (e) {
         print(e);
-        //_warning = e.message
+        _errorMessage = e.message;
       }
+    } else {
+      setState(() {
+        _authHint = '';
+      });
     }
   }
 
   void moveToJobseekerRegister() {
     _formKey.currentState.reset();
     setState(() {
+      _errorMessage = "";
       formType = FormType.jobseekerRegister;
       _authHint = '';
     });
@@ -124,6 +168,7 @@ class _LoginPageState extends State<LoginPage> {
   void moveToEmployerRegister() {
     _formKey.currentState.reset();
     setState(() {
+      _errorMessage = "";
       formType = FormType.employerRegister;
       _authHint = '';
     });
@@ -132,6 +177,7 @@ class _LoginPageState extends State<LoginPage> {
   void moveToLogin() {
     _formKey.currentState.reset();
     setState(() {
+      _errorMessage = "";
       formType = FormType.login;
       _authHint = '';
     });
@@ -140,6 +186,7 @@ class _LoginPageState extends State<LoginPage> {
   void moveToForgotPassword() {
     _formKey.currentState.reset();
     setState(() {
+      _errorMessage = "";
       formType = FormType.forgot;
       _authHint = '';
     });
@@ -167,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
             )));
   }
 
-  Widget employerButton () {
+  Widget employerButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
@@ -186,17 +233,14 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget createButton () {
+  Widget createButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        onPressed:
- //         submit();
-//          _showVerifyEmailDialog();
-          validateAndSubmit,
+        onPressed: validateAndSubmit,
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
         color: ArezueColors.outSecondaryColor,
         child: Text(ArezueTexts.create,
@@ -217,7 +261,7 @@ class _LoginPageState extends State<LoginPage> {
         validator: NameValidator.validate,
         decoration: InputDecoration(
           prefixIcon:
-          Icon(Icons.account_circle, color: ArezueColors.highGreyColor),
+              Icon(Icons.account_circle, color: ArezueColors.highGreyColor),
           hintText: ArezueTexts.name,
           filled: true,
           fillColor: ArezueColors.lowGreyColor,
@@ -247,6 +291,7 @@ class _LoginPageState extends State<LoginPage> {
         keyboardType: TextInputType.text,
         autofocus: false,
         style: style,
+        onSaved: (value) => _company = value,
         cursorColor: ArezueColors.outSecondaryColor,
         validator: (String value) {
           if (value.isEmpty) {
@@ -256,7 +301,7 @@ class _LoginPageState extends State<LoginPage> {
         },
         decoration: InputDecoration(
           prefixIcon:
-          Icon(Icons.business_center, color: ArezueColors.highGreyColor),
+              Icon(Icons.business_center, color: ArezueColors.highGreyColor),
           hintText: ArezueTexts.company,
           filled: true,
           fillColor: ArezueColors.lowGreyColor,
@@ -291,7 +336,7 @@ class _LoginPageState extends State<LoginPage> {
         validator: EmailValidator.validate,
         decoration: InputDecoration(
           prefixIcon:
-          Icon(Icons.alternate_email, color: ArezueColors.highGreyColor),
+              Icon(Icons.alternate_email, color: ArezueColors.highGreyColor),
           hintText: ArezueTexts.email,
           filled: true,
           fillColor: ArezueColors.lowGreyColor,
@@ -388,8 +433,7 @@ class _LoginPageState extends State<LoginPage> {
               color: ArezueColors.highGreyColor,
               fontSize: 16,
               fontFamily: 'Arezue',
-            ))
-    );
+            )));
   }
 
   Widget jobSeekerButton() {
@@ -471,7 +515,6 @@ class _LoginPageState extends State<LoginPage> {
             )));
   }
 
-
   Widget forgotButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 110.0),
@@ -479,12 +522,14 @@ class _LoginPageState extends State<LoginPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        onPressed: forgotSubmit,
+        onPressed: () {
+          forgotSubmit();
+        },
         padding: EdgeInsets.all(12),
         color: ArezueColors.outSecondaryColor,
         child: Text(ArezueTexts.submit,
             style:
-            TextStyle(color: ArezueColors.outPrimaryColor, fontSize: 16)),
+                TextStyle(color: ArezueColors.outPrimaryColor, fontSize: 16)),
       ),
     );
   }
@@ -496,27 +541,28 @@ class _LoginPageState extends State<LoginPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        onPressed: (){
+        onPressed: () {
           validateAndSubmit();
         },
         padding: EdgeInsets.all(12),
         color: ArezueColors.outSecondaryColor,
         child: Text(ArezueTexts.signin,
             style:
-            TextStyle(color: ArezueColors.outPrimaryColor, fontSize: 16)),
+                TextStyle(color: ArezueColors.outPrimaryColor, fontSize: 16)),
       ),
     );
   }
 
   Widget forgotLabel() {
     return FlatButton(
-        child: Text(
-          ArezueTexts.forgotPassword,
-          style: TextStyle(color: ArezueColors.highGreyColor, fontSize: 16),
-        ),
+      child: Text(
+        ArezueTexts.forgotPassword,
+        style: TextStyle(color: ArezueColors.highGreyColor, fontSize: 16),
+      ),
       onPressed: () {
         moveToForgotPassword();
-      },);
+      },
+    );
   }
 
   Widget signUpLabel() {
@@ -551,6 +597,7 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
           loginButton(),
+          _showErrorMessage(),
           signUpLabel(),
         ];
       case FormType.forgot:
@@ -560,12 +607,14 @@ class _LoginPageState extends State<LoginPage> {
           email(),
           SizedBox(height: 24.0),
           forgotButton(),
+          // _showErrorMessage(),
           Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.only(top: 40.0),
-                child: backLabel(),
-              )),
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 40.0),
+              child: backLabel(),
+            ),
+          ),
         ];
       case FormType.employerRegister:
         return [
@@ -580,25 +629,26 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             width: MediaQuery.of(context).size.width,
             child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  jobSeekerButton(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 6.0),
-                  ),
-                  createButton(),
-                ],
-              ),
-              Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 40.0),
-                    child: signInLabel(),
-                  )),
-            ],
-          ),
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    jobSeekerButton(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 6.0),
+                    ),
+                    createButton(),
+                  ],
+                ),
+                _showErrorMessage(),
+                Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40.0),
+                      child: signInLabel(),
+                    )),
+              ],
+            ),
           ),
         ];
       case FormType.jobseekerRegister:
@@ -616,15 +666,16 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      employerButton(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 6.0),
-                      ),
-                      createButton(),
-                      ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    employerButton(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 6.0),
+                    ),
+                    createButton(),
+                  ],
                 ),
+                _showErrorMessage(),
                 Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -641,24 +692,71 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Stack(
-        children: <Widget>[
-          Scaffold(
-            backgroundColor: ArezueColors.outPrimaryColor,
-            body: Center(
-              child: ListView(
-                shrinkWrap: true,
-                padding: EdgeInsets.only(left: 24.0, right: 24.0),
-                children: submitWidgets(),
-              ),
+    return loading
+        ? Loading()
+        : new Form(
+            key: _formKey,
+            child: Stack(
+              children: <Widget>[
+                Scaffold(
+                  backgroundColor: ArezueColors.outPrimaryColor,
+                  body: Center(
+                    child: ListView(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                      children: submitWidgets(),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-
-        ],
-      ),
-    );
+          );
   }
 
+  void _showVerifyEmailSentDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Thank You"),
+            content:
+                new Text("A verification Link has been sent to your email"),
+            actions: <Widget>[
+              new FlatButton(
+                  onPressed: () {
+                    moveToLogin();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("OK")),
+            ],
+          );
+        });
+  }
+
+  void _showPasswordResetSentDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Thank You"),
+            content:
+                new Text("A Password Reset link has been sent to your email"),
+            actions: <Widget>[
+              new FlatButton(
+                  onPressed: () {
+                    moveToLogin();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Dismiss")),
+            ],
+          );
+        });
+  }
+
+  Widget _showErrorMessage() {
+    return new Text(
+      _errorMessage,
+      style: TextStyle(fontSize: 14.0, color: Colors.red),
+    );
+  }
 }

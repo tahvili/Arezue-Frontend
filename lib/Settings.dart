@@ -1,8 +1,7 @@
 import 'package:arezue/login_page.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:arezue/provider.dart';
-import 'package:arezue/auth.dart';
+import 'package:arezue/services/auth.dart';
 
 enum AuthStatus {
   notSignedIn,
@@ -195,8 +194,6 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         onPressed:() {
           _signOut();
-//          Navigator.pop(context);
-          //Navigator.popUntil(context, (route) => route.isFirst);
           Navigator.pop(context);
           Navigator.pop(context);
           Navigator.push(
@@ -209,18 +206,6 @@ class _SettingsPageState extends State<SettingsPage> {
           )),
           );
           },
-        //() async {
-//          try {
-//            Auth auth = Provider.of(context).auth;
-//            await auth.signOut();
-//            Navigator.push(
-//              context,
-//              MaterialPageRoute(builder: (context) => LoginPage()),
-//            );
-//          } catch (e) {
-//            print(e);
-//          }
-//        },
         padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
         color: ArezueColors.outSecondaryColor,
         child: Text('Sign out',
