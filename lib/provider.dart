@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:arezue/auth.dart';
+import 'package:arezue/services/auth.dart';
 
 class Provider extends InheritedWidget{
   final BaseAuth auth;

@@ -1,4 +1,7 @@
 PODS:
+  - connectivity (0.0.1):
+    - Flutter
+    - Reachability
   - Firebase/Analytics (6.14.0):
     - Firebase/Core
   - Firebase/Auth (6.14.0):
@@ -89,8 +92,10 @@ PODS:
     - nanopb/encode (= 0.3.9011)
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
+  - Reachability (3.2)
 
 DEPENDENCIES:
+  - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -113,8 +118,11 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMSessionFetcher
     - nanopb
+    - Reachability
 
 EXTERNAL SOURCES:
+  connectivity:
+    :path: ".symlinks/plugins/connectivity/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_auth:
@@ -127,6 +135,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/flutter/ios"
 
 SPEC CHECKSUMS:
+  connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
   Firebase: 0219bb4782eb1406f1b9b0628a2e625484ce910d
   firebase_analytics: dacdcfc524d722fff13dcff942f0dfa47e6be567
   firebase_auth: d99b993c1405096e66c58211b1cd956c23eed1c5
@@ -146,6 +155,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 29bd0d8f850efbd28cff6d99e8b7da1f8d236bcf
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
 PODFILE CHECKSUM: b6a0a141693093b304368d08511b46cf3d1d0ac5
 

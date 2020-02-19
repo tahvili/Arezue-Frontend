@@ -1,4 +1,4 @@
-import 'package:arezue/auth.dart';
+import 'package:arezue/services/auth.dart';
 import 'package:arezue/introduction.dart';
 import 'package:arezue/jobseeker/HomePage.dart';
 import 'package:flutter/material.dart';
@@ -25,20 +25,18 @@ class _SplashScreenState extends State<Splash> {
   AuthStatus authStatus = AuthStatus.notSignedIn;
   Timer timer;
   @override
-  void initState() {
+  void initState(){
     super.initState();
 
-    widget.auth.currentUser().then((userId) {
-      setState(() {
-        authStatus = userId != null ? AuthStatus.signedIn : AuthStatus.notSignedIn;
+    widget.auth.currentUser().then((userId) async{
+      bool flag = (await widget.auth.checkEmailVerification()) == true;
+      setState((){
+        authStatus = (userId != null) && flag ? AuthStatus.signedIn : AuthStatus.notSignedIn;
         print(authStatus);
       });
     });
     timer = new Timer(Duration(seconds: 5), () => check());
 
-    //Timer(Duration(seconds: 5), () => Navigate.intro(context));
-//    Timer(Duration(seconds: 5), () => Navigator.push(context, building(context) ));
-//    Timer(Duration(seconds: 5), () => Navigate.intro(context));
   }
 
   @override
@@ -67,6 +65,7 @@ class _SplashScreenState extends State<Splash> {
             ), fullscreenDialog: true),
           );
           break;
+
       }
   }
 
