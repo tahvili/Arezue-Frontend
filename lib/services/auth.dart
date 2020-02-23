@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 
 abstract class BaseAuth {
-  Stream<String> get OnAuthStateChanged;
+  //Stream<String> get OnAuthStateChanged;
   Future signInWithEmailAndPassword(
     String email,
     String password,
@@ -49,11 +49,11 @@ class Auth implements BaseAuth {
     user.sendEmailVerification();
   }
 
-  @override
-  // TODO: implement OnAuthStateChanged
-  Stream<String> get OnAuthStateChanged => _firebaseAuth.onAuthStateChanged.map(
-      (FirebaseUser user) => userFromFirebaseUser(user)
-          ?.uid); //to tell us whether or not the user is signed in to firebase
+//  @override
+//  // TODO: implement OnAuthStateChanged
+//  Stream<String> get OnAuthStateChanged => _firebaseAuth.onAuthStateChanged.map(
+//      (FirebaseUser user) => userFromFirebaseUser(user)
+//          ?.uid); //to tell us whether or not the user is signed in to firebase
 
   @override
   Future createUserWithEmailAndPassword(String name, String email,
@@ -111,13 +111,16 @@ class Auth implements BaseAuth {
     print(user.isEmailVerified);
     try {
       if (user.isEmailVerified) {
+        print("hey");
         var url = 'https://api.daffychuy.com/api/v1/init';
         var response = await http.post(url,
             body: {'firebaseID': user.uid});
+        print(response);
         var parsedResponse = json.decode(response.body);
         dbID = parsedResponse['payload']['uid'];
+        print(dbID);
         int statusCode = response.statusCode;
-        print("the status code in init is ${statusCode}");
+        print("the status code in init is $statusCode");
         if ((statusCode) == 200) {
           return User.fromJson(parsedResponse);
         } else if (statusCode == 400) {

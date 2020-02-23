@@ -1,5 +1,3 @@
-import 'package:arezue/user.dart';
-
 class Jobseeker{
   int numEmployerScanned = 6;
   int numEmployerViewedResume = 35;

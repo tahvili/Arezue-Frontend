@@ -41,10 +41,11 @@ class _SplashScreenState extends State<Splash> {
 
   @override
   void dispose() {
+    super.dispose(); //i added this, dont know its exact purpose
     timer.cancel();
   }
 
-  Widget check(){
+  void check(){
     switch (authStatus) {
         case AuthStatus.notSignedIn:
           Navigator.pop(context);
@@ -59,7 +60,7 @@ class _SplashScreenState extends State<Splash> {
         case AuthStatus.signedIn:
           Navigator.pop(context);
           Navigator.push(context,
-            MaterialPageRoute(builder: (context) => JobseekerHomePage(
+            MaterialPageRoute(builder: (context) => HomePage(
               auth: widget.auth,
               onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn),
             ), fullscreenDialog: true),
