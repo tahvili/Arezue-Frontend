@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:arezue/splashScreen.dart';
-import 'package:arezue/introduction.dart';
-import 'package:arezue/provider.dart';
 import 'package:arezue/services/auth.dart';
 
 bool leading = true;

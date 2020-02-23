@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   String _email, _name, _password, _company, _errorMessage;
   bool loading;
   String userId;
-  String _authHint = '';
+  //String _authHint = '';
 
   bool validateAndSave() {
     final form = _formKey.currentState;
@@ -55,7 +55,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _errorMessage = " ";
     loading = false;
@@ -74,15 +73,17 @@ class _LoginPageState extends State<LoginPage> {
               null) {
             //setState(() => loading = true);
             setState(() {
-              _authHint = 'Signed In';
+              //_authHint = 'Signed In';
               Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => JobseekerHomePage(
-                        auth: widget.auth,
-                        onSignOut: () =>
-                            _updateAuthStatus(AuthStatus.notSignedIn)),
+                    builder: (context) => HomePage(
+                          auth: widget.auth,
+                          onSignOut: () =>
+                              _updateAuthStatus(AuthStatus.notSignedIn),
+                          formType: FormType3.jobseeker,
+                        ),
                     fullscreenDialog: true),
               );
             });
@@ -122,13 +123,13 @@ class _LoginPageState extends State<LoginPage> {
         print(e);
         setState(() {
           loading = false;
-          _authHint = 'Sign In Error\n\n${e.toString()}';
+         // _authHint = 'Sign In Error\n\n${e.toString()}';
           _errorMessage = e.message;
         });
       }
     } else {
       setState(() {
-        _authHint = '';
+        //_authHint = '';
       });
     }
   }
@@ -151,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
       }
     } else {
       setState(() {
-        _authHint = '';
+       // _authHint = '';
       });
     }
   }
@@ -161,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _errorMessage = "";
       formType = FormType.jobseekerRegister;
-      _authHint = '';
+      //_authHint = '';
     });
   }
 
@@ -170,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _errorMessage = "";
       formType = FormType.employerRegister;
-      _authHint = '';
+      //_authHint = '';
     });
   }
 
@@ -179,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _errorMessage = "";
       formType = FormType.login;
-      _authHint = '';
+      //_authHint = '';
     });
   }
 
@@ -188,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _errorMessage = "";
       formType = FormType.forgot;
-      _authHint = '';
+      //_authHint = '';
     });
   }
 

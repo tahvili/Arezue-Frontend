@@ -13,7 +13,7 @@ class Requests {
 
   Future<User> jobseekerGetRequest(Future<String> uid) async {
     var response = await http.get(
-        'https://api.daffychuy.com/api/v1/jobseeker?uid=${await uid}');
+        'https://api.daffychuy.com/api/v1/jobseeker/?uid=${await uid}');
     print(response.statusCode);
     print("the status code is ${response.statusCode}");
     print(response.body);
@@ -72,53 +72,53 @@ class Requests {
     return statusCode;
   }
 
-  void putRequest(String letter) async {
-    //URL for testing.
-    String url = 'http://www.mocky.io/v2/5e39ee2f320000cef5ddfdbf';
-    // the makes the PUT request
-    http.Response response =
-        await http.put(url, body: json.encode({'message': letter}));
-
-    // the updated post, after the request has been made.
-    Post p_response = Post.fromjson(json.decode(response.body));
-
-    //the status code of the request.
-    int statusCode = response.statusCode;
-  }
-
-  void patchRequest(String letter) async {
-    // URL for testing;
-    String url = 'http://www.mocky.io/v2/5e39ee2f320000cef5ddfdbf';
-
-    // this makes the patch request
-    http.Response response =
-        await http.patch(url, body: json.encode({'message': letter}));
-
-    // the updated post
-    Post p_resonse = Post.fromjson(json.decode(response.body));
-
-    // status code for the result of the function
-    int statusCode = response.statusCode;
-  }
-
-  void deleteRequest() async {
-    String url = 'http://www.mocky.io/v2/5e39ee2f320000cef5ddfdbf';
-
-    http.Response response = await http.delete(url);
-
-    int statusCode = response.statusCode;
-  }
-}
-
-// Mock post information from the site
-class Post {
-  final String message = "";
-  //final int name;
-  //final int email;
-
-  Post({message});
-
-  factory Post.fromjson(Map<String, dynamic> json) {
-    return Post(message: json['message']);
-  }
+//  void putRequest(String letter) async {
+//    //URL for testing.
+//    String url = 'http://www.mocky.io/v2/5e39ee2f320000cef5ddfdbf';
+//    // the makes the PUT request
+//    http.Response response =
+//        await http.put(url, body: json.encode({'message': letter}));
+//
+//    // the updated post, after the request has been made.
+//    Post p_response = Post.fromjson(json.decode(response.body));
+//
+//    //the status code of the request.
+//    int statusCode = response.statusCode;
+//  }
+//
+//  void patchRequest(String letter) async {
+//    // URL for testing;
+//    String url = 'http://www.mocky.io/v2/5e39ee2f320000cef5ddfdbf';
+//
+//    // this makes the patch request
+//    http.Response response =
+//        await http.patch(url, body: json.encode({'message': letter}));
+//
+//    // the updated post
+//    Post p_resonse = Post.fromjson(json.decode(response.body));
+//
+//    // status code for the result of the function
+//    int statusCode = response.statusCode;
+//  }
+//
+//  void deleteRequest() async {
+//    String url = 'http://www.mocky.io/v2/5e39ee2f320000cef5ddfdbf';
+//
+//    http.Response response = await http.delete(url);
+//
+//    int statusCode = response.statusCode;
+//  }
+//}
+//
+//// Mock post information from the site
+//class Post {
+//  final String message = "";
+//  //final int name;
+//  //final int email;
+//
+//  Post({message});
+//
+//  factory Post.fromjson(Map<String, dynamic> json) {
+//    return Post(message: json['message']);
+//  }
 }

@@ -1,4 +1,5 @@
 import 'package:arezue/Settings.dart';
+import 'package:arezue/employer/employer.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -7,26 +8,34 @@ import 'package:arezue/user.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/utils/texts.dart';
 
-//var user = new User();
-//var fullName = user.getName().split(" ");
 
-class JobseekerHomePage extends StatefulWidget {
-  JobseekerHomePage({this.auth, this.onSignOut});
+class HomePage extends StatefulWidget {
+  HomePage({this.auth, this.onSignOut, this.formType});
   final BaseAuth auth;
+  final FormType3 formType;
   final VoidCallback onSignOut;
 
   @override
-  _HomePageState createState() => new _HomePageState();
+  _HomePageState createState() => new _HomePageState(formType: this.formType);
 }
 
-class _HomePageState extends State<JobseekerHomePage> {
+enum FormType3 { employer, jobseeker }
+
+class _HomePageState extends State<HomePage> {
+  FormType3 formType;
+  _HomePageState({this.formType});
   Future<User> futureUser;
+  Future<Employer> futureEmployer;
   Requests request = new Requests();
 
   @override
-  void initState() {
+  void initState() {   //calling the appropriate http get request
     super.initState();
-    futureUser = request.jobseekerGetRequest(widget.auth.currentUser());
+    if(this.formType == FormType3.jobseeker) {
+      futureUser = request.jobseekerGetRequest(widget.auth.currentUser());
+    }else{
+      futureEmployer = request.employerGetRequest(widget.auth.currentUser());
+    }
   }
 
   Widget lookingButton() {
@@ -34,7 +43,8 @@ class _HomePageState extends State<JobseekerHomePage> {
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data.activeStates == 'true') {
+          // ignore: unrelated_type_equality_checks
+          if (snapshot.data.activeStates == "true") {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
               child: RaisedButton(
@@ -87,7 +97,8 @@ class _HomePageState extends State<JobseekerHomePage> {
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data.activeStates == 'true') {
+          // ignore: unrelated_type_equality_checks
+          if (snapshot.data.activeStates == "true") {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
               child: RaisedButton(
@@ -279,6 +290,59 @@ class _HomePageState extends State<JobseekerHomePage> {
     ),
   );
 
+  final middleSectionEmployer = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+      decoration: BoxDecoration(
+        color: ArezueColors.primaryColor,
+        boxShadow: [
+          BoxShadow(
+            color: ArezueColors.shadowColor,
+            blurRadius: 10.0,
+            spreadRadius: 5.0,
+            offset: Offset(
+              0.0, // horizontal, move right 10
+              0.0, // vertical, move down 10
+            ),
+          ),
+        ],
+      ),
+      child: Column(
+        children: <Widget>[
+          Text("0", textAlign: TextAlign.center),
+          Text("accepted interview requests", textAlign: TextAlign.center),
+        ],
+      ));
+  final leftSectionEmployer = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+      decoration: BoxDecoration(
+        borderRadius: new BorderRadius.only(
+            topLeft: const Radius.circular(10),
+            bottomLeft: const Radius.circular(10)),
+      ),
+      child: Column(
+        children: <Widget>[
+          Text("0", textAlign: TextAlign.center),
+          Text("successful job searches made", textAlign: TextAlign.center),
+        ],
+      ));
+  final rightSectionEmployer = Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+    decoration: BoxDecoration(
+      borderRadius: new BorderRadius.only(
+          topRight: const Radius.circular(10),
+          bottomRight: const Radius.circular(10)),
+    ),
+    child: Column(
+      children: <Widget>[
+        Text(
+          "0",
+          textAlign: TextAlign.center,
+        ),
+        Text("interview requests sent", textAlign: TextAlign.center),
+      ],
+    ),
+  );
+
   final activityBox = Container(
     margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
     //height: 200,
@@ -324,15 +388,60 @@ class _HomePageState extends State<JobseekerHomePage> {
     ),
   );
 
+  final activityBoxEmployer = Container(
+    margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
+    //height: 200,
+    decoration: BoxDecoration(
+      color: ArezueColors.primaryColor,
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      boxShadow: [
+        BoxShadow(
+          color: ArezueColors.shadowColor,
+          blurRadius: 10.0,
+          spreadRadius: 5.0,
+          offset: Offset(
+            0.0, // horizontal, move right 10
+            0.0, // vertical, move down 10
+          ),
+        ),
+      ],
+    ),
+    child: Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Text("What's your company's logo?"),
+            addNowButton,
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Text("Company's address?"),
+            addNowButton,
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Text("Have a website?"),
+            addNowButton,
+          ],
+        ),
+      ],
+    ),
+  );
+
   static final addNowButton = RaisedButton(
     child: Text('Add now!'),
     onPressed: () {},
   );
 
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Stack(overflow: Overflow.visible, children: <Widget>[
+  List<Widget> submitWidgets() {
+    switch (formType) {
+      case FormType3.employer:
+        return [
           ListView(
             children: <Widget>[
               Container(
@@ -354,7 +463,120 @@ class _HomePageState extends State<JobseekerHomePage> {
                       );
                     } else if (snapshot.hasError) {
                       return Text("${snapshot.error}");
-                    }// By default, show a loading spinner.
+                    } // By default, show a loading spinner.
+                    return CircularProgressIndicator();
+                  },
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(
+                    right: 50, left: 50, bottom: 20, top: 0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(child: lookingButton()),
+                    Expanded(child: notLookingButton()),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(
+                    right: 50, left: 50, bottom: 20, top: 0),
+                height: 125,
+                decoration: BoxDecoration(
+                  color: ArezueColors.primaryColor,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: ArezueColors.shadowColor,
+                      blurRadius: 10.0,
+                      spreadRadius: 5.0,
+                      offset: Offset(
+                        0.0, // horizontal, move right 10
+                        0.0, // vertical, move down 10
+                      ),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Expanded(child: leftSectionEmployer),
+                    Expanded(child: middleSectionEmployer),
+                    Expanded(child: rightSectionEmployer),
+                  ],
+                ),
+              ),
+              activityBoxEmployer,
+            ],
+          ),
+          new Container(
+            color: ArezueColors.appBarColor,
+            height: 150,
+          ),
+          new Positioned(
+            top: (155 / 2) + 10,
+            left: 15,
+            child: IconButton(
+              color: Colors.white,
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onPressed: null,
+            ),
+          ),
+          new Positioned(
+            top: (155 / 2) + 10,
+            left: MediaQuery.of(context).size.width - 65,
+            child: IconButton(
+              color: Colors.white,
+              icon: Icon(Icons.settings, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SettingsPage(
+                            auth: widget.auth,
+                            onSignOut: widget.onSignOut,
+                            formType: FormType2.employer,
+                          )),
+                );
+              },
+            ),
+          ),
+          new Positioned(
+            top: (155 / 2),
+            left: (MediaQuery.of(context).size.width / 2) - (155 / 2),
+            height: 155,
+            width: 155,
+            child: Center(child: userProfile()),
+          ),
+        ];
+        break;
+      case FormType3.jobseeker:
+        return [
+          ListView(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(
+                    right: 50, left: 50, bottom: 20, top: 230),
+                alignment: Alignment.center,
+                child: FutureBuilder<User>(
+                  future: futureUser,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(
+                        "Hey, " + snapshot.data.name + "!",
+                        style: TextStyle(
+                          color: ArezueColors.outPrimaryColor,
+                          fontSize: 25,
+                          fontFamily: 'Arezue',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text("${snapshot.error}");
+                    } // By default, show a loading spinner.
                     return CircularProgressIndicator();
                   },
                 ),
@@ -429,6 +651,7 @@ class _HomePageState extends State<JobseekerHomePage> {
                       builder: (context) => SettingsPage(
                             auth: widget.auth,
                             onSignOut: widget.onSignOut,
+                            formType: FormType2.jobseeker,
                           )),
                 );
               },
@@ -441,7 +664,19 @@ class _HomePageState extends State<JobseekerHomePage> {
             width: 155,
             child: Center(child: userProfile()),
           ),
-        ]),
+        ];
+        break;
+    }
+    return null;
+  }
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        child: Stack(
+          overflow: Overflow.visible,
+          children: submitWidgets(),
+        ),
       ),
     );
   }
