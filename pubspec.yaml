@@ -30,6 +30,8 @@ dependencies:
   http: ^0.12.0+4
   flutter_spinkit: ^4.1.1+1
   connectivity: ^0.4.6+2
+  data_connection_checker: ^0.3.4
+  provider: ^2.0.0+1
   json_annotation: ^3.0.1
 
 dev_dependencies:
