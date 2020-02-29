@@ -58,7 +58,6 @@ class _SplashScreenState extends State<Splash> {
   void check(){
     switch (authStatus) {
         case AuthStatus.notSignedIn:
-          Navigator.pop(context);
           Navigator.push(context,
             MaterialPageRoute(builder: (context) => Intro(
               auth: widget.auth,
@@ -68,7 +67,6 @@ class _SplashScreenState extends State<Splash> {
           break;
 
         case AuthStatus.signedIn:
-          Navigator.pop(context);
           Navigator.push(context,
             MaterialPageRoute(builder: (context) => HomePage(
               auth: widget.auth,
