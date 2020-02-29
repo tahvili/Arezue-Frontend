@@ -144,15 +144,16 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                   side: BorderSide(color: ArezueColors.outSecondaryColor),
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
                   Navigator.push(
                     context,
+                    
                     MaterialPageRoute(
                         builder: (context) => new LoginPage(
                               auth: widget.auth,
                               onSignIn: widget.onSignIn,
                               formType: FormType.jobseekerRegister,
-                            )),
+                              
+                            ), fullscreenDialog: true),
                   );
                 },
                 padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
@@ -174,7 +175,6 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                   side: BorderSide(color: ArezueColors.outSecondaryColor),
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -182,7 +182,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                               auth: widget.auth,
                               onSignIn: widget.onSignIn,
                               formType: FormType.login,
-                            )),
+                            ), fullscreenDialog: true),
                   );
                 },
                 padding: EdgeInsets.fromLTRB(35, 10, 35, 10),
