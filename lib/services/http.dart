@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:arezue/employer/employer.dart';
 import 'package:arezue/user.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class Requests {
@@ -13,7 +14,7 @@ class Requests {
 
   Future<User> jobseekerGetRequest(Future<String> uid) async {
     var response = await http.get(
-        'https://api.daffychuy.com/api/v1/jobseeker/?uid=${await uid}');
+        'https://api.daffychuy.com/api/v1/jobseeker/${await uid}');
     print(response.statusCode);
     print("the status code is ${response.statusCode}");
     print(response.body);
@@ -26,11 +27,30 @@ class Requests {
     }
   }
 
+  void putRequest(String userType, String uid, String command, String change) async {
+    //URL for testing.
+    if(userType=="jobseeker"){
+      String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid';
+      // the makes the PUT request
+      http.Response response =
+      await http.put(url, body: {command: change});
+      print(response.statusCode);
+    }
+    if(userType=="employer"){
+      String url = 'https://api.daffychuy.com/api/v1/employer/$uid';
+      // the makes the PUT request
+      http.Response response =
+      await http.put(url, body: {command: change});
+      print(response.statusCode);
+    }
+
+  }
+
   //get request for employer
 
   Future<Employer> employerGetRequest(Future<String> uid) async {
     var response = await http.get(
-        'https://api.daffychuy.com/api/v1/employer?uid=${await uid}');
+        'https://api.daffychuy.com/api/v1/employer/${await uid}');
     print(response.statusCode);
     print("the status code is ${response.statusCode}");
     print(response.body);
@@ -59,12 +79,12 @@ class Requests {
       String uid, String email, String name, String company) async {
     var url = 'https://api.daffychuy.com/api/v1/employer';
     var response = await http.post(url,
-        body: json.encode({
+        body:{
           'firebaseID': uid,
           'email': email,
           'name': name,
           'company': company
-        }));
+        });
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
 //    Post p_response = Post.fromjson(json.decode(response.body));
@@ -72,19 +92,6 @@ class Requests {
     return statusCode;
   }
 
-//  void putRequest(String letter) async {
-//    //URL for testing.
-//    String url = 'http://www.mocky.io/v2/5e39ee2f320000cef5ddfdbf';
-//    // the makes the PUT request
-//    http.Response response =
-//        await http.put(url, body: json.encode({'message': letter}));
-//
-//    // the updated post, after the request has been made.
-//    Post p_response = Post.fromjson(json.decode(response.body));
-//
-//    //the status code of the request.
-//    int statusCode = response.statusCode;
-//  }
 //
 //  void patchRequest(String letter) async {
 //    // URL for testing;

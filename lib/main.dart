@@ -19,16 +19,6 @@ class Launcher extends StatelessWidget {
           home: Splash(auth: new Auth()),
     );
 
-//    return Provider(
-//      auth: Auth() ,
-//      child: MaterialApp(
-//          theme: ThemeData(
-//              primaryColor: ArezueColors.outPrimaryColor,
-//              accentColor: ArezueColors.outSecondaryColor),
-//          debugShowCheckedModeBanner: false,
-//          home: Splash(),
-//          routes: routes),
-//    );
   }
 
 }

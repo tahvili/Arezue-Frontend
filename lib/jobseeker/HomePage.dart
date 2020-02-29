@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:arezue/user.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/utils/texts.dart';
-
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   HomePage({this.auth, this.onSignOut, this.formType});
@@ -27,6 +27,8 @@ class _HomePageState extends State<HomePage> {
   Future<User> futureUser;
   Future<Employer> futureEmployer;
   Requests request = new Requests();
+  bool activelyLooking = false;
+  Requests serverRequest = new Requests();
 
   @override
   void initState() {   //calling the appropriate http get request
@@ -44,7 +46,10 @@ class _HomePageState extends State<HomePage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           // ignore: unrelated_type_equality_checks
-          if (snapshot.data.activeStates == "true") {
+          print("user active state is:");
+          print(snapshot.data.activeStates);
+          activelyLooking = snapshot.data.activeStates;
+          if (activelyLooking) {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
               child: RaisedButton(
@@ -72,9 +77,10 @@ class _HomePageState extends State<HomePage> {
                       topLeft: const Radius.circular(10),
                       bottomLeft: const Radius.circular(10)),
                 ),
-                onPressed: () {
-                  snapshot.data.changeStatus();
-                },
+                onPressed: () => setState(() {activelyLooking = snapshot.data.changeStatus();
+                String sendValue='false';
+                if (activelyLooking){sendValue='true';}
+                serverRequest.putRequest('jobseeker', snapshot.data.uid, 'active_states', sendValue);}),
                 padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
                 color: ArezueColors.primaryColor,
                 child: Text(ArezueTexts.lookingForJob,
@@ -98,7 +104,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           // ignore: unrelated_type_equality_checks
-          if (snapshot.data.activeStates == "true") {
+          if (activelyLooking) {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
               child: RaisedButton(
@@ -108,11 +114,12 @@ class _HomePageState extends State<HomePage> {
                       topRight: const Radius.circular(10),
                       bottomRight: const Radius.circular(10)),
                 ),
-                onPressed: () {
-                  snapshot.data.changeStatus();
-                },
                 padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
                 color: ArezueColors.primaryColor,
+                onPressed: () => setState(() {activelyLooking = snapshot.data.changeStatus();
+                String sendValue='false';
+                if (activelyLooking){sendValue='true';}
+                serverRequest.putRequest('jobseeker', snapshot.data.uid, 'active_states', sendValue);}),
                 child: Text(ArezueTexts.notLookingAnymore,
                     style: TextStyle(
                         color: ArezueColors.secondaryColor, fontSize: 14)),
@@ -128,9 +135,9 @@ class _HomePageState extends State<HomePage> {
                       topRight: const Radius.circular(10),
                       bottomRight: const Radius.circular(10)),
                 ),
-                onPressed: () {},
                 padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
-                color: ArezueColors.greenColor,
+                onPressed: () {},
+                color: ArezueColors.yellowColor,
                 child: Text(ArezueTexts.notLookingAnymore,
                     style: TextStyle(
                         color: ArezueColors.secondaryColor, fontSize: 14)),

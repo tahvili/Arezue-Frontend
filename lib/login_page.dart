@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:arezue/jobseeker/HomePage.dart';
 import 'services/auth.dart';
 import 'package:arezue/loading.dart';
+import 'package:arezue/employer/employer.dart';
+import 'package:arezue/user.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.auth, this.onSignIn, this.formType})
@@ -32,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   static final _formKey = new GlobalKey<FormState>();
   TextStyle style = TextStyle(color: ArezueColors.outSecondaryColor);
 
-  String _email, _name, _password, _company, _errorMessage;
+  String _email, _name, _password, _errorMessage, _company;
   bool loading;
   String userId;
   //String _authHint = '';
@@ -69,23 +71,42 @@ class _LoginPageState extends State<LoginPage> {
       print(formType);
       try {
         if (formType == FormType.login) {
-          if (await widget.auth.signInWithEmailAndPassword(_email, _password) !=
+          Object value = await widget.auth.signInWithEmailAndPassword(_email, _password);
+          print("the signed in object is:");
+          print(value);
+          if (value !=
               null) {
             //setState(() => loading = true);
             setState(() {
               //_authHint = 'Signed In';
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => HomePage(
-                          auth: widget.auth,
-                          onSignOut: () =>
-                              _updateAuthStatus(AuthStatus.notSignedIn),
-                          formType: FormType3.jobseeker,
-                        ),
-                    fullscreenDialog: true),
-              );
+              if (value is Employer){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomePage(
+                        auth: widget.auth,
+                        onSignOut: () =>
+                            _updateAuthStatus(AuthStatus.notSignedIn),
+                        formType: FormType3.employer,
+                      ),
+                      fullscreenDialog: true),
+                );
+              }
+              if (value is User){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomePage(
+                        auth: widget.auth,
+                        onSignOut: () =>
+                            _updateAuthStatus(AuthStatus.notSignedIn),
+                        formType: FormType3.jobseeker,
+                      ),
+                      fullscreenDialog: true),
+                );
+              }
+
             });
             widget.onSignIn();
           }
@@ -292,8 +313,8 @@ class _LoginPageState extends State<LoginPage> {
         keyboardType: TextInputType.text,
         autofocus: false,
         style: style,
-        onSaved: (value) => _company = value,
         cursorColor: ArezueColors.outSecondaryColor,
+        onSaved: (value) => _company = value,
         validator: (String value) {
           if (value.isEmpty) {
             return ArezueTexts.companyError;

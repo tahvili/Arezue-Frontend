@@ -1,3 +1,4 @@
+import 'package:arezue/employer/employer.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,7 +23,7 @@ abstract class BaseAuth {
 }
 
 class Auth implements BaseAuth {
-  String dbID;
+  String dbID, userType;
   final FirebaseAuth _firebaseAuth =
       FirebaseAuth.instance; //this will get FirebaseAuth from a
   // singleton instance
@@ -65,9 +66,10 @@ class Auth implements BaseAuth {
       await user.sendEmailVerification();
       Future<int> status;
       if (type == "employer") {
+        print("I got here!");
         status = request.employerPostRequest(user.uid, email, name, company);
       } else {
-        print("I got here!");
+
         status = request.jobseekerPostRequest(user.uid, email, name);
       }
       print(status);
@@ -115,14 +117,23 @@ class Auth implements BaseAuth {
         var url = 'https://api.daffychuy.com/api/v1/init';
         var response = await http.post(url,
             body: {'firebaseID': user.uid});
-        print(response);
+        print("the response is ${response.statusCode}");
+        print("the response is ${response.body}");
         var parsedResponse = json.decode(response.body);
         dbID = parsedResponse['payload']['uid'];
+        userType = parsedResponse['payload']['user_type'];
         print(dbID);
         int statusCode = response.statusCode;
         print("the status code in init is $statusCode");
         if ((statusCode) == 200) {
-          return User.fromJson(parsedResponse);
+          print(userType);
+          if(userType == "employer"){
+            return Employer.fromJson(parsedResponse);
+          }
+          else {
+            print("I got hereeeeeeeeeeeee!");
+            return User.fromJson(parsedResponse);
+          }
         } else if (statusCode == 400) {
           print("User not found");
           return null;
