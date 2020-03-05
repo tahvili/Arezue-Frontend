@@ -36,13 +36,13 @@ class Requests {
       await http.put(url, body: {command: change});
       print(response.statusCode);
     }
-    if(userType=="employer"){
-      String url = 'https://api.daffychuy.com/api/v1/employer/$uid';
-      // the makes the PUT request
-      http.Response response =
-      await http.put(url, body: {command: change});
-      print(response.statusCode);
-    }
+//    else if(userType=="employer"){
+//      String url = 'https://api.daffychuy.com/api/v1/employer/$uid';
+//      // the makes the PUT request
+//      http.Response response =
+//      await http.put(url, body: {command: change});
+//      print(response.statusCode);
+//    }
 
   }
 

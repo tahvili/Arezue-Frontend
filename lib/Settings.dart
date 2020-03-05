@@ -1,4 +1,7 @@
+import 'package:arezue/employer/employer.dart';
 import 'package:arezue/login_page.dart';
+import 'package:arezue/services/http.dart';
+import 'package:arezue/user.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/services/auth.dart';
@@ -19,7 +22,8 @@ enum AuthStatus { notSignedIn, signedIn,
 class _SettingsPageState extends State<SettingsPage> {
   FormType2 formType;
   _SettingsPageState({this.formType});
-  //static final _formKey = new GlobalKey<FormState>();
+  Future<User> futureUser;
+  Future<Employer> futureEmployer;
   AuthStatus authStatus = AuthStatus.notSignedIn;
   static TextStyle textStyle = TextStyle(
     color: ArezueColors.outPrimaryColor,
@@ -27,6 +31,17 @@ class _SettingsPageState extends State<SettingsPage> {
     fontFamily: 'Arezue',
     fontWeight: FontWeight.w400,
   );
+  Requests request = new Requests();
+
+  @override
+  void initState() {   //calling the appropriate http get request
+    super.initState();
+    if(this.formType == FormType2.jobseeker) {
+      futureUser = request.jobseekerGetRequest(widget.auth.currentUser());
+    }else{
+      futureEmployer = request.employerGetRequest(widget.auth.currentUser());
+    }
+  }
 
   void _signOut() async {
     try {

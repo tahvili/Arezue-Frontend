@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -41,22 +44,39 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     controller.text = this.fieldData;
     return Container(
-      padding: EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.black,
-          width: 1.5
+      padding: EdgeInsets.fromLTRB(15,1, 15,1),
+        margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
+        //height: 200,
+        decoration: BoxDecoration(
+          color: ArezueColors.primaryColor,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: ArezueColors.shadowColor,
+              blurRadius: 10.0,
+              spreadRadius: 5.0,
+              offset: Offset(
+                0.0, // horizontal, move right 10
+                0.0, // vertical, move down 10
+              ),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(10)
-      ),
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width,
       child: Row(
         children: <Widget>[
-          Text(this.title, style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(width: 20),
+          Text(this.title, style: TextStyle(
+            color: ArezueColors.outPrimaryColor,
+            fontSize: 18,
+            fontFamily: 'Arezue',
+            fontWeight: FontWeight.w600,
+          )
+          ),
+          SizedBox(width: 15),
           Expanded(child:
             TextField(
+              textAlign: TextAlign.right,
               controller: controller,
               keyboardType: keyboards[this.fieldType],
               decoration: InputDecoration(

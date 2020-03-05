@@ -1,5 +1,6 @@
 import 'package:arezue/Settings.dart';
 import 'package:arezue/employer/employer.dart';
+import 'package:arezue/jobseeker/profile.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -642,7 +643,13 @@ class _HomePageState extends State<HomePage> {
                 Icons.create,
                 color: Colors.white,
               ),
-              onPressed: null,
+              onPressed: (){
+                Navigator.push(context,
+                  MaterialPageRoute(
+                    builder: (context) => Profile()
+                  )
+                );
+              },
             ),
           ),
           new Positioned(
