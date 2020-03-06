@@ -1,6 +1,7 @@
 import 'package:arezue/Settings.dart';
 import 'package:arezue/employer/employer.dart';
 import 'package:arezue/jobseeker/profile.dart';
+import 'package:arezue/loading.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -149,7 +150,7 @@ class _HomePageState extends State<HomePage> {
           return Text("${snapshot.error}");
         }
         // By default, show a loading spinner.
-        return CircularProgressIndicator();
+        return Loading();
       },
     );
   }
@@ -188,7 +189,7 @@ class _HomePageState extends State<HomePage> {
           return Text("${snapshot.error}");
         }
         // By default, show a loading spinner.
-        return CircularProgressIndicator();
+        return Loading();
       },
     );
   }
