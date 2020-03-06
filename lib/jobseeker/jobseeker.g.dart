@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user.dart';
+part of 'jobseeker.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-User _$UserFromJson(Map<String, dynamic> json) {
-  return User(
+Jobseeker _$JobseekerFromJson(Map<String, dynamic> json) {
+  return Jobseeker(
     json['uid'] as String,
     json['fb_id'] as String,
     json['name'] as String,
@@ -25,7 +25,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+Map<String, dynamic> _$JobseekerToJson(Jobseeker instance) => <String, dynamic>{
       'uid': instance.uid,
       'fb_id': instance.fbId,
       'name': instance.name,

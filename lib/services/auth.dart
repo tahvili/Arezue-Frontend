@@ -1,6 +1,6 @@
 import 'package:arezue/employer/employer.dart';
 import 'package:arezue/services/http.dart';
-import 'package:arezue/user.dart';
+import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -17,7 +17,7 @@ abstract class BaseAuth {
   Future<String> currentUser();
   Future<void> signOut();
   Future sendPasswordResetEmail(String email);
-  User userFromFirebaseUser(FirebaseUser user);
+  Jobseeker userFromFirebaseUser(FirebaseUser user);
   Future<bool> checkEmailVerification();
   Future<void> sendEmailVerification();
 }
@@ -132,7 +132,7 @@ class Auth implements BaseAuth {
           }
           else {
             print("I got hereeeeeeeeeeeee!");
-            return User.fromJson(parsedResponse);
+            return Jobseeker.fromJson(parsedResponse);
           }
         } else if (statusCode == 400) {
           print("User not found");
@@ -156,7 +156,7 @@ class Auth implements BaseAuth {
   }
 
   @override
-  User userFromFirebaseUser(FirebaseUser user) {
+  Jobseeker userFromFirebaseUser(FirebaseUser user) {
     // TODO: implement userFromFirebaseUser
     return null;
   }

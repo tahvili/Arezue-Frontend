@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:arezue/employer/employer.dart';
-import 'package:arezue/user.dart';
+import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,7 +12,7 @@ class Requests {
 
   //get request for jobseeker
 
-  Future<User> jobseekerGetRequest(Future<String> uid) async {
+  Future<Jobseeker> jobseekerGetRequest(Future<String> uid) async {
     var response = await http.get(
         'https://api.daffychuy.com/api/v1/jobseeker/${await uid}');
     print(response.statusCode);
@@ -20,7 +20,7 @@ class Requests {
     print(response.body);
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response, then parse the JSON.
-      return User.fromJson(json.decode(response.body));
+      return Jobseeker.fromJson(json.decode(response.body));
     } else {
       // If the server did not return a 200 OK response, then throw an exception.
       throw Exception('Failed to load album');
@@ -36,13 +36,13 @@ class Requests {
       await http.put(url, body: {command: change});
       print(response.statusCode);
     }
-    if(userType=="employer"){
-      String url = 'https://api.daffychuy.com/api/v1/employer/$uid';
-      // the makes the PUT request
-      http.Response response =
-      await http.put(url, body: {command: change});
-      print(response.statusCode);
-    }
+//    else if(userType=="employer"){
+//      String url = 'https://api.daffychuy.com/api/v1/employer/$uid';
+//      // the makes the PUT request
+//      http.Response response =
+//      await http.put(url, body: {command: change});
+//      print(response.statusCode);
+//    }
 
   }
 
