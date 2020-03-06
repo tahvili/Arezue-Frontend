@@ -60,31 +60,90 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  final Widget nameField = Container(
-    width: 40,
-    height: 40,
-    color: Colors.redAccent,
-    alignment: Alignment.center,
-    margin: const EdgeInsets.only(right: 50, left: 50, bottom: 10, top: 35),
-    child: Text(
-      'Name: Rohan Poojary',
-      style: textStyle,
-      textAlign: TextAlign.center,
-    ),
-  );
+  Widget nameField(){
+    if(this.formType == FormType2.jobseeker) {
+      return FutureBuilder<User>(
+          future: futureUser,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                width: 40,
+                height: 40,
+                color: Colors.redAccent,
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(
+                    right: 50, left: 50, bottom: 10, top: 35),
+                child: Text(
+                  snapshot.data.name,
+                  style: textStyle,
+                  textAlign: TextAlign.center,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+            return CircularProgressIndicator();
+          }
+      );
+    }else{
+      return FutureBuilder<Employer>(
+          future: futureEmployer,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                width: 40,
+                height: 40,
+                color: Colors.redAccent,
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(
+                    right: 50, left: 50, bottom: 10, top: 35),
+                child: Text(
+                  snapshot.data.name,
+                  style: textStyle,
+                  textAlign: TextAlign.center,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+            return CircularProgressIndicator();
+          }
+      );
+    }
+  }
 
-  final Widget phoneNumberField = Container(
-    width: 40,
-    height: 40,
-    color: Colors.redAccent,
-    alignment: Alignment.center,
-    margin: const EdgeInsets.only(right: 50, left: 50, bottom: 10, top: 10),
-    child: Text(
-      'Phone: (647) 331-9530',
-      style: textStyle,
-      textAlign: TextAlign.center,
-    ),
-  );
+
+  Widget phoneNumberField(){
+    var phone;
+    return FutureBuilder<User>(
+      future: futureUser,
+      builder: (context, snapshot){
+        if (snapshot.hasData) {
+          if(snapshot.data.phoneNumber == null){
+              phone = "--";
+          }else {
+              phone = snapshot.data.phoneNumber;
+          }
+          return Container(
+            width: 40,
+            height: 40,
+            color: Colors.redAccent,
+            alignment: Alignment.center,
+            margin: const EdgeInsets.only(
+                right: 50, left: 50, bottom: 10, top: 10),
+
+            child:
+            Text(
+              phone,
+              style: textStyle,
+              textAlign: TextAlign.center,
+              ),
+          );
+        }
+        return CircularProgressIndicator();
+      }
+    );
+  }
 
   final Widget appLanguageField = Container(
     width: 40,
@@ -248,7 +307,7 @@ class _SettingsPageState extends State<SettingsPage> {
     switch (formType) {
       case FormType2.employer:
         return [
-          nameField,
+          nameField(),
           appLanguageField,
           changePasswordButton,
           billingButton,
@@ -267,8 +326,8 @@ class _SettingsPageState extends State<SettingsPage> {
         break;
       case FormType2.jobseeker:
         return [
-          nameField,
-          phoneNumberField,
+          nameField(),
+          phoneNumberField(),
           appLanguageField,
           changePasswordButton,
           connectedAccounts,
