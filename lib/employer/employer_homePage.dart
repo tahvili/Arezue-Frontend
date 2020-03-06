@@ -7,6 +7,7 @@ import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:arezue/services/auth.dart';
+import 'package:arezue/components/searchPage.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:http/http.dart' as http;
 
@@ -481,7 +482,15 @@ class _EmployerPageState extends State<EmployerHomePage> {
                 Icons.search,
                 color: Colors.white,
               ),
-              onPressed: null,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchPage(
+                      auth: widget.auth,
+                    )),
+                );
+              },
             ),
           ),
           new Positioned(
