@@ -1,9 +1,9 @@
 import 'package:arezue/components/textfield.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/services/http.dart';
-import 'package:arezue/user.dart';
+import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:arezue/utils/colors.dart';
-import 'package:arezue/utils/textfield2.dart';
+import 'package:arezue/components/inputChip.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
@@ -17,7 +17,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<Profile> {
-  Future<User> futureUser;
+  Future<Jobseeker> futureUser;
   Requests request = new Requests();
   //State variable
   Map<String, dynamic> data;
@@ -84,7 +84,7 @@ class _ProfilePageState extends State<Profile> {
           MyTextField(endpoint: "/api/jobseeker", title: "Open to Relocate?",
             fieldId: "relocate", fieldType: "text", fieldData: data["relocate"].
             toString(),handler: textFieldHandler,),
-          MyTextField2(endpoint: "/api/jobseeker", title: "Skills: ",
+          inputChip(endpoint: "/api/jobseeker", title: "Skills: ",
             fieldId: "skills", fieldType: "text", fieldData: data["skills"]
             ,handler: textFieldHandler2,),
         ],

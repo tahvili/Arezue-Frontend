@@ -1,6 +1,6 @@
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/introduction.dart';
-import 'package:arezue/jobseeker/HomePage.dart';
+import 'package:arezue/jobseeker/homePage.dart';
 import 'package:flutter/material.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:connectivity/connectivity.dart';

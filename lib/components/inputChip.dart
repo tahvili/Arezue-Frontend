@@ -5,10 +5,10 @@ import 'package:arezue/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class MyTextField2 extends StatelessWidget {
+class inputChip extends StatelessWidget {
   //Constructor of the child widget
   @override
-  MyTextField2(
+  inputChip(
       {@required this.title,
       this.endpoint,
       this.fieldData,

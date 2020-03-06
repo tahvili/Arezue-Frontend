@@ -3,11 +3,11 @@ import 'package:arezue/utils/colors.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:arezue/validations.dart';
 import 'package:flutter/material.dart';
-import 'package:arezue/jobseeker/HomePage.dart';
+import 'package:arezue/jobseeker/homePage.dart';
 import 'services/auth.dart';
 import 'package:arezue/loading.dart';
 import 'package:arezue/employer/employer.dart';
-import 'package:arezue/user.dart';
+import 'package:arezue/jobseeker/jobseeker.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.auth, this.onSignIn, this.formType})
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                       fullscreenDialog: true),
                 );
               }
-              if (value is User){
+              if (value is Jobseeker){
                 Navigator.push(
                   context,
                   MaterialPageRoute(

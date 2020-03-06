@@ -1,12 +1,12 @@
 import 'package:arezue/Settings.dart';
 import 'package:arezue/employer/employer.dart';
 import 'package:arezue/jobseeker/profile.dart';
+import 'package:arezue/jobseeker/resumes.dart';
 import 'package:arezue/loading.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:arezue/user.dart';
+import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:http/http.dart' as http;
@@ -26,7 +26,7 @@ enum FormType3 { employer, jobseeker }
 class _HomePageState extends State<HomePage> {
   FormType3 formType;
   _HomePageState({this.formType});
-  Future<User> futureUser;
+  Future<Jobseeker> futureUser;
   Future<Employer> futureEmployer;
   Requests request = new Requests();
   bool activelyLooking = false;
@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget lookingButton() {
-    return FutureBuilder<User>(
+    return FutureBuilder<Jobseeker>(
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget notLookingButton() {
-    return FutureBuilder<User>(
+    return FutureBuilder<Jobseeker>(
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _getProfile() {
-    return FutureBuilder<User>(
+    return FutureBuilder<Jobseeker>(
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget userProfile() {
-    return FutureBuilder<User>(
+    return FutureBuilder<Jobseeker>(
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -457,7 +457,7 @@ class _HomePageState extends State<HomePage> {
                 margin: const EdgeInsets.only(
                     right: 50, left: 50, bottom: 20, top: 230),
                 alignment: Alignment.center,
-                child: FutureBuilder<User>(
+                child: FutureBuilder<Jobseeker>(
                   future: futureUser,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
@@ -570,7 +570,7 @@ class _HomePageState extends State<HomePage> {
                 margin: const EdgeInsets.only(
                     right: 50, left: 50, bottom: 20, top: 230),
                 alignment: Alignment.center,
-                child: FutureBuilder<User>(
+                child: FutureBuilder<Jobseeker>(
                   future: futureUser,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
@@ -649,6 +649,35 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(
                     builder: (context) => Profile()
                   )
+                );
+              },
+            ),
+          ),
+          new Positioned(
+            top: (155 / 2) + 10,
+            left: 65,
+            child: IconButton(
+              color: Colors.white,
+              icon: Icon(
+                Icons.center_focus_strong,
+                color: Colors.white,
+              ),
+              onPressed: (){},
+            ),
+          ),
+          new Positioned(
+            top: (155 / 2) + 10,
+            left: MediaQuery.of(context).size.width - 115,
+            child: IconButton(
+              color: Colors.white,
+              icon: Icon(Icons.layers, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ResumePage(
+                        auth: widget.auth,
+                      )),
                 );
               },
             ),

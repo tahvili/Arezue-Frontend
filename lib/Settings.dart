@@ -1,7 +1,7 @@
 import 'package:arezue/employer/employer.dart';
 import 'package:arezue/login_page.dart';
 import 'package:arezue/services/http.dart';
-import 'package:arezue/user.dart';
+import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/services/auth.dart';
@@ -22,7 +22,7 @@ enum AuthStatus { notSignedIn, signedIn,
 class _SettingsPageState extends State<SettingsPage> {
   FormType2 formType;
   _SettingsPageState({this.formType});
-  Future<User> futureUser;
+  Future<Jobseeker> futureUser;
   Future<Employer> futureEmployer;
   AuthStatus authStatus = AuthStatus.notSignedIn;
   static TextStyle textStyle = TextStyle(
@@ -62,7 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget nameField(){
     if(this.formType == FormType2.jobseeker) {
-      return FutureBuilder<User>(
+      return FutureBuilder<Jobseeker>(
           future: futureUser,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -115,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget phoneNumberField(){
     var phone;
-    return FutureBuilder<User>(
+    return FutureBuilder<Jobseeker>(
       future: futureUser,
       builder: (context, snapshot){
         if (snapshot.hasData) {
