@@ -63,7 +63,6 @@ class Auth implements BaseAuth {
     FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
             email: email, password: password)).user;
     try {
-      await user.sendEmailVerification();
       Future<int> status;
       if (type == "employer") {
         print("I got here!");
@@ -74,12 +73,15 @@ class Auth implements BaseAuth {
       }
       print(status);
       if ((await status) == 200) {
+        await user.sendEmailVerification();
         signOut();
         return user;
       } else if ((await status) == 400) {
         print("User could not be created");
+        await user.delete();
         return null;
       } else {
+        await user.delete();
         print("server error");
         return null;
       }

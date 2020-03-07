@@ -128,6 +128,8 @@ class _LoginPageState extends State<LoginPage> {
                   _name, _email, _password, _company, "employer") !=
               null) {
             _showVerifyEmailSentDialog();
+          } else {
+            _errorMessage = "Failed to Create Employer";
           }
         }
 //          else
