@@ -32,6 +32,7 @@ dependencies:
   connectivity: ^0.4.6+2
   json_annotation: ^3.0.1
   data_connection_checker: ^0.3.4
+  flappy_search_bar: ^1.7.2
 
 dev_dependencies:
   flutter_test:

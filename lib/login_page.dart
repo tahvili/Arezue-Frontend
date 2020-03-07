@@ -8,6 +8,7 @@ import 'services/auth.dart';
 import 'package:arezue/loading.dart';
 import 'package:arezue/employer/employer.dart';
 import 'package:arezue/jobseeker/jobseeker.dart';
+import 'package:arezue/employer/employer_homePage.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.auth, this.onSignIn, this.formType})
@@ -84,11 +85,11 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => HomePage(
+                      builder: (context) => EmployerHomePage(
                         auth: widget.auth,
                         onSignOut: () =>
                             _updateAuthStatus(AuthStatus.notSignedIn),
-                        formType: FormType3.employer,
+                        formType: FormType4.employer,
                       ),
                       fullscreenDialog: true),
                 );
