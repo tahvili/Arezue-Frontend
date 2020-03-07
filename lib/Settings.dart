@@ -6,6 +6,8 @@ import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/services/auth.dart';
 
+import 'loading.dart';
+
 class SettingsPage extends StatefulWidget {
   SettingsPage({this.auth, this.onSignOut, this.formType});
   final BaseAuth auth;
@@ -21,6 +23,7 @@ enum AuthStatus { notSignedIn, signedIn,
 
 class _SettingsPageState extends State<SettingsPage> {
   FormType2 formType;
+  bool loading = false;
   _SettingsPageState({this.formType});
   Future<Jobseeker> futureUser;
   Future<Employer> futureEmployer;
@@ -36,6 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {   //calling the appropriate http get request
     super.initState();
+    loading = false;
     if(this.formType == FormType2.jobseeker) {
       futureUser = request.jobseekerGetRequest(widget.auth.currentUser());
     }else{
@@ -45,8 +49,14 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void _signOut() async {
     try {
+      setState(() {
+        loading = true;
+      });
       await widget.auth.signOut();
       widget.onSignOut();
+      setState(() {
+        loading = false;
+      });
     } catch (e) {
       print(e);
     }
@@ -350,7 +360,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
       appBar: AppBar(
         backgroundColor: ArezueColors.secondaryColor,
         title: Text('Settings'),

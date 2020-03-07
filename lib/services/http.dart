@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:arezue/employer/employer.dart';
+import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,23 @@ class Requests {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response, then parse the JSON.
       return Jobseeker.fromJson(json.decode(response.body));
+    } else {
+      // If the server did not return a 200 OK response, then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+  Future<JobseekerInfo> profileGetRequest(Future<String> uid) async {
+    var response = await http.get(
+        'https://api.daffychuy.com/api/v1/jobseeker/${await uid}/profile');
+    print(response.statusCode);
+    print("the status code is ${response.statusCode}");
+    print(response.body);
+    if (response.statusCode == 200) {
+      print("the response before sending is");
+      print(json.decode(response.body));
+      // If the server did return a 200 OK response, then parse the JSON.
+        return new JobseekerInfo.fromJson(json.decode(response.body));
     } else {
       // If the server did not return a 200 OK response, then throw an exception.
       throw Exception('Failed to load album');
