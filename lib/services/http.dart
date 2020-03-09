@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:arezue/employer/employer.dart';
+import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -27,6 +28,23 @@ class Requests {
     }
   }
 
+  Future<JobseekerInfo> profileGetRequest(Future<String> uid) async {
+    var response = await http.get(
+        'https://api.daffychuy.com/api/v1/jobseeker/${await uid}/profile');
+    print(response.statusCode);
+    print("the status code is ${response.statusCode}");
+    print(response.body);
+    if (response.statusCode == 200) {
+      print("the response before sending is");
+      print(json.decode(response.body));
+      // If the server did return a 200 OK response, then parse the JSON.
+        return new JobseekerInfo.fromJson(json.decode(response.body));
+    } else {
+      // If the server did not return a 200 OK response, then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
   void putRequest(String userType, String uid, String command, String change) async {
     //URL for testing.
     if(userType=="jobseeker"){
@@ -44,6 +62,16 @@ class Requests {
 //      print(response.statusCode);
 //    }
 
+  }
+
+  void deleteRequest(String userType, String uid, String command, String value) async {
+
+    if(userType == "jobseeker"){
+      String url = "https://api.daffychuy.com/api/v1/jobseeker/$uid/$command";
+
+      http.Response response = await http.delete(url,headers:{command: value});
+      print("Delete Response code : ${response.statusCode}");
+    }
   }
 
   //get request for employer
@@ -108,13 +136,7 @@ class Requests {
 //    int statusCode = response.statusCode;
 //  }
 //
-//  void deleteRequest() async {
-//    String url = 'http://www.mocky.io/v2/5e39ee2f320000cef5ddfdbf';
-//
-//    http.Response response = await http.delete(url);
-//
-//    int statusCode = response.statusCode;
-//  }
+
 //}
 //
 //// Mock post information from the site

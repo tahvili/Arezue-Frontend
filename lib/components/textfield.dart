@@ -3,19 +3,29 @@ import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../services/http.dart';
+import '../services/http.dart';
+import '../validations.dart';
+import '../validations.dart';
+import '../validations.dart';
+import '../validations.dart';
+
 class MyTextField extends StatelessWidget {
 
   //Constructor of the child widget
   @override
   MyTextField(
-    {@required this.title, 
+    {@required this.title,
+      this.uid,
     this.endpoint, 
     this.fieldData="", 
     @required this.fieldId="", 
     @required this.fieldType="text", 
     this.handler}
     );
-  
+
+
+  final String uid;
   final String title; // this goes before the textfield, i.e. what textfield is this.
   final String endpoint; // api endpoint, send the whole URL for now but we'll need to generalize this
   final String fieldType; // numeric or text, depending on that it displays the keyboard differently
@@ -23,6 +33,7 @@ class MyTextField extends StatelessWidget {
   final String fieldData; // the actualy value of the key.
   Function handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
+  Requests serverRequest = new Requests();
   //created a texteditting controll so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
 
@@ -33,6 +44,8 @@ class MyTextField extends StatelessWidget {
   void submitHandler(text) {
 
     // Handle PUT request to the api here
+    serverRequest.putRequest('jobseeker', uid, fieldId, text);
+    controller.text = text;
     print("child handler triggered: ${text}");
 
     // Once that's done, notify the parent so it knows to update its local state.
@@ -81,6 +94,10 @@ class MyTextField extends StatelessWidget {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: "Enter something",
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                  borderSide: BorderSide(color: Colors.red, width: 1),
+                ),
               ),
               onSubmitted: (text) => submitHandler(text),
             ),
