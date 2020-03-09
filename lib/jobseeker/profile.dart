@@ -18,7 +18,6 @@ class Profile extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _ProfilePageState();
   }
-
 }
 
 class _ProfilePageState extends State<Profile> {
@@ -29,7 +28,6 @@ class _ProfilePageState extends State<Profile> {
   Map<String, dynamic> data;
   Future<JobseekerInfo> uData;
 //  JobseekerInfo ud = new JobseekerInfo();
-
 
   @override
   void initState() {
@@ -72,18 +70,9 @@ class _ProfilePageState extends State<Profile> {
   }
 
   void textFieldHandler2(text, fieldId, command) {
-    if (command == "add") {
-      setState(() {
-        data["info"][fieldId].add(text);
-      });
-    } else {
-      setState(() {
-        data["info"][fieldId].remove(text);
-      });
-    }
     print("Parent got: ${text} from ${fieldId}, set state here.");
+    initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -106,51 +95,72 @@ class _ProfilePageState extends State<Profile> {
             ),
             body: ListView(
               children: <Widget>[
-                SizedBox(height: 30,),
-                MyTextField(endpoint: "/api/jobseeker",
+                SizedBox(
+                  height: 30,
+                ),
+                MyTextField(
+                  endpoint: "/api/jobseeker",
                   title: "Acceptance Wage: ",
                   uid: snapshot.data.jobseeker.uid,
                   fieldId: "acceptance_wage",
                   fieldType: "numeric",
-                  fieldData: snapshot.data.jobseeker.information.acceptanceWage.toString(),
-                  handler: textFieldHandler,),
-                MyTextField(endpoint: "/api/jobseeker",
+                  fieldData: snapshot.data.jobseeker.information.acceptanceWage
+                      .toString(),
+                  handler: textFieldHandler,
+                ),
+                MyTextField(
+                  endpoint: "/api/jobseeker",
                   title: "Your Goal Wage: ",
                   uid: snapshot.data.jobseeker.uid,
                   fieldId: "goal_wage",
                   fieldType: "text",
                   fieldData:
-                  snapshot.data.jobseeker.information.goalWage.toString(),
-                  handler: textFieldHandler,),
-                MyTextField(endpoint: "/api/jobseeker",
+                      snapshot.data.jobseeker.information.goalWage.toString(),
+                  handler: textFieldHandler,
+                ),
+                MyTextField(
+                  endpoint: "/api/jobseeker",
                   title: "Open to Relocate?",
                   uid: snapshot.data.jobseeker.uid,
                   fieldId: "open_relocation",
                   fieldType: "text",
-                  fieldData: snapshot.data.jobseeker.information.openRelocation.
-                  toString(),
-                  handler: textFieldHandler,),
-//          inputChip(endpoint: "/api/jobseeker", title: "Dream Career(s): ",
-//            fieldId: "dream_career", fieldType: "text", fieldData: data["dream_career"]
-//            ,handler: textFieldHandler2,),
-//          inputChip(endpoint: "/api/jobseeker", title: "Dream Companies: ",
-//            fieldId: "dream_company", fieldType: "text", fieldData: data["dream_company"]
-//            ,handler: textFieldHandler2,),
+                  fieldData: snapshot.data.jobseeker.information.openRelocation
+                      .toString(),
+                  handler: textFieldHandler,
+                ),
+//                inputChip(
+//                  endpoint: "/api/jobseeker",
+//                  title: "Dream Career(s): ",
+//                  uid: snapshot.data.jobseeker.uid,
+//                  fieldId: "dream_career",
+//                  fieldType: "text",
+//                  fieldData: List<String>.from(snapshot.data.jobseeker.information.dreamCareer.careers),
+//                  handler: textFieldHandler2,
+//                ),
+//                inputChip(
+//                  endpoint: "/api/jobseeker",
+//                  title: "Dream Companies: ",
+//                  uid: snapshot.data.jobseeker.uid,
+//                  fieldId: "dream_company",
+//                  fieldType: "text",
+//                  fieldData: List<String>.from(snapshot.data.jobseeker.information.dreamCompany.companies),
+//                  handler: textFieldHandler2,
+//                ),
 //          inputChip(endpoint: "/api/jobseeker", title: "Available Locations: ",
 //            fieldId: "available_locations", fieldType: "text", fieldData: data["available_locations"]
 //            ,handler: textFieldHandler2,),
 //          inputChip(endpoint: "/api/jobseeker", title: "Skills: ",
 //            fieldId: "skill", fieldType: "text", fieldData: data["skill"]
 //            ,handler: textFieldHandler2,),
-
               ],
             ),
           );
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
-        }else {
+        } else {
           return Loading();
         }
-      },);
+      },
+    );
   }
 }

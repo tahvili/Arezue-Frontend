@@ -5,17 +5,21 @@ import 'package:arezue/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../services/http.dart';
+
 class inputChip extends StatelessWidget {
   //Constructor of the child widget
   @override
   inputChip(
       {@required this.title,
+        this.uid,
       this.endpoint,
       this.fieldData,
       @required this.fieldId = "",
       @required this.fieldType = "text",
       this.handler});
 
+  final String uid;
   final String
       title; // this goes before the textfield, i.e. what textfield is this.
   final String
@@ -28,6 +32,7 @@ class inputChip extends StatelessWidget {
   Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
+  Requests serverRequest = new Requests();
   //created a texteditting controll so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
 
@@ -40,6 +45,11 @@ class inputChip extends StatelessWidget {
   // child handler that calls the API and then the parent handler.
   void submitHandler(text, command) {
     // Handle PUT request to the api here
+    if (command == "remove"){
+      serverRequest.deleteRequest('jobseeker', uid, fieldId, text);
+    }else if (command == "add"){
+      serverRequest.putRequest('jobseeker', uid, fieldId, text);
+    }
     print("child handler triggered: ${text}");
 
     // Once that's done, notify the parent so it knows to update its local state.
