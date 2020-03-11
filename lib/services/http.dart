@@ -45,6 +45,18 @@ class Requests {
     }
   }
 
+//  Future<int> profilePostRequest(
+//      String usertype, String uid, String command, String value) async {
+//    var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$command';
+//    var response = await http.post(url,
+//        body: {'firebaseID': uid, 'email': email, 'name': name});
+//    print('Response status: ${response.statusCode}');
+//    print('Response body: ${response.body}');
+////    Post p_response = Post.fromjson(json.decode(response.body));
+//    int statusCode = response.statusCode;
+//    return statusCode;
+//  }
+
   void putRequest(String userType, String uid, String command, String change) async {
     //URL for testing.
     if(userType=="jobseeker"){
@@ -109,6 +121,8 @@ class Requests {
     int statusCode = response.statusCode;
     return statusCode;
   }
+
+
 
 //
 //  void patchRequest(String letter) async {

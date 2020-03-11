@@ -46,7 +46,8 @@ class Information{
         goalWage: double.parse(json['goal_wage']),
         openRelocation : json['open_relocation'],
         dreamCompany: DreamCompany(json['dream_company']),
-        dreamCareer: DreamCareer(json['dream_career'])
+        dreamCareer: DreamCareer(json['dream_career']),
+        skill: Skill(json['skill']),
     );
   }
 }
@@ -56,16 +57,17 @@ class Experiences{
 }
 
 class DreamCareer{
-  final List<String> careers;
+  final List careers;
   DreamCareer(this.careers);
 
 }
 
 class DreamCompany{
-  final List<String> companies;
+  final List companies;
   DreamCompany(this.companies);
 }
 
 class Skill{
-
+  final List skillsList;
+  Skill(this.skillsList);
 }

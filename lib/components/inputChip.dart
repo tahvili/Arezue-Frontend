@@ -1,5 +1,8 @@
 import 'dart:ui';
 
+import 'package:arezue/components/form.dart';
+import 'package:arezue/components/search.dart';
+import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +13,14 @@ class inputChip extends StatelessWidget {
   @override
   inputChip(
       {@required this.title,
+      this.uid,
       this.endpoint,
       this.fieldData,
       @required this.fieldId = "",
       @required this.fieldType = "text",
       this.handler});
 
+  final String uid;
   final String
       title; // this goes before the textfield, i.e. what textfield is this.
   final String
@@ -30,7 +35,7 @@ class inputChip extends StatelessWidget {
 
   //created a texteditting controll so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
-
+  Requests serverRequest = new Requests();
   //keyboard map
   final Map<String, TextInputType> keyboards = {
     "numeric": TextInputType.numberWithOptions(decimal: true),
@@ -40,10 +45,17 @@ class inputChip extends StatelessWidget {
   // child handler that calls the API and then the parent handler.
   void submitHandler(text, command) {
     // Handle PUT request to the api here
+    if (command == "add") {
+      serverRequest.putRequest('jobseeker', uid, fieldId, text);
+    } else if (command == "delete") {
+      //make a delete request to API here
+    } else {
+      print("why am I here?");
+    }
     print("child handler triggered: ${text}");
 
     // Once that's done, notify the parent so it knows to update its local state.
-    handler(text, fieldId, command);
+    handler(text, fieldId);
   }
 
   Widget inputChips(text) {
@@ -53,8 +65,8 @@ class inputChip extends StatelessWidget {
       labelStyle: TextStyle(
         color: ArezueColors.secondaryColor,
       ),
-      onDeleted:(){
-        submitHandler(text, "remove");
+      onDeleted: () {
+        submitHandler(text, "delete");
       }, //this is what happens when the x is pressed
     );
   }
@@ -94,38 +106,32 @@ class inputChip extends StatelessWidget {
                       fontFamily: 'Arezue',
                       fontWeight: FontWeight.w600,
                     )),
+                new Spacer(),
+                Container(child:
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                      icon: Icon(Icons.add),
+                      color: ArezueColors.secondaryColor,
+                      onPressed: () {
+//                        Navigator.push(
+//                          context,
+//                          MaterialPageRoute(
+//                            builder: (context) => Formm(title: "skills"),
+//                          ),
+//                        );
+                      showSearch(context: context, delegate: Search());
+                      }),
+                ),
+                ),
               ],
             ),
             SizedBox(height: 15),
             //Row(children: <Widget>[
-              Wrap(
-                spacing: 5.0, // gap between adjacent chips
-                alignment: WrapAlignment.start  ,
-                children: listWidgets(this.fieldData),
-              ),
-            //],),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                      controller: controller,
-                      keyboardType: keyboards[this.fieldType],
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.fromLTRB(15, 8, 15, 8),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(32.0),
-                          borderSide: BorderSide(
-                              color: ArezueColors.transparent, width: 1),
-                        ),
-                        hintText: "Enter something",
-                      ),
-                      onSubmitted: (text) {
-                        submitHandler(text, "add");
-                        controller.text = "";
-                      }),
-                ),
-              ],
+            Wrap(
+              spacing: 5.0, // gap between adjacent chips
+              alignment: WrapAlignment.start,
+              children: listWidgets(this.fieldData),
             ),
           ],
         ));
