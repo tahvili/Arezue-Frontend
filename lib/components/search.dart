@@ -41,6 +41,8 @@ class Search extends SearchDelegate<String>{
     );
   }
 
+
+  
   @override
   Widget buildSuggestions(BuildContext context) {
     final List<String> suggestionList = query.isEmpty ? nonSearchList : list.where((p) => p.startsWith(query)).toList();
