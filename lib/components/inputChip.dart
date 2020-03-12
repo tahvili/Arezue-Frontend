@@ -1,17 +1,14 @@
 import 'dart:ui';
-
-import 'package:arezue/components/form.dart';
 import 'package:arezue/components/search.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
-import 'package:arezue/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class inputChip extends StatelessWidget {
+class InputChipBuilder extends StatelessWidget {
   //Constructor of the child widget
   @override
-  inputChip(
+  InputChipBuilder(
       {@required this.title,
       this.uid,
       this.endpoint,
@@ -52,7 +49,7 @@ class inputChip extends StatelessWidget {
     } else {
       print("why am I here?");
     }
-    print("child handler triggered: ${text}");
+    print("child handler triggered: $text");
 
     // Once that's done, notify the parent so it knows to update its local state.
     handler(text, fieldId);

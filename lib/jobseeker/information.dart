@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:async';
 
 class JobseekerInfo{
   final UserData jobseeker;

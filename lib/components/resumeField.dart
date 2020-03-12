@@ -36,7 +36,7 @@ class _ResumeField extends State<ResumeField> {
   // child handler that calls the API and then the parent handler.
   void submitHandler(text) {
     // Handle PUT request to the api here
-    print("child handler triggered: ${text}");
+    print("child handler triggered: $text");
   }
 
   // The actual object iself.

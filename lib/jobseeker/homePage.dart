@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/utils/texts.dart';
-import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   HomePage({this.auth, this.onSignOut, this.formType});

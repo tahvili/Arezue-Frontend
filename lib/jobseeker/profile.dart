@@ -2,12 +2,9 @@ import 'package:arezue/components/textfield.dart';
 import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/services/http.dart';
-import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:arezue/components/inputChip.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import '../loading.dart';
 
@@ -65,7 +62,7 @@ class _ProfilePageState extends State<Profile> {
   // setState()...
   void textFieldHandler(text, fieldId) {
     //print(ud.jobseeker.uid);
-    print("Parent got: ${text} from ${fieldId}, set state here.");
+    print("Parent got: $text from $fieldId, set state here.");
     initState();
   }
 
@@ -136,7 +133,7 @@ class _ProfilePageState extends State<Profile> {
                       .toString(),
                   handler: textFieldHandler,
                 ),
-                inputChip(
+                InputChipBuilder(
                   endpoint: "/api/jobseeker",
                   uid: snapshot.data.jobseeker.uid,
                   title: "Dream Career(s): ",
@@ -145,7 +142,7 @@ class _ProfilePageState extends State<Profile> {
                   fieldData: List<String>.from(snapshot.data.jobseeker.information.dreamCareer.careers),
                   handler: textFieldHandler,
                 ),
-                inputChip(
+                InputChipBuilder(
                   endpoint: "/api/jobseeker",
                   uid: snapshot.data.jobseeker.uid,
                   title: "Dream Companies: ",
@@ -154,7 +151,7 @@ class _ProfilePageState extends State<Profile> {
                   fieldData: List<String>.from(snapshot.data.jobseeker.information.dreamCompany.companies),
                   handler: textFieldHandler,
                 ),
-                inputChip(
+                InputChipBuilder(
                   endpoint: "/api/jobseeker",
                   title: "Skills ",
                   fieldId: "skill",

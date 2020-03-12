@@ -4,11 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../services/http.dart';
-import '../services/http.dart';
-import '../validations.dart';
-import '../validations.dart';
-import '../validations.dart';
-import '../validations.dart';
 
 class MyTextField extends StatelessWidget {
 
@@ -46,7 +41,7 @@ class MyTextField extends StatelessWidget {
     // Handle PUT request to the api here
     serverRequest.putRequest('jobseeker', uid, fieldId, text);
     controller.text = text;
-    print("child handler triggered: ${text}");
+    print("child handler triggered: $text");
 
     // Once that's done, notify the parent so it knows to update its local state.
     handler(text, fieldId);

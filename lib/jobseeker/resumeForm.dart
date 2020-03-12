@@ -2,7 +2,6 @@ import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/components/resumeField.dart';
-import 'package:flutter/services.dart';
 
 class ResumeFormPage extends StatefulWidget {
   ResumeFormPage({this.auth, this.resumeId});
