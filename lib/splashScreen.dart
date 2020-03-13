@@ -44,7 +44,7 @@ class _SplashScreenState extends State<Splash> {
         print(authStatus);
       });
     });
-    timer = new Timer(Duration(seconds: 5), () => _check_network());
+    timer = new Timer(Duration(seconds: 5), () => _checkNetwork());
 
   }
 
@@ -78,7 +78,7 @@ class _SplashScreenState extends State<Splash> {
       }
   }
 
-  _check_internet() async {
+  _checkInternet() async {
 
     print("The statement 'this machine is connected to the Internet' is: ");
     print(await DataConnectionChecker().hasConnection);
@@ -111,25 +111,25 @@ class _SplashScreenState extends State<Splash> {
     return await DataConnectionChecker().connectionStatus;
   }
 
-  _check_network() async {
+  _checkNetwork() async {
     var result = await Connectivity().checkConnectivity();
     var connectionStatus = _getStatus(result);
 
-    DataConnectionStatus int_status = await _check_internet();
+    DataConnectionStatus intStatus = await _checkInternet();
 
     if (connectionStatus == ConnectivityStatus.Offline) {
       _showDialog('No Internet',
           "No connection to internat established");
     } else if (connectionStatus == ConnectivityStatus.Wifi) {
 
-      if (int_status == DataConnectionStatus.connected){
+      if (intStatus == DataConnectionStatus.connected){
         check();
       }else {
         _showDialog("No Internet",
             "Cannot reach database");
       }
     } else if (connectionStatus == ConnectivityStatus.Cell) {
-      if(int_status == DataConnectionStatus.connected) {
+      if(intStatus == DataConnectionStatus.connected) {
         check();
       }
       else {
@@ -153,7 +153,7 @@ class _SplashScreenState extends State<Splash> {
                 child: Text('Try Again'),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  _check_network();
+                  _checkNetwork();
                 },
               )
             ],

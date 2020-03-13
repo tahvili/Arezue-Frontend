@@ -1,18 +1,14 @@
 import 'dart:ui';
-
+import 'package:arezue/components/search.dart';
+import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
-import 'package:arezue/utils/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../services/http.dart';
-
-class inputChip extends StatelessWidget {
-  //Constructor of the child widget
-  @override
-  inputChip(
+class InputChipBuilder extends StatefulWidget {
+  InputChipBuilder(
       {@required this.title,
-        this.uid,
+      this.uid,
       this.endpoint,
       this.fieldData,
       @required this.fieldId = "",
@@ -32,10 +28,44 @@ class inputChip extends StatelessWidget {
   Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
-  Requests serverRequest = new Requests();
+  @override
+  State<StatefulWidget> createState() {
+    return _InputChipBuilderState(
+        title, uid, endpoint, fieldData, fieldId, fieldType, handler);
+  }
+}
+
+class _InputChipBuilderState extends State<InputChipBuilder> {
+  _InputChipBuilderState(
+      @required this.title,
+      this.uid,
+      this.endpoint,
+      this.fieldData,
+      @required this.fieldId,
+      @required this.fieldType,
+      this.handler);
+
+  final String uid;
+  final String
+      title; // this goes before the textfield, i.e. what textfield is this.
+  final String
+      endpoint; // api endpoint, send the whole URL for now but we'll need to generalize this
+  final String
+      fieldType; // numeric or text, depending on that it displays the keyboard differently
+  final String
+      fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
+  final List<String> fieldData; // the actualy value of the key.
+  Function
+      handler; // the parent handler function that updates the parent state, this is passed from the parent.
+  
   //created a texteditting controll so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
+  Requests serverRequest = new Requests();
 
+  @override
+  void initState() {
+    super.initState();
+  }
   //keyboard map
   final Map<String, TextInputType> keyboards = {
     "numeric": TextInputType.numberWithOptions(decimal: true),
@@ -43,17 +73,23 @@ class inputChip extends StatelessWidget {
   };
 
   // child handler that calls the API and then the parent handler.
-  void submitHandler(text, command) {
+  void submitHandler(String text, String preference, String command) {
     // Handle PUT request to the api here
-    if (command == "remove"){
-      serverRequest.deleteRequest('jobseeker', uid, fieldId, text);
-    }else if (command == "add"){
-      serverRequest.putRequest('jobseeker', uid, fieldId, text);
+    if (command == "add") {
+      serverRequest.profilePostRequest(
+          'jobseeker', uid, fieldId, text, preference, "1");
+      setState(() {this.fieldData.add(text);});
+    } else if (command == "delete") {
+      //make a delete request to API here
+      serverRequest.deleteRequest(uid, fieldId, text);
+      setState(() {this.fieldData.remove(text);});
+    } else {
+      print("why am I here?");
     }
-    print("child handler triggered: ${text}");
-
+    print("child handler triggered: $text");
+    
+    handler(text, command);
     // Once that's done, notify the parent so it knows to update its local state.
-    handler(text, fieldId, command);
   }
 
   Widget inputChips(text) {
@@ -63,8 +99,8 @@ class inputChip extends StatelessWidget {
       labelStyle: TextStyle(
         color: ArezueColors.secondaryColor,
       ),
-      onDeleted:(){
-        submitHandler(text, "remove");
+      onDeleted: () {
+        submitHandler(text, fieldId, "delete");
       }, //this is what happens when the x is pressed
     );
   }
@@ -104,38 +140,26 @@ class inputChip extends StatelessWidget {
                       fontFamily: 'Arezue',
                       fontWeight: FontWeight.w600,
                     )),
+                new Spacer(),
+                Container(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                        icon: Icon(Icons.add),
+                        color: ArezueColors.secondaryColor,
+                        onPressed: () {
+                          _showSearchBar(context, fieldId, submitHandler);
+                        }),
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 15),
             //Row(children: <Widget>[
-              Wrap(
-                spacing: 5.0, // gap between adjacent chips
-                alignment: WrapAlignment.start  ,
-                children: listWidgets(this.fieldData),
-              ),
-            //],),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                      controller: controller,
-                      keyboardType: keyboards[this.fieldType],
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.fromLTRB(15, 8, 15, 8),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(32.0),
-                          borderSide: BorderSide(
-                              color: ArezueColors.transparent, width: 1),
-                        ),
-                        hintText: "Enter something",
-                      ),
-                      onSubmitted: (text) {
-                        submitHandler(text, "add");
-                        controller.text = "";
-                      }),
-                ),
-              ],
+            Wrap(
+              spacing: 5.0, // gap between adjacent chips
+              alignment: WrapAlignment.start,
+              children: listWidgets(this.fieldData),
             ),
           ],
         ));
@@ -148,4 +172,17 @@ class inputChip extends StatelessWidget {
     });
     return widglist;
   }
+  void _showSearchBar(BuildContext context, String id, Function handler) async {
+    final result = await showSearch(
+        context: context,
+        delegate: Search(
+          fieldId: id,
+          handler: handler,
+        ));
+    if (result != null) {
+      handler(result, 'ranking', 'add');
+    }
+  }
 }
+
+

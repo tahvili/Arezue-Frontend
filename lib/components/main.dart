@@ -1,6 +1,5 @@
 import 'package:arezue/components/textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 bool leading = true;
 
 void main() => runApp(Launcher());
@@ -48,7 +47,7 @@ class ProfileState extends State<Profile> {
   // is so that when the child changes, this method will be triggere which then updates state by calling 
   // setState()...
   void textFieldHandler(text, fieldId) {
-    print("Parent got: ${text} from ${fieldId}, set state here.");
+    print("Parent got: $text from $fieldId, set state here.");
     setState(() {data[fieldId]=text;});
   }
 

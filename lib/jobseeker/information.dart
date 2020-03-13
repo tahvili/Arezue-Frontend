@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:async';
 
 class JobseekerInfo{
   final UserData jobseeker;
@@ -45,8 +43,9 @@ class Information{
         acceptanceWage: double.parse(json['acceptance_wage']),
         goalWage: double.parse(json['goal_wage']),
         openRelocation : json['open_relocation'],
-//        dreamCompany: DreamCompany(json['dream_company']),
-//        dreamCareer: DreamCareer(json['dream_career'])
+        dreamCompany: DreamCompany(json['dream_company']),
+        dreamCareer: DreamCareer(json['dream_career']),
+        skill: Skill(json['skill']),
     );
   }
 }
@@ -56,16 +55,18 @@ class Experiences{
 }
 
 class DreamCareer{
-//  final List<dynamic> careers;
-//  DreamCareer(this.careers);
+  final List careers;
+  DreamCareer(this.careers);
+
 
 }
 
 class DreamCompany{
-//  final List<dynamic> companies;
-//  DreamCompany(this.companies);
+  final List companies;
+  DreamCompany(this.companies);
 }
 
 class Skill{
-
+  final List skillsList;
+  Skill(this.skillsList);
 }

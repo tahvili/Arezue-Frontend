@@ -25,8 +25,8 @@ class _ResumeField extends State<ResumeField> {
   final String endpoint;
   //Constructor of the child widget
 
-  List<String> items_to_select = ["something1","something2","something3","something4","something5"];
-  List<bool> items_bool_select = [];
+  List<String> itemsToSelect = ["something1","something2","something3","something4","something5"];
+  List<bool> itemsBoolSelect = [];
   //created a texteditting controll so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
 
@@ -36,7 +36,7 @@ class _ResumeField extends State<ResumeField> {
   // child handler that calls the API and then the parent handler.
   void submitHandler(text) {
     // Handle PUT request to the api here
-    print("child handler triggered: ${text}");
+    print("child handler triggered: $text");
   }
 
   // The actual object iself.
@@ -55,7 +55,7 @@ class _ResumeField extends State<ResumeField> {
       ),
       body: Center(
         child: Column(
-          children: listWidgets(items_to_select),
+          children: listWidgets(itemsToSelect),
         ),
       ),
     );
@@ -69,10 +69,10 @@ class _ResumeField extends State<ResumeField> {
       labelStyle: TextStyle(
         color: ArezueColors.secondaryColor,
       ),
-      selected: items_bool_select[i],
+      selected: itemsBoolSelect[i],
       onSelected:(bool isSelected){
         setState((){
-          items_bool_select[i] = isSelected;
+          itemsBoolSelect[i] = isSelected;
         });
       },
       showCheckmark: true,//this is what happens when the x is pressed
@@ -82,7 +82,7 @@ class _ResumeField extends State<ResumeField> {
   List<Widget> listWidgets(List<String> list) {
     List<Widget> widgetlist = new List<Widget>();
     for (int i=0;i<list.length;i++){
-      items_bool_select.add(false);
+      itemsBoolSelect.add(false);
       widgetlist.add(selectChip(list[i], i));
     }
     return widgetlist;

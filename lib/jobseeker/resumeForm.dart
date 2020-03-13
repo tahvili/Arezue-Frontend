@@ -2,7 +2,6 @@ import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/components/resumeField.dart';
-import 'package:flutter/services.dart';
 
 class ResumeFormPage extends StatefulWidget {
   ResumeFormPage({this.auth, this.resumeId});
@@ -14,7 +13,7 @@ class ResumeFormPage extends StatefulWidget {
 class _ResumeFormPageState extends State<ResumeFormPage>{
   Map<String, dynamic> data;
 
-  Widget ResumeButton(String title, String endpoint) {
+  Widget resumeButton(String title, String endpoint) {
     return SizedBox(
       width: MediaQuery.of(context).size.width-100,
       child: RaisedButton(
@@ -39,7 +38,7 @@ class _ResumeFormPageState extends State<ResumeFormPage>{
     );
   }
 
-  Widget ResumeName() {
+  Widget resumeName() {
     return Container(
         padding: EdgeInsets.fromLTRB(15,1, 15,1),
         margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
@@ -117,11 +116,11 @@ class _ResumeFormPageState extends State<ResumeFormPage>{
           ),
         ),
             SizedBox(height: 18,),
-            ResumeName(),
-            ResumeButton("Careers to apply to","/dream_careers"),
-            ResumeButton("Companies in the field","/dream_companies"),
-            ResumeButton("Skills you have for this","/skills"),
-            ResumeButton("Experiences you bring","/exp"),
+            resumeName(),
+            resumeButton("Careers to apply to","/dream_careers"),
+            resumeButton("Companies in the field","/dream_companies"),
+            resumeButton("Skills you have for this","/skills"),
+            resumeButton("Experiences you bring","/exp"),
           ],
         ),
       ),

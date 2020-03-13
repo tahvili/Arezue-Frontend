@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:arezue/employer/employer.dart';
 import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/jobseeker/jobseeker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class Requests {
@@ -43,6 +42,23 @@ class Requests {
       // If the server did not return a 200 OK response, then throw an exception.
       throw Exception('Failed to load album');
     }
+  }
+
+  Future<int> profilePostRequest(
+      String usertype, String uid, String command, String value, String preference, String rank) async {
+    var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$command';
+    var response = await http.post(url,
+        body: {command: value, preference : rank});
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+//    Post p_response = Post.fromjson(json.decode(response.body));
+    int statusCode = response.statusCode;
+    return statusCode;
+  }
+
+    void deleteRequest(String uid, String type, String value) async {
+    String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$type/$value';
+    http.Response response = await http.delete(url);
   }
 
   void putRequest(String userType, String uid, String command, String change) async {
@@ -120,6 +136,8 @@ class Requests {
     return statusCode;
   }
 
+
+
 //
 //  void patchRequest(String letter) async {
 //    // URL for testing;
@@ -136,8 +154,6 @@ class Requests {
 //    int statusCode = response.statusCode;
 //  }
 //
-
-//}
 //
 //// Mock post information from the site
 //class Post {

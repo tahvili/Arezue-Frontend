@@ -4,17 +4,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../services/http.dart';
-import '../services/http.dart';
-import '../validations.dart';
-import '../validations.dart';
-import '../validations.dart';
-import '../validations.dart';
 
-class MyTextField extends StatelessWidget {
+class MyTextField extends StatefulWidget {
+    MyTextField(
+    {@required this.title,
+      this.uid,
+    this.endpoint, 
+    this.fieldData="", 
+    @required this.fieldId="", 
+    @required this.fieldType="text", 
+    this.handler}
+    );
+    final String uid;
+  final String title; // this goes before the textfield, i.e. what textfield is this.
+  final String endpoint; // api endpoint, send the whole URL for now but we'll need to generalize this
+  final String fieldType; // numeric or text, depending on that it displays the keyboard differently
+  final String fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
+  final String fieldData; // the actualy value of the key.
+  Function handler;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _MyTextFieldState(
+      title: this.title, 
+      uid:this.uid, 
+      endpoint: this.endpoint, 
+      fieldId: this.fieldId, 
+      fieldData: this.fieldData,
+      fieldType: this.fieldType);
+  } // the parent handler function that updates the parent state, this is passed from the parent.
+}
+
+class _MyTextFieldState extends State<MyTextField> {
 
   //Constructor of the child widget
   @override
-  MyTextField(
+  _MyTextFieldState(
     {@required this.title,
       this.uid,
     this.endpoint, 
@@ -46,10 +71,10 @@ class MyTextField extends StatelessWidget {
     // Handle PUT request to the api here
     serverRequest.putRequest('jobseeker', uid, fieldId, text);
     controller.text = text;
-    print("child handler triggered: ${text}");
+    print("child handler triggered: $text");
 
     // Once that's done, notify the parent so it knows to update its local state.
-    handler(text, fieldId);
+    // handler(text, fieldId);
   }
 
   // The actual object iself.

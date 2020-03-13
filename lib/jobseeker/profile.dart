@@ -2,12 +2,9 @@ import 'package:arezue/components/textfield.dart';
 import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/services/http.dart';
-import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:arezue/components/inputChip.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import '../loading.dart';
 
@@ -33,31 +30,12 @@ class _ProfilePageState extends State<Profile> {
   void initState() {
     super.initState();
     print("Profile init, this is where we make the API call /profile");
-    uData = request.profileGetRequest(widget.auth.currentUser());
-//    uData.then((resp) {
-//      setState(() {
-//        ud = resp;
-//      });
-//    });
-//    var response = await http.get(
-//        'https://api.daffychuy.com/api/v1/jobseeker/'
-//            '${widget.auth.currentUser()}/profile');
-//    if (response == 200) {
-//        setState(() {
-//          data = json.decode(response.body);
-//          uData = new UserData.fromJson(data);
-//          print(uData.uid);
-//        }
-//        );
-//      };
   }
 
-//    setState(()
-//    {data = {"acceptance_wage": 100, "goal_wage": 140, "relocate": "Yes",
-//      "dream_careers": ["Software Developer", "Program Manager"], "dream_companies": ["Google","Microsoft"],
-//      "available_locations": ["Toronto, ON"],
-//      "skills": ["Java", "Python", "Algorithm Analysis"] };}
-//    );
+  Future<JobseekerInfo> FetchData() async {
+    return await request.profileGetRequest(widget.auth.currentUser());
+  }
+
 
   //This handler is passed into the stateless widgets of the profile page.
   //The reason we create a handler in the parent (stateful class) and pass it down to the children
@@ -65,19 +43,18 @@ class _ProfilePageState extends State<Profile> {
   // setState()...
   void textFieldHandler(text, fieldId) {
     //print(ud.jobseeker.uid);
-    print("Parent got: ${text} from ${fieldId}, set state here.");
-    initState();
-  }
-
-  void textFieldHandler2(text, fieldId, command) {
-    print("Parent got: ${text} from ${fieldId}, set state here.");
-    initState();
+    print("Parent got: $text from $fieldId, set state here.");
+    //initState()
+    setState(() {
+      build(context);
+      print("HEY I GOT TO SET STATE BITCH");
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<JobseekerInfo>(
-      future: uData,
+      future: FetchData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -128,27 +105,35 @@ class _ProfilePageState extends State<Profile> {
                       .toString(),
                   handler: textFieldHandler,
                 ),
-//                inputChip(
-//                  endpoint: "/api/jobseeker",
-//                  title: "Dream Career(s): ",
-//                  uid: snapshot.data.jobseeker.uid,
-//                  fieldId: "dream_career",
-//                  fieldType: "text",
-//                  fieldData: List<String>.from(snapshot.data.jobseeker.information.dreamCareer.careers),
-//                  handler: textFieldHandler2,
-//                ),
-//                inputChip(
-//                  endpoint: "/api/jobseeker",
-//                  title: "Dream Companies: ",
-//                  uid: snapshot.data.jobseeker.uid,
-//                  fieldId: "dream_company",
-//                  fieldType: "text",
-//                  fieldData: List<String>.from(snapshot.data.jobseeker.information.dreamCompany.companies),
-//                  handler: textFieldHandler2,
-//                ),
-//          inputChip(endpoint: "/api/jobseeker", title: "Available Locations: ",
-//            fieldId: "available_locations", fieldType: "text", fieldData: data["available_locations"]
-//            ,handler: textFieldHandler2,),
+                InputChipBuilder(
+                  endpoint: "/api/jobseeker",
+                  uid: snapshot.data.jobseeker.uid,
+                  title: "Dream Career(s): ",
+                  fieldId: "dream_career",
+                  fieldType: "text",
+                  fieldData: List<String>.from(
+                      snapshot.data.jobseeker.information.dreamCareer.careers),
+                  handler: textFieldHandler,
+                ),
+                InputChipBuilder(
+                  endpoint: "/api/jobseeker",
+                  uid: snapshot.data.jobseeker.uid,
+                  title: "Dream Companies: ",
+                  fieldId: "dream_company",
+                  fieldType: "text",
+                  fieldData: List<String>.from(snapshot
+                      .data.jobseeker.information.dreamCompany.companies),
+                  handler: textFieldHandler,
+                ),
+                InputChipBuilder(
+                  endpoint: "/api/jobseeker",
+                  title: "Skills ",
+                  fieldId: "skill",
+                  fieldType: "text",
+                  fieldData: List<String>.from(
+                      snapshot.data.jobseeker.information.skill.skillsList),
+                  handler: textFieldHandler,
+                ),
 //          inputChip(endpoint: "/api/jobseeker", title: "Skills: ",
 //            fieldId: "skill", fieldType: "text", fieldData: data["skill"]
 //            ,handler: textFieldHandler2,),
