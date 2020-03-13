@@ -51,7 +51,9 @@ class Search extends SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
     final List<String> suggestionList = query.isEmpty
         ? nonSearchList
-        : list.where((p) => p.toLowerCase().startsWith(query.toLowerCase())).toList();
+        : list
+            .where((p) => p.toLowerCase().startsWith(query.toLowerCase()))
+            .toList();
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
         onTap: () {
