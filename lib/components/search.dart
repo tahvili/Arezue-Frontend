@@ -1,7 +1,16 @@
+import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class Search extends SearchDelegate<String> {
+  Search({
+    this.handler,
+    this.fieldId,
+  });
+
+  Function handler;
+  final String fieldId;
+  Requests serverRequest = new Requests();
   final List<String> list = [
     "App Dev",
     "Software Dev",
@@ -35,17 +44,7 @@ class Search extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Center(
-      child: Container(
-          height: 100,
-          width: 100,
-          child: Card(
-            color: Colors.grey,
-            child: Center(
-              child: Text(query),
-            ),
-          )),
-    );
+    return null;
   }
 
   @override
@@ -56,7 +55,10 @@ class Search extends SearchDelegate<String> {
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
         onTap: () {
-          showResults(context);
+          //when the user selects the option
+//          showResults(context);
+          close(context, suggestionList[index]);
+          //handler(suggestionList[index], 'ranking', "add");
         },
         leading: Icon(Icons.business_center),
         title: RichText(

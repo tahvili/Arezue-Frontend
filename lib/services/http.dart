@@ -44,17 +44,22 @@ class Requests {
     }
   }
 
-//  Future<int> profilePostRequest(
-//      String usertype, String uid, String command, String value) async {
-//    var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$command';
-//    var response = await http.post(url,
-//        body: {'firebaseID': uid, 'email': email, 'name': name});
-//    print('Response status: ${response.statusCode}');
-//    print('Response body: ${response.body}');
-////    Post p_response = Post.fromjson(json.decode(response.body));
-//    int statusCode = response.statusCode;
-//    return statusCode;
-//  }
+  Future<int> profilePostRequest(
+      String usertype, String uid, String command, String value, String preference, String rank) async {
+    var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$command';
+    var response = await http.post(url,
+        body: {command: value, preference : rank});
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+//    Post p_response = Post.fromjson(json.decode(response.body));
+    int statusCode = response.statusCode;
+    return statusCode;
+  }
+
+    void deleteRequest(String uid, String type, String value) async {
+    String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$type/$value';
+    http.Response response = await http.delete(url);
+  }
 
   void putRequest(String userType, String uid, String command, String change) async {
     //URL for testing.
@@ -139,14 +144,7 @@ class Requests {
 //    int statusCode = response.statusCode;
 //  }
 //
-//  void deleteRequest() async {
-//    String url = 'http://www.mocky.io/v2/5e39ee2f320000cef5ddfdbf';
-//
-//    http.Response response = await http.delete(url);
-//
-//    int statusCode = response.statusCode;
-//  }
-//}
+
 //
 //// Mock post information from the site
 //class Post {

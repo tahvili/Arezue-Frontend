@@ -30,7 +30,6 @@ class _ProfilePageState extends State<Profile> {
   void initState() {
     super.initState();
     print("Profile init, this is where we make the API call /profile");
-    uData = request.profileGetRequest(widget.auth.currentUser());
 //    uData.then((resp) {
 //      setState(() {
 //        ud = resp;
@@ -49,6 +48,10 @@ class _ProfilePageState extends State<Profile> {
 //      };
   }
 
+  Future<JobseekerInfo> FetchData() async {
+    return await request.profileGetRequest(widget.auth.currentUser());
+  }
+
 //    setState(()
 //    {data = {"acceptance_wage": 100, "goal_wage": 140, "relocate": "Yes",
 //      "dream_careers": ["Software Developer", "Program Manager"], "dream_companies": ["Google","Microsoft"],
@@ -63,7 +66,11 @@ class _ProfilePageState extends State<Profile> {
   void textFieldHandler(text, fieldId) {
     //print(ud.jobseeker.uid);
     print("Parent got: $text from $fieldId, set state here.");
-    initState();
+    //initState()
+    setState(() {
+      build(context);
+      print("HEY I GOT TO SET STATE BITCH");
+    });
   }
 
 //  void textFieldHandler2(text, fieldId, command) {
@@ -82,7 +89,7 @@ class _ProfilePageState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<JobseekerInfo>(
-      future: uData,
+      future: FetchData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -139,7 +146,8 @@ class _ProfilePageState extends State<Profile> {
                   title: "Dream Career(s): ",
                   fieldId: "dream_career",
                   fieldType: "text",
-                  fieldData: List<String>.from(snapshot.data.jobseeker.information.dreamCareer.careers),
+                  fieldData: List<String>.from(
+                      snapshot.data.jobseeker.information.dreamCareer.careers),
                   handler: textFieldHandler,
                 ),
                 InputChipBuilder(
@@ -148,7 +156,8 @@ class _ProfilePageState extends State<Profile> {
                   title: "Dream Companies: ",
                   fieldId: "dream_company",
                   fieldType: "text",
-                  fieldData: List<String>.from(snapshot.data.jobseeker.information.dreamCompany.companies),
+                  fieldData: List<String>.from(snapshot
+                      .data.jobseeker.information.dreamCompany.companies),
                   handler: textFieldHandler,
                 ),
                 InputChipBuilder(
@@ -156,7 +165,8 @@ class _ProfilePageState extends State<Profile> {
                   title: "Skills ",
                   fieldId: "skill",
                   fieldType: "text",
-                  fieldData: List<String>.from(snapshot.data.jobseeker.information.skill.skillsList),
+                  fieldData: List<String>.from(
+                      snapshot.data.jobseeker.information.skill.skillsList),
                   handler: textFieldHandler,
                 ),
 //          inputChip(endpoint: "/api/jobseeker", title: "Skills: ",
