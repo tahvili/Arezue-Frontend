@@ -77,9 +77,11 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
     if (command == "add") {
       serverRequest.profilePostRequest(
           'jobseeker', uid, fieldId, text, preference, "1");
+      setState(() {this.fieldData.add(text);});
     } else if (command == "delete") {
       //make a delete request to API here
       serverRequest.deleteRequest(uid, fieldId, text);
+      setState(() {this.fieldData.remove(text);});
     } else {
       print("why am I here?");
     }
@@ -169,14 +171,17 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
     });
     return widglist;
   }
+  void _showSearchBar(BuildContext context, String id, Function handler) async {
+    final result = await showSearch(
+        context: context,
+        delegate: Search(
+          fieldId: id,
+          handler: handler,
+        ));
+    if (result != null) {
+      handler(result, 'ranking', 'add');
+    }
+  }
 }
 
-void _showSearchBar(BuildContext context, String id, Function handler) async {
-  final result = await showSearch(
-      context: context,
-      delegate: Search(
-        fieldId: id,
-        handler: handler,
-      ));
-  handler(result, 'ranking', 'add');
-}
+
