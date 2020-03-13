@@ -30,34 +30,12 @@ class _ProfilePageState extends State<Profile> {
   void initState() {
     super.initState();
     print("Profile init, this is where we make the API call /profile");
-//    uData.then((resp) {
-//      setState(() {
-//        ud = resp;
-//      });
-//    });
-//    var response = await http.get(
-//        'https://api.daffychuy.com/api/v1/jobseeker/'
-//            '${widget.auth.currentUser()}/profile');
-//    if (response == 200) {
-//        setState(() {
-//          data = json.decode(response.body);
-//          uData = new UserData.fromJson(data);
-//          print(uData.uid);
-//        }
-//        );
-//      };
   }
 
   Future<JobseekerInfo> FetchData() async {
     return await request.profileGetRequest(widget.auth.currentUser());
   }
 
-//    setState(()
-//    {data = {"acceptance_wage": 100, "goal_wage": 140, "relocate": "Yes",
-//      "dream_careers": ["Software Developer", "Program Manager"], "dream_companies": ["Google","Microsoft"],
-//      "available_locations": ["Toronto, ON"],
-//      "skills": ["Java", "Python", "Algorithm Analysis"] };}
-//    );
 
   //This handler is passed into the stateless widgets of the profile page.
   //The reason we create a handler in the parent (stateful class) and pass it down to the children
@@ -73,18 +51,6 @@ class _ProfilePageState extends State<Profile> {
     });
   }
 
-//  void textFieldHandler2(text, fieldId, command) {
-//    if (command == "add") {
-//      setState(() {
-//        data["info"][fieldId].add(text);
-//      });
-//    } else {
-//      setState(() {
-//        data["info"][fieldId].remove(text);
-//      });
-//    }
-//    print("Parent got: ${text} from ${fieldId}, set state here.");
-//  }
 
   @override
   Widget build(BuildContext context) {
