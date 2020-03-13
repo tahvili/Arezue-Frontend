@@ -51,7 +51,6 @@ class _ProfilePageState extends State<Profile> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<JobseekerInfo>(

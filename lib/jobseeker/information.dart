@@ -58,6 +58,7 @@ class DreamCareer{
   final List careers;
   DreamCareer(this.careers);
 
+
 }
 
 class DreamCompany{

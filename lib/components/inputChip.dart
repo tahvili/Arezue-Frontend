@@ -57,6 +57,7 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
   final List<String> fieldData; // the actualy value of the key.
   Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
+  
   //created a texteditting controll so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
   Requests serverRequest = new Requests();
@@ -86,7 +87,7 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
       print("why am I here?");
     }
     print("child handler triggered: $text");
-
+    
     handler(text, command);
     // Once that's done, notify the parent so it knows to update its local state.
   }
