@@ -1,7 +1,10 @@
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/services/auth.dart';
+import 'package:arezue/services/http.dart';
+import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/components/resumeField.dart';
+import '../loading.dart';
 
 class ResumeFormPage extends StatefulWidget {
   ResumeFormPage({this.auth, this.resumeId});
@@ -12,8 +15,28 @@ class ResumeFormPage extends StatefulWidget {
 }
 class _ResumeFormPageState extends State<ResumeFormPage>{
   Map<String, dynamic> data;
+  Requests request = new Requests();
+  Future<JobseekerInfo> uData;
+  List<String> dream_career = [];
+  final resumeNameController = TextEditingController();
 
-  Widget resumeButton(String title, String endpoint) {
+  void updateHandler(String endpoint, List list){
+    if(endpoint=="/dream_career") {
+      dream_career = list;
+    }
+  }
+
+  @override
+  void dispose() {
+    resumeNameController.dispose();
+    super.dispose();
+  }
+
+  Future<JobseekerInfo> FetchData() async {
+    return await request.profileGetRequest(widget.auth.currentUser());
+  }
+
+  Widget resumeButton(String title, String endpoint, List original, List list) {
     return SizedBox(
       width: MediaQuery.of(context).size.width-100,
       child: RaisedButton(
@@ -27,6 +50,9 @@ class _ResumeFormPageState extends State<ResumeFormPage>{
                 builder: (context) => ResumeField(
                   title: title,
                   endpoint: endpoint,
+                  list: list,
+                  original: original,
+                  handler: updateHandler
                 )),
           );
         },
@@ -34,6 +60,29 @@ class _ResumeFormPageState extends State<ResumeFormPage>{
         color: ArezueColors.outSecondaryColor,
         child: Text(title,
             style: TextStyle(color: ArezueColors.outPrimaryColor)),
+      ),
+    );
+  }
+
+  Widget saveButton(String uid) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width-100,
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        onPressed: () async {
+          //List<List<String>> finalData = new List<List<String>>();
+          var finalData = {"name":resumeNameController.text,"career": dream_career.toString()};
+          Future<int> result = request.resumePostRequest(uid,finalData);
+
+          if ((await result) == 200){
+            Navigator.pop(context);
+          }
+        },
+        padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
+        color: ArezueColors.outSecondaryColor,
+        child: Text("Save", style: TextStyle(color: ArezueColors.outPrimaryColor)),
       ),
     );
   }
@@ -66,6 +115,7 @@ class _ResumeFormPageState extends State<ResumeFormPage>{
             SizedBox(width: 20),
             Expanded(child:
             TextField(
+              controller: resumeNameController,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: "Enter something",
@@ -80,6 +130,7 @@ class _ResumeFormPageState extends State<ResumeFormPage>{
   @override
   void initState() {
     super.initState();
+    uData = FetchData();
     print("Profile init, this is where we make the API call /profile");
     setState(()
     {data = {"acceptance_wage": 100, "relocate": "Yes"};}
@@ -89,6 +140,10 @@ class _ResumeFormPageState extends State<ResumeFormPage>{
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<JobseekerInfo>(
+        future: FetchData(),
+    builder: (context, snapshot) {
+    if (snapshot.hasData) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ArezueColors.secondaryColor,
@@ -117,12 +172,22 @@ class _ResumeFormPageState extends State<ResumeFormPage>{
         ),
             SizedBox(height: 18,),
             resumeName(),
-            resumeButton("Careers to apply to","/dream_careers"),
-            resumeButton("Companies in the field","/dream_companies"),
-            resumeButton("Skills you have for this","/skills"),
-            resumeButton("Experiences you bring","/exp"),
+            resumeButton("Choose Your Career","/dream_career", List<String>.from(
+                snapshot.data.jobseeker.information.dreamCareer.careers), dream_career),
+            //resumeButton("Companies in the field","/dream_companies"),
+            //resumeButton("Skills you have for this","/skills"),
+            //resumeButton("Experiences you bring","/exp"),
+            saveButton(snapshot.data.jobseeker.uid),
           ],
         ),
       ),
     );
-  }}
+    } else if (snapshot.hasError) {
+      return Text("${snapshot.error}");
+    } else {
+      return Loading();
+    }
+    },
+    );
+  }
+}
