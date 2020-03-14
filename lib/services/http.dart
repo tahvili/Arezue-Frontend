@@ -44,11 +44,41 @@ class Requests {
     }
   }
 
+  Future<Map<String,dynamic>> resumeGetList(Future<String> uid) async {
+    var response = await http.get(
+        'https://api.daffychuy.com/api/v1/jobseeker/${await uid}/resumes');
+    if (response.statusCode == 200) {
+      var _list = json.decode(response.body);
+      Map<String,dynamic> returnList = new Map<String,dynamic>();
+        for(int i=0;i<(_list["data"]).length;i++){
+          returnList[(_list["data"][i]["resume_id"].toString())]=(_list["data"][i]["resume"]);
+        }
+      // If the server did return a 200 OK response, then parse the JSON.
+      return returnList;
+    } else {
+      // If the server did not return a 200 OK response, then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
   Future<int> profilePostRequest(
       String usertype, String uid, String command, String value, String preference, String rank) async {
     var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$command';
     var response = await http.post(url,
         body: {command: value, preference : rank});
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+//    Post p_response = Post.fromjson(json.decode(response.body));
+    int statusCode = response.statusCode;
+    return statusCode;
+  }
+
+  Future<int> resumePostRequest(String uid, Map<String, String> list) async {
+    print(uid);
+    print(list);
+    var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes';
+    var response = await http.post(url,
+        body: {'resume':json.encode(list)});
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
 //    Post p_response = Post.fromjson(json.decode(response.body));
@@ -80,15 +110,15 @@ class Requests {
 
   }
 
-  void deleteRequest(String userType, String uid, String command, String value) async {
-
-    if(userType == "jobseeker"){
-      String url = "https://api.daffychuy.com/api/v1/jobseeker/$uid/$command";
-
-      http.Response response = await http.delete(url,headers:{command: value});
-      print("Delete Response code : ${response.statusCode}");
-    }
-  }
+//  void deleteRequest(String userType, String uid, String command, String value) async {
+//
+//    if(userType == "jobseeker"){
+//      String url = "https://api.daffychuy.com/api/v1/jobseeker/$uid/$command";
+//
+//      http.Response response = await http.delete(url,headers:{command: value});
+//      print("Delete Response code : ${response.statusCode}");
+//    }
+//  }
 
   //get request for employer
 
