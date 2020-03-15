@@ -26,12 +26,13 @@ class RadioWidgetState extends State<RadioWidget> {
   setSelectedRadioTile(int val) {
     setState(() {
       selectedRadioTile = val;
+      handler(val, "experience");
     });
   }
-
-  void submitHandler(value){
-    handler(value, "experience");
-  }
+//
+//  void submitHandler(int value){
+//    handler(value, "experience");
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +72,7 @@ class RadioWidgetState extends State<RadioWidget> {
             title: Text("Intermediate"),
             onChanged: (val) {
               setSelectedRadioTile(val);
-              submitHandler(val);
+              //submitHandler(val);
             },
             activeColor: Colors.green,
             selected: selectedRadioTile == 3,
@@ -82,7 +83,7 @@ class RadioWidgetState extends State<RadioWidget> {
             title: Text("Expert"),
             onChanged: (val) {
               setSelectedRadioTile(val);
-              submitHandler(val);
+              //submitHandler(val);
             },
             activeColor: Colors.green,
             selected: selectedRadioTile == 1,

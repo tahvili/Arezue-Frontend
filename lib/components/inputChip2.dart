@@ -75,6 +75,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
   @override
   void initState() {
     super.initState();
+    generateListSkills(fieldData);
   }
   //keyboard map
   final Map<String, TextInputType> keyboards = {

@@ -48,7 +48,6 @@ class _ProfilePageState extends State<Profile> {
     //initState()
     setState(() {
       build(context);
-      print("HEY I GOT TO SET STATE BITCH");
     });
   }
 

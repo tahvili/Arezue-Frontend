@@ -53,13 +53,15 @@ class _FormPageState extends State<FormPage> {
     super.initState();
   }
 
-  void submitHandler(preference){
+  void submitHandler(preference) async{
     //make the post request for skill here
-    int result = numExpertise + numExperience;
-    request.profilePostRequest('jobseeker', uid, this.fieldId, this.skill,
-        preference, '$result');
-
-    handler(skill, "add");
+    print(skill);
+    print(numExperience);
+    print(numExpertise);
+    if(await (request.profileSkillPostRequest('jobseeker', uid, skill, '$numExpertise', '$numExperience' )) == 200){
+      print("post call to skill successful");
+      handler(skill, "add");
+    }
   }
 
   void formHandler(value, String command){
@@ -72,7 +74,9 @@ class _FormPageState extends State<FormPage> {
         numExperience = value;
       });
     }else{
-      numExpertise = value;
+      setState(() {
+        numExpertise = value;
+      });
     }
   }
 
@@ -93,6 +97,7 @@ class _FormPageState extends State<FormPage> {
         ],
       ),
       body: Container(
+        //width: MediaQuery.of(context).size.width,
         child: Column(
           children: <Widget>[
             SizedBox(

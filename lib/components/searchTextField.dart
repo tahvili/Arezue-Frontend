@@ -32,10 +32,9 @@ class MySearchTextField extends StatefulWidget {
     return _MySearchTextFieldState(
         title: this.title,
         uid: this.uid,
-        endpoint: this.endpoint,
-        fieldId: this.fieldId,
         fieldData: this.fieldData,
-        fieldType: this.fieldType);
+        fieldType: this.fieldType,
+    handler: this.handler);
   } // the parent handler function that updates the parent state, this is passed from the parent.
 }
 
