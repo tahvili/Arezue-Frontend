@@ -49,11 +49,6 @@ class _ResumeField extends State<ResumeField> {
     }
     return list;
   }
-  // child handler that calls the API and then the parent handler.
-  void submitHandler(text) {
-    // Handle PUT request to the api here
-    print("child handler triggered: $text");
-  }
 
   Widget saveButton() {
     return SizedBox(
@@ -64,7 +59,6 @@ class _ResumeField extends State<ResumeField> {
         ),
         onPressed: () {
           handler(endpoint, getList());
-          print(getList());
           Navigator.pop(context);
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
@@ -90,12 +84,12 @@ class _ResumeField extends State<ResumeField> {
       ),
       body: Center(
         child: ListView(
-            children: <Widget>[
-              Column(
-          children: listWidgets(original),
-        ),
-              saveButton(),
-      ],
+          children: <Widget>[
+            Column(
+              children: listWidgets(original),
+            ),
+            saveButton(),
+          ],
         ),
       ),
     );
