@@ -56,6 +56,7 @@ class Requests {
       // If the server did return a 200 OK response, then parse the JSON.
       return returnList;
     } else {
+      return {};
       // If the server did not return a 200 OK response, then throw an exception.
       throw Exception('Failed to load album');
     }

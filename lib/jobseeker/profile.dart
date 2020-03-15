@@ -1,3 +1,4 @@
+import 'package:arezue/components/inputChip2.dart';
 import 'package:arezue/components/textfield.dart';
 import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/services/auth.dart';
@@ -125,13 +126,13 @@ class _ProfilePageState extends State<Profile> {
                       .data.jobseeker.information.dreamCompany.companies),
                   handler: textFieldHandler,
                 ),
-                InputChipBuilder(
+                InputChipBuilder2(
                   endpoint: "/api/jobseeker",
                   title: "Skills ",
                   fieldId: "skill",
                   fieldType: "text",
-                  fieldData: List<String>.from(
-                      snapshot.data.jobseeker.information.skill.skillsList),
+                  fieldData: List<String>.from(snapshot
+                      .data.jobseeker.information.dreamCompany.companies),
                   handler: textFieldHandler,
                 ),
 //          inputChip(endpoint: "/api/jobseeker", title: "Skills: ",
