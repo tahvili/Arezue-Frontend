@@ -128,11 +128,11 @@ class _ProfilePageState extends State<Profile> {
                 ),
                 InputChipBuilder2(
                   endpoint: "/api/jobseeker",
+                  uid: snapshot.data.jobseeker.uid,
                   title: "Skills ",
                   fieldId: "skill",
                   fieldType: "text",
-                  fieldData: List<String>.from(snapshot
-                      .data.jobseeker.information.dreamCompany.companies),
+                  fieldData: snapshot.data.jobseeker.information.skills,
                   handler: textFieldHandler,
                 ),
 //          inputChip(endpoint: "/api/jobseeker", title: "Skills: ",

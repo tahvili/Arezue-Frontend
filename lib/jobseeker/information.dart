@@ -42,13 +42,18 @@ class Information {
       this.experiences});
 
   factory Information.fromJson(Map<String, dynamic> parsedJson) {
+
+    var list = parsedJson['skill'] as List;
+    print(list);
+    List<Skill> skillsList = list.map((i) => Skill.fromJson(i)).toList();
+
     return Information(
       acceptanceWage: double.parse(parsedJson['acceptance_wage']),
       goalWage: double.parse(parsedJson['goal_wage']),
       openRelocation: parsedJson['open_relocation'],
       dreamCompany: DreamCompany(parsedJson['dream_company']),
       dreamCareer: DreamCareer(parsedJson['dream_career']),
-      skills: parsedJson['skill'],
+      skills: skillsList,
     );
   }
 }

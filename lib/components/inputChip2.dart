@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:arezue/components/form.dart';
 import 'package:arezue/components/search.dart';
+import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class InputChipBuilder2 extends StatefulWidget {
   fieldType; // numeric or text, depending on that it displays the keyboard differently
   final String
   fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
-  final List<String> fieldData; // the actualy value of the key.
+  final List<Skill> fieldData; // the actualy value of the key.
   Function
   handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
@@ -55,13 +56,21 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
   fieldType; // numeric or text, depending on that it displays the keyboard differently
   final String
   fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
-  final List<String> fieldData; // the actualy value of the key.
+  final List<Skill> fieldData; // the actualy value of the key.
   Function
   handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
   //created a texteditting controll so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
   Requests serverRequest = new Requests();
+
+  List<String> skillsList = new List();
+
+  void generateListSkills(List<Skill> skills){
+    skills.forEach((skill) {
+      skillsList.add(skill.skill);
+    });
+  }
 
   @override
   void initState() {
@@ -74,20 +83,17 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
   };
 
   // child handler that calls the API and then the parent handler.
-  void submitHandler(String text, String preference, String command) {
+  void submitHandler(String text, String command) {
     // Handle PUT request to the api here
     if (command == "add") {
-      serverRequest.profilePostRequest(
-          'jobseeker', uid, fieldId, text, preference, "1");
-      setState(() {this.fieldData.add(text);});
+      setState(() {this.skillsList.add(text);});
     } else if (command == "delete") {
       //make a delete request to API here
       serverRequest.deleteRequest(uid, fieldId, text);
-      setState(() {this.fieldData.remove(text);});
+      setState(() {this.skillsList.remove(text);});
     } else {
       print("why am I here?");
     }
-    print("child handler triggered: $text");
 
     handler(text, command);
     // Once that's done, notify the parent so it knows to update its local state.
@@ -101,7 +107,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
         color: ArezueColors.secondaryColor,
       ),
       onDeleted: () {
-        submitHandler(text, fieldId, "delete");
+        submitHandler(text, "delete");
       }, //this is what happens when the x is pressed
     );
   }
@@ -150,7 +156,8 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
                         color: ArezueColors.secondaryColor,
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => FormPage(title: "Add a skill")
+                              builder: (context) => FormPage(title: "Add a skill",
+                                handler: submitHandler, uid: this.uid, fieldId: this.fieldId)
                               ));
                         }),
                   ),
@@ -162,7 +169,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
             Wrap(
               spacing: 5.0, // gap between adjacent chips
               alignment: WrapAlignment.start,
-              children: listWidgets(this.fieldData),
+              children: listWidgets(this.skillsList),
             ),
           ],
         ));

@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:arezue/components/radioButton.dart';
 import 'package:arezue/components/searchTextField.dart';
+import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -9,29 +10,38 @@ class FormPage extends StatefulWidget {
   @override
   FormPage(
       {@required this.title,
-        this.handler
+        this.uid,
+        this.handler,
+        this.fieldId,
       });
 
 
   final String
   title;
+  final String uid;
+  final String fieldId;
   Function handler;
+
 
   @override
   State<StatefulWidget> createState() {
-    return _FormPageState(title: this.title, handler:  this.handler);
+    return _FormPageState(title: this.title, handler:  this.handler, uid: this.uid,
+    fieldId: this.fieldId);
   }
   }
 
 class _FormPageState extends State<FormPage> {
   _FormPageState({
       @required this.title,
-      this.handler});
+      this.handler, this.uid, this.fieldId});
 
   final String
   title; // this goes before the textfield, i.e. what textfield is this.
   Function
   handler; // the parent handler function that updates the parent state, this is passed from the parent.
+  final String uid;
+  final String fieldId;
+  Requests request = new Requests();
 
   int numExperience;
   int numExpertise;
@@ -42,9 +52,13 @@ class _FormPageState extends State<FormPage> {
     super.initState();
   }
 
-  void submitHandler(){
+  void submitHandler(preference){
     //make the post request for skill here
-    handler();
+    int result = numExpertise + numExperience;
+    request.profilePostRequest('jobseeker', uid, this.fieldId, this.skill,
+        preference, '$result');
+
+    handler(skill, "add");
   }
 
   void formHandler(value, String command){
@@ -62,7 +76,7 @@ class _FormPageState extends State<FormPage> {
   }
 
 
-  // The actual object iself.
+  // The actual object itself.
   Widget build(BuildContext context) {
     //controller.text = this.fieldData as String;
     return Scaffold(
@@ -84,7 +98,7 @@ class _FormPageState extends State<FormPage> {
             RadioWidget(handler: formHandler),
             RaisedButton(
               onPressed: (){
-                submitHandler();
+                submitHandler('ranking');
               },
               child: Text(
                   "Submit", style: TextStyle(color: ArezueColors.outPrimaryColor)
