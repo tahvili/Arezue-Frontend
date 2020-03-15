@@ -125,16 +125,6 @@ class Requests {
 
   }
 
-//  void deleteRequest(String userType, String uid, String command, String value) async {
-//
-//    if(userType == "jobseeker"){
-//      String url = "https://api.daffychuy.com/api/v1/jobseeker/$uid/$command";
-//
-//      http.Response response = await http.delete(url,headers:{command: value});
-//      print("Delete Response code : ${response.statusCode}");
-//    }
-//  }
-
   //get request for employer
 
   Future<Employer> employerGetRequest(Future<String> uid) async {

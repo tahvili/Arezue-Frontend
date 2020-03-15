@@ -29,10 +29,6 @@ class RadioWidgetState extends State<RadioWidget> {
       handler(val, "experience");
     });
   }
-//
-//  void submitHandler(int value){
-//    handler(value, "experience");
-//  }
 
   @override
   Widget build(BuildContext context) {

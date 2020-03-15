@@ -101,7 +101,7 @@ class _FormPageState extends State<FormPage> {
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: 30,
+              height: 25,
             ),
             MySearchTextField(handler : formHandler),
             SliderWidget(handler: formHandler),

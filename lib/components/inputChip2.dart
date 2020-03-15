@@ -10,25 +10,25 @@ import 'package:flutter/services.dart';
 class InputChipBuilder2 extends StatefulWidget {
   InputChipBuilder2(
       {@required this.title,
-        this.uid,
-        this.endpoint,
-        this.fieldData,
-        @required this.fieldId = "",
-        @required this.fieldType = "text",
-        this.handler});
+      this.uid,
+      this.endpoint,
+      this.fieldData,
+      @required this.fieldId = "",
+      this.fieldType = "text",
+      this.handler});
 
   final String uid;
   final String
-  title; // this goes before the textfield, i.e. what textfield is this.
+      title; // this goes before the textfield, i.e. what textfield is this.
   final String
-  endpoint; // api endpoint, send the whole URL for now but we'll need to generalize this
+      endpoint; // api endpoint, send the whole URL for now but we'll need to generalize this
   final String
-  fieldType; // numeric or text, depending on that it displays the keyboard differently
+      fieldType; // numeric or text, depending on that it displays the keyboard differently
   final String
-  fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
+      fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final List<Skill> fieldData; // the actualy value of the key.
   Function
-  handler; // the parent handler function that updates the parent state, this is passed from the parent.
+      handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
   @override
   State<StatefulWidget> createState() {
@@ -38,27 +38,21 @@ class InputChipBuilder2 extends StatefulWidget {
 }
 
 class _InputChipBuilderState2 extends State<InputChipBuilder2> {
-  _InputChipBuilderState2(
-      @required this.title,
-      this.uid,
-      this.endpoint,
-      this.fieldData,
-      @required this.fieldId,
-      @required this.fieldType,
-      this.handler);
+  _InputChipBuilderState2(@required this.title, this.uid, this.endpoint,
+      this.fieldData, @required this.fieldId, this.fieldType, this.handler);
 
   final String uid;
   final String
-  title; // this goes before the textfield, i.e. what textfield is this.
+      title; // this goes before the textfield, i.e. what textfield is this.
   final String
-  endpoint; // api endpoint, send the whole URL for now but we'll need to generalize this
+      endpoint; // api endpoint, send the whole URL for now but we'll need to generalize this
   final String
-  fieldType; // numeric or text, depending on that it displays the keyboard differently
+      fieldType; // numeric or text, depending on that it displays the keyboard differently
   final String
-  fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
+      fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final List<Skill> fieldData; // the actualy value of the key.
   Function
-  handler; // the parent handler function that updates the parent state, this is passed from the parent.
+      handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
   //created a texteditting controll so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
@@ -66,7 +60,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
 
   List<String> skillsList = new List();
 
-  void generateListSkills(List<Skill> skills){
+  void generateListSkills(List<Skill> skills) {
     skills.forEach((skill) {
       skillsList.add(skill.skill);
     });
@@ -77,6 +71,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
     super.initState();
     generateListSkills(fieldData);
   }
+
   //keyboard map
   final Map<String, TextInputType> keyboards = {
     "numeric": TextInputType.numberWithOptions(decimal: true),
@@ -87,11 +82,15 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
   void submitHandler(String text, String command) {
     // Handle PUT request to the api here
     if (command == "add") {
-      setState(() {this.skillsList.add(text);});
+      setState(() {
+        this.skillsList.add(text);
+      });
     } else if (command == "delete") {
       //make a delete request to API here
       serverRequest.deleteRequest(uid, fieldId, text);
-      setState(() {this.skillsList.remove(text);});
+      setState(() {
+        this.skillsList.remove(text);
+      });
     } else {
       print("why am I here?");
     }
@@ -156,10 +155,14 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
                         icon: Icon(Icons.add),
                         color: ArezueColors.secondaryColor,
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => FormPage(title: "Add a skill",
-                                handler: submitHandler, uid: this.uid, fieldId: this.fieldId)
-                              ));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FormPage(
+                                      title: "Add a skill",
+                                      handler: submitHandler,
+                                      uid: this.uid,
+                                      fieldId: this.fieldId)));
                         }),
                   ),
                 ),
@@ -184,5 +187,3 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
     return widglist;
   }
 }
-
-

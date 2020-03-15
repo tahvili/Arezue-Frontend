@@ -10,16 +10,13 @@ class MySearchTextField extends StatefulWidget {
   MySearchTextField(
       {@required this.title,
       this.uid,
-      this.endpoint,
       this.fieldData = "",
       @required this.fieldId = "",
-      @required this.fieldType = "text",
+      this.fieldType = "text",
       this.handler});
   final String uid;
   final String
       title; // this goes before the textfield, i.e. what textfield is this.
-  final String
-      endpoint; // api endpoint, send the whole URL for now but we'll need to generalize this
   final String
       fieldType; // numeric or text, depending on that it displays the keyboard differently
   final String
@@ -34,7 +31,7 @@ class MySearchTextField extends StatefulWidget {
         uid: this.uid,
         fieldData: this.fieldData,
         fieldType: this.fieldType,
-    handler: this.handler);
+        handler: this.handler);
   } // the parent handler function that updates the parent state, this is passed from the parent.
 }
 
@@ -110,7 +107,7 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
         onTap: () {
           _showSearchBar(context, fieldId, submitHandler);
         },
-        textAlign: TextAlign.right,
+        textAlign: TextAlign.center,
         controller: controller,
         keyboardType: keyboards[this.fieldType],
         decoration: InputDecoration(
