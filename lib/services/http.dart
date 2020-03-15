@@ -56,6 +56,7 @@ class Requests {
       // If the server did return a 200 OK response, then parse the JSON.
       return returnList;
     } else {
+      return {};
       // If the server did not return a 200 OK response, then throw an exception.
       throw Exception('Failed to load album');
     }
@@ -72,6 +73,20 @@ class Requests {
     int statusCode = response.statusCode;
     return statusCode;
   }
+
+  Future<int> profileSkillPostRequest(
+      String usertype, String uid, String skill, String level, String years) async {
+    var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/skill';
+    var response = await http.post(url,
+        body: {'skill': skill, 'level' : level, 'years': years});
+    print('Response status skill: ${response.statusCode}');
+    print('Response body skill: ${response.body}');
+//    Post p_response = Post.fromjson(json.decode(response.body));
+    int statusCode = response.statusCode;
+    return statusCode;
+  }
+
+
 
   Future<int> resumePostRequest(String uid, Map<String, String> list) async {
     print(uid);
@@ -109,16 +124,6 @@ class Requests {
 //    }
 
   }
-
-//  void deleteRequest(String userType, String uid, String command, String value) async {
-//
-//    if(userType == "jobseeker"){
-//      String url = "https://api.daffychuy.com/api/v1/jobseeker/$uid/$command";
-//
-//      http.Response response = await http.delete(url,headers:{command: value});
-//      print("Delete Response code : ${response.statusCode}");
-//    }
-//  }
 
   //get request for employer
 
