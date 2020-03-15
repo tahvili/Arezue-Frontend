@@ -24,7 +24,7 @@ class _ResumePageState extends State<ResumePage>{
     return await request.profileGetRequest(widget.auth.currentUser());
   }
 
-  Widget selectResume(String resumeID, Map<String,dynamic> Data, String uid) {
+  Widget selectResume(String resumeID, String Name, Map<String,dynamic> Data, String uid) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 0.0),
       child: RaisedButton(
@@ -32,10 +32,20 @@ class _ResumePageState extends State<ResumePage>{
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ResumeFormPage(
+                    auth: widget.auth,
+                    resumeId: resumeID,
+                    resumeName: Name,
+                    uid: uid
+                )),
+          );
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
         color: ArezueColors.outSecondaryColor,
-        child: Text(resumeID,
+        child: Text(Name,
             style: TextStyle(color: ArezueColors.outPrimaryColor)),
       ),
     );
@@ -53,8 +63,10 @@ class _ResumePageState extends State<ResumePage>{
             context,
             MaterialPageRoute(
                 builder: (context) => ResumeFormPage(
-                  auth: widget.auth,
-                  resumeId: null,
+                    auth: widget.auth,
+                    resumeId: null,
+                    resumeName: '',
+                    uid: null
                 )),
           );
         },
@@ -69,38 +81,38 @@ class _ResumePageState extends State<ResumePage>{
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<JobseekerInfo>(
-        future: FetchData(),
-    builder: (context, snapshot) {
-    if (snapshot.hasData) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ArezueColors.secondaryColor,
-        title: Text('My Resumes'),
-        actions: <Widget>[
-          IconButton(
-            color: Colors.white,
-            icon: Icon(Icons.help, color: Colors.white),
-            onPressed: null,
-          )
-        ],
-      ),
-    body: Center(
-      child: ListView(
-        children: <Widget>[
-          Column(
-            children: listWidgets(snapshot.data.jobseeker.uid),
-          ),
-          createButton(),
-        ],
-      ),
-    ),
-    );
-    } else if (snapshot.hasError) {
-      return Text("${snapshot.error}");
-    } else {
-      return Loading();
-    }
-    },
+      future: FetchData(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: ArezueColors.secondaryColor,
+              title: Text('My Resumes'),
+              actions: <Widget>[
+                IconButton(
+                  color: Colors.white,
+                  icon: Icon(Icons.help, color: Colors.white),
+                  onPressed: null,
+                )
+              ],
+            ),
+            body: Center(
+              child: ListView(
+                children: <Widget>[
+                  Column(
+                    children: listWidgets(snapshot.data.jobseeker.uid),
+                  ),
+                  createButton(),
+                ],
+              ),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        } else {
+          return Loading();
+        }
+      },
     );
   }
 
@@ -109,9 +121,8 @@ class _ResumePageState extends State<ResumePage>{
     List<Widget> widgetlist = new List<Widget>();
     var keys;
     for(keys in minidata.keys){
-      widgetlist.add(selectResume(minidata[keys]['name'], minidata[keys]['resume'], uid));
+      widgetlist.add(selectResume(keys, minidata[keys]['name'], minidata[keys], uid));
     }
     return widgetlist;
   }
 }
-
