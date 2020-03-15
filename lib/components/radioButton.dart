@@ -1,3 +1,4 @@
+import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class RadioWidget extends StatefulWidget {
@@ -29,12 +30,28 @@ class RadioWidgetState extends State<RadioWidget> {
   }
 
   void submitHandler(value){
-    handler(value, "expertise");
+    handler(value, "experience");
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
+      margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
+      //height: 200,
+      decoration: BoxDecoration(
+        color: ArezueColors.primaryColor,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+        BoxShadow(
+        color: ArezueColors.shadowColor,
+        blurRadius: 10.0,
+        spreadRadius: 5.0,
+        offset: Offset(
+          0.0, // horizontal, move right 10
+          0.0, // vertical, move down 10
+        ),
+      ),]),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[

@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:arezue/components/radioButton.dart';
 import 'package:arezue/components/searchTextField.dart';
+import 'package:arezue/components/slider.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -94,11 +95,16 @@ class _FormPageState extends State<FormPage> {
       body: Container(
         child: Column(
           children: <Widget>[
+            SizedBox(
+              height: 30,
+            ),
             MySearchTextField(handler : formHandler),
+            SliderWidget(handler: formHandler),
             RadioWidget(handler: formHandler),
             RaisedButton(
               onPressed: (){
                 submitHandler('ranking');
+                Navigator.pop(context);
               },
               child: Text(
                   "Submit", style: TextStyle(color: ArezueColors.outPrimaryColor)
