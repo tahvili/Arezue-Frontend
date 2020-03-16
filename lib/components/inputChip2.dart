@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:arezue/components/form.dart';
-import 'package:arezue/components/search.dart';
 import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
@@ -59,6 +58,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
   Requests serverRequest = new Requests();
 
   List<String> skillsList = new List();
+  List<Map<String, dynamic>> arr = new List<Map<String, dynamic>>();
 
   void generateListSkills(List<Skill> skills) {
     skills.forEach((skill) {
@@ -69,6 +69,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
   @override
   void initState() {
     super.initState();
+    FetchData();
     generateListSkills(fieldData);
   }
 
@@ -86,17 +87,23 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
         this.skillsList.add(text);
       });
     } else if (command == "delete") {
-      //make a delete request to API here
-      serverRequest.deleteRequest(uid, fieldId, text);
       setState(() {
         this.skillsList.remove(text);
       });
     } else {
-      print("why am I here?");
+      setState(() {});
     }
-
     handler(text, command);
     // Once that's done, notify the parent so it knows to update its local state.
+  }
+
+  Future<int> FetchData() async {
+    arr = await (serverRequest.skillsGetRequest(uid));
+    if (arr.length != 0) {
+      return 200;
+    } else {
+      return 0;
+    }
   }
 
   Widget inputChips(text) {
@@ -106,6 +113,24 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
       labelStyle: TextStyle(
         color: ArezueColors.secondaryColor,
       ),
+      onPressed: () async {
+        if (await (FetchData()) == 200) {
+          //Skill value = fieldData.singleWhere((skill) => skill.skill == text);
+          Map<String, dynamic> value =
+              arr.singleWhere((element) => element['skill'] == text);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FormPage(
+                      title: "Edit Your skill",
+                      skill: value['skill'],
+                      numExperience: value['years_of_expertise'],
+                      numExpertise: value['level_expertise'],
+                      handler: submitHandler,
+                      uid: this.uid,
+                      fieldId: this.fieldId)));
+        }
+      },
       onDeleted: () {
         submitHandler(text, "delete");
       }, //this is what happens when the x is pressed
@@ -160,6 +185,9 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
                               MaterialPageRoute(
                                   builder: (context) => FormPage(
                                       title: "Add a skill",
+                                      skill: null,
+                                      numExperience: null,
+                                      numExpertise: null,
                                       handler: submitHandler,
                                       uid: this.uid,
                                       fieldId: this.fieldId)));

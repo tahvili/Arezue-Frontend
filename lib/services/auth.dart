@@ -37,7 +37,6 @@ class Auth implements BaseAuth {
   Future sendPasswordResetEmail(String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
-      print("hellooooooo");
       return "Done";
     } catch (e) {
       print(e.toString());
@@ -59,20 +58,17 @@ class Auth implements BaseAuth {
   @override
   Future createUserWithEmailAndPassword(String name, String email,
       String password, String company, String type) async {
-    print(type);
     FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
             email: email, password: password)).user;
     try {
       await user.sendEmailVerification();
       Future<int> status;
       if (type == "employer") {
-        print("I got here!");
         status = request.employerPostRequest(user.uid, email, name, company);
       } else {
 
         status = request.jobseekerPostRequest(user.uid, email, name);
       }
-      print(status);
       if ((await status) == 200) {
         signOut();
         return user;
@@ -110,28 +106,21 @@ class Auth implements BaseAuth {
   Future signInWithEmailAndPassword(String email, String password) async {
     FirebaseUser user = (await _firebaseAuth.signInWithEmailAndPassword(
             email: email, password: password)).user;
-    print(user.isEmailVerified);
     try {
       if (user.isEmailVerified) {
-        print("hey");
         var url = 'https://api.daffychuy.com/api/v1/init';
         var response = await http.post(url,
             body: {'firebaseID': user.uid});
-        print("the response is ${response.statusCode}");
-        print("the response is ${response.body}");
         var parsedResponse = json.decode(response.body);
         dbID = parsedResponse['payload']['uid'];
         userType = parsedResponse['payload']['user_type'];
-        print(dbID);
         int statusCode = response.statusCode;
-        print("the status code in init is $statusCode");
         if ((statusCode) == 200) {
           print(userType);
           if(userType == "employer"){
             return Employer.fromJson(parsedResponse);
           }
           else {
-            print("I got hereeeeeeeeeeeee!");
             return Jobseeker.fromJson(parsedResponse);
           }
         } else if (statusCode == 400) {

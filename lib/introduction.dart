@@ -58,8 +58,6 @@ List<T> map<T>(List list, Function handler) {
   return result;
 }
 
-
-
 class CarouselWithIndicator extends StatefulWidget {
   CarouselWithIndicator({Key key, this.auth, this.onSignIn}) : super(key: key);
 
@@ -75,17 +73,8 @@ class CarouselWithIndicator extends StatefulWidget {
 //  signedIn,
 //}
 
-
 class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
   int _current = 0;
-
-//  AuthStatus authStatus = AuthStatus.notSignedIn;
-//
-//  void _updateAuthStatus(AuthStatus status) {
-//    setState(() {
-//      authStatus = status;
-//    });
-//  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,14 +135,13 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    
                     MaterialPageRoute(
                         builder: (context) => new LoginPage(
                               auth: widget.auth,
                               onSignIn: widget.onSignIn,
                               formType: FormType.jobseekerRegister,
-                              
-                            ), fullscreenDialog: true),
+                            ),
+                        fullscreenDialog: true),
                   );
                 },
                 padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
@@ -182,7 +170,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                               auth: widget.auth,
                               onSignIn: widget.onSignIn,
                               formType: FormType.login,
-                            ), fullscreenDialog: true),
+                            ),
+                        fullscreenDialog: true),
                   );
                 },
                 padding: EdgeInsets.fromLTRB(35, 10, 35, 10),

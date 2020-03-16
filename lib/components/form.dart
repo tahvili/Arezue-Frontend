@@ -9,77 +9,134 @@ import 'package:flutter/material.dart';
 class FormPage extends StatefulWidget {
   //Constructor of the child widget
   @override
-  FormPage(
-      {@required this.title,
-        this.uid,
-        this.handler,
-        this.fieldId,
-      });
+  FormPage({
+    @required this.title,
+    this.skill,
+    this.numExperience,
+    this.numExpertise,
+    this.uid,
+    this.handler,
+    this.fieldId,
+  });
 
-
-  final String
-  title;
+  final String title;
   final String uid;
   final String fieldId;
   Function handler;
 
+  String skill;
+  int numExperience;
+  int numExpertise;
 
   @override
   State<StatefulWidget> createState() {
-    return _FormPageState(title: this.title, handler:  this.handler, uid: this.uid,
-    fieldId: this.fieldId);
+    return _FormPageState(
+        title: this.title,
+        handler: this.handler,
+        uid: this.uid,
+        fieldId: this.fieldId,
+        skill: this.skill,
+        numExpertise: this.numExpertise,
+        numExperience: this.numExperience);
   }
-  }
+}
 
 class _FormPageState extends State<FormPage> {
-  _FormPageState({
-      @required this.title,
-      this.handler, this.uid, this.fieldId});
+  _FormPageState(
+      {@required this.title,
+      this.handler,
+      this.uid,
+      this.fieldId,
+      this.skill,
+      this.numExperience,
+      this.numExpertise});
 
   final String
-  title; // this goes before the textfield, i.e. what textfield is this.
+      title; // this goes before the textfield, i.e. what textfield is this.
   Function
-  handler; // the parent handler function that updates the parent state, this is passed from the parent.
+      handler; // the parent handler function that updates the parent state, this is passed from the parent.
   final String uid;
   final String fieldId;
-  Requests request = new Requests();
 
+  bool flag;
+
+  String skill;
   int numExperience;
   int numExpertise;
-  String skill;
+
+  String oldSkill;
+
+  Requests request = new Requests();
 
   @override
-  initState(){
+  initState() {
     super.initState();
-  }
-
-  void submitHandler(preference) async{
-    //make the post request for skill here
-    print(skill);
-    print(numExperience);
-    print(numExpertise);
-    if(await (request.profileSkillPostRequest('jobseeker', uid, skill, '$numExpertise', '$numExperience' )) == 200){
-      print("post call to skill successful");
-      handler(skill, "add");
+    if (this.skill == null) {
+      flag = false;
+    } else {
+      flag = true;
+      this.oldSkill = skill;
     }
   }
 
-  void formHandler(value, String command){
-    if(command == "skill"){
+  void submitHandler(preference) async {
+
+    if (this.skill == null){
+      _showPasswordResetSentDialog();
+    }else {
+      if (flag == true) {
+        if (await (request.profileSkillPutRequest(
+            uid, oldSkill, skill, '$numExperience', '$numExpertise')) ==
+            200) {
+          handler(oldSkill, "delete");
+          handler(skill, "add");
+          Navigator.pop(context);
+        }
+      } else {
+        if (await (request.profileSkillPostRequest(
+            uid, skill, skill, '$numExpertise', '$numExperience')) ==
+            200) {
+          handler(skill, "add");
+          Navigator.pop(context);
+        }
+      }
+    }
+  }
+
+
+  void _showPasswordResetSentDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Oops!"),
+            content: new Text("Please select a skill to be added!"),
+            actions: <Widget>[
+              new FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Dismiss")),
+            ],
+          );
+        });
+  }
+
+  void formHandler(value, String command) {
+    if (command == "skill") {
       setState(() {
         skill = value;
       });
-    }else if(command == "experience"){
+    } else if (command == "experience") {
       setState(() {
         numExperience = value;
       });
-    }else{
+    } else {
       setState(() {
         numExpertise = value;
       });
     }
   }
-
 
   // The actual object itself.
   Widget build(BuildContext context) {
@@ -96,29 +153,29 @@ class _FormPageState extends State<FormPage> {
           )
         ],
       ),
-      body: Container(
-        //width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 25,
-            ),
-            MySearchTextField(handler : formHandler),
-            SliderWidget(handler: formHandler),
-            RadioWidget(handler: formHandler),
-            RaisedButton(
-              onPressed: (){
-                submitHandler('ranking');
-                Navigator.pop(context);
-              },
-              child: Text(
-                  "Submit", style: TextStyle(color: ArezueColors.outPrimaryColor)
+      body: SingleChildScrollView(
+        child: Container(
+          //width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 25,
               ),
-            ),
-          ],
+              MySearchTextField(skill: this.skill, handler: formHandler),
+              SliderWidget(
+                  numExperience: this.numExperience, handler: formHandler),
+              RadioWidget(numExpertise: this.numExpertise, handler: formHandler),
+              RaisedButton(
+                onPressed: () {
+                  submitHandler('ranking');
+                },
+                child: Text("Submit",
+                    style: TextStyle(color: ArezueColors.outPrimaryColor)),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-
 }

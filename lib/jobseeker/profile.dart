@@ -30,22 +30,17 @@ class _ProfilePageState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    print("Profile init, this is where we make the API call /profile");
   }
 
   Future<JobseekerInfo> FetchData() async {
     return await request.profileGetRequest(widget.auth.currentUser());
   }
 
-
   //This handler is passed into the stateless widgets of the profile page.
   //The reason we create a handler in the parent (stateful class) and pass it down to the children
   // is so that when the child changes, this method will be triggere which then updates state by calling
   // setState()...
   void textFieldHandler(text, fieldId) {
-    //print(ud.jobseeker.uid);
-    print("Parent got: $text from $fieldId, set state here.");
-    //initState()
     setState(() {
       build(context);
     });
@@ -134,9 +129,6 @@ class _ProfilePageState extends State<Profile> {
                   fieldData: snapshot.data.jobseeker.information.skills,
                   handler: textFieldHandler,
                 ),
-//          inputChip(endpoint: "/api/jobseeker", title: "Skills: ",
-//            fieldId: "skill", fieldType: "text", fieldData: data["skill"]
-//            ,handler: textFieldHandler2,),
               ],
             ),
           );

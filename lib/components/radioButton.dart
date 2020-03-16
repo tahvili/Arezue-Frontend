@@ -3,30 +3,36 @@ import 'package:flutter/material.dart';
 
 class RadioWidget extends StatefulWidget {
 
-  RadioWidget({this.handler});
+  RadioWidget({this.numExpertise, this.handler});
 
   final Function handler;
+  final int numExpertise;
   @override
-  RadioWidgetState createState() => RadioWidgetState(handler : this.handler);
+  RadioWidgetState createState() => RadioWidgetState(numExpertise: this.numExpertise, handler : this.handler);
 }
 
 class RadioWidgetState extends State<RadioWidget> {
 
-  RadioWidgetState({this.handler});
+  RadioWidgetState({this.numExpertise, this.handler});
 
   int selectedRadioTile;
   Function handler;
+  int numExpertise;
 
   @override
   void initState() {
     super.initState();
-    selectedRadioTile = 0;
+    if (numExpertise == null) {
+      selectedRadioTile = 5;
+    } else{
+      selectedRadioTile = numExpertise;
+    }
   }
 
   setSelectedRadioTile(int val) {
     setState(() {
       selectedRadioTile = val;
-      handler(val, "experience");
+      handler(val, "expertise");
     });
   }
 

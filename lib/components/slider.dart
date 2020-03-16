@@ -2,26 +2,34 @@ import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class SliderWidget extends StatefulWidget {
-  SliderWidget({this.handler});
+  SliderWidget({this.numExperience, this.handler});
 
   final Function handler;
+  final int numExperience;
   @override
-  SliderWidgetState createState() => SliderWidgetState(handler: this.handler);
+  SliderWidgetState createState() => SliderWidgetState(
+      numExperience: this.numExperience, handler: this.handler);
 }
 
 class SliderWidgetState extends State<SliderWidget> {
-  SliderWidgetState({this.handler});
+  SliderWidgetState({this.numExperience, this.handler});
 
   Function handler;
+  int numExperience;
   double _value = 0.0;
 
   @override
   void initState() {
+    if (this.numExperience == null) {
+      _value = 0.0;
+    } else {
+      _value = numExperience.toDouble();
+    }
     super.initState();
   }
 
   void submitHandler(int value) {
-    handler(value, "expertise");
+    handler(value, "experience");
   }
 
   @override
@@ -71,8 +79,8 @@ class SliderWidgetState extends State<SliderWidget> {
                   onChanged: (value) {
                     setState(() {
                       _value = value;
-                      submitHandler(value.toInt());
                     });
+                    submitHandler(value.toInt());
                   },
                 ),
               ),

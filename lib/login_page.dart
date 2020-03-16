@@ -69,12 +69,9 @@ class _LoginPageState extends State<LoginPage> {
       _errorMessage = "";
     });
     if (validateAndSave()) {
-      print(formType);
       try {
         if (formType == FormType.login) {
           Object value = await widget.auth.signInWithEmailAndPassword(_email, _password);
-          print("the signed in object is:");
-          print(value);
           if (value !=
               null) {
             //setState(() => loading = true);
