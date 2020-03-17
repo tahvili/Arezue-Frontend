@@ -70,7 +70,6 @@ class Requests {
     var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/skill';
     var response = await http
         .post(url, body: {'skill': skill, 'level': level, 'years': years});
-//    Post p_response = Post.fromjson(json.decode(response.body));
     int statusCode = response.statusCode;
     return statusCode;
   }

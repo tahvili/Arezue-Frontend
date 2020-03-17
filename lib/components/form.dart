@@ -93,8 +93,8 @@ class _FormPageState extends State<FormPage> {
           Navigator.pop(context);
         }
       } else {
-        if (await (request.profileSkillPostRequest(
-            uid, skill, skill, '$numExpertise', '$numExperience')) ==
+        if (await (request.profileSkillPostRequest('jobseeker',
+            uid, skill, '$numExpertise', '$numExperience')) ==
             200) {
           handler(skill, "add");
           Navigator.pop(context);
