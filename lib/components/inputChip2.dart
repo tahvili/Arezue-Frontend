@@ -25,7 +25,7 @@ class InputChipBuilder2 extends StatefulWidget {
       fieldType; // numeric or text, depending on that it displays the keyboard differently
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
-  final List<Skill> fieldData; // the actualy value of the key.
+  final List<Object> fieldData; // the actualy value of the key.
   Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
@@ -49,7 +49,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
       fieldType; // numeric or text, depending on that it displays the keyboard differently
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
-  final List<Skill> fieldData; // the actualy value of the key.
+  final List<Object> fieldData; // the actualy value of the key.
   Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
@@ -57,13 +57,20 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
   var controller = TextEditingController();
   Requests serverRequest = new Requests();
 
-  List<String> skillsList = new List();
+  List<String> objectList = new List();
   List<Map<String, dynamic>> arr = new List<Map<String, dynamic>>();
 
-  void generateListSkills(List<Skill> skills) {
-    skills.forEach((skill) {
-      skillsList.add(skill.skill);
-    });
+  void generateListSkills(List<Object> list) {
+    if(fieldId == "skill") {
+      List<Skill>.from(list).forEach((skill) {
+        objectList.add(skill.skill);
+      });
+    }
+//    else if(fieldId == "education"){
+//      List<Education>.from(list).forEach((education) {
+//        objectList.add(education.schoolName);
+//      });
+//    }
   }
 
   @override
@@ -84,11 +91,11 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
     // Handle PUT request to the api here
     if (command == "add") {
       setState(() {
-        this.skillsList.add(text);
+        this.objectList.add(text);
       });
     } else if (command == "delete") {
       setState(() {
-        this.skillsList.remove(text);
+        this.objectList.remove(text);
       });
     } else {
       setState(() {});
@@ -98,7 +105,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
   }
 
   Future<int> FetchData() async {
-    arr = await (serverRequest.skillsGetRequest(uid));
+    arr = await (serverRequest.skillsGetRequest(uid, this.fieldId));
     if (arr.length != 0) {
       return 200;
     } else {
@@ -201,7 +208,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
             Wrap(
               spacing: 5.0, // gap between adjacent chips
               alignment: WrapAlignment.start,
-              children: listWidgets(this.skillsList),
+              children: listWidgets(this.objectList),
             ),
           ],
         ));

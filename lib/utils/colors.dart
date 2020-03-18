@@ -12,4 +12,5 @@ class ArezueColors {
   static Color highGreyColor = Color.fromRGBO(255, 255, 255, 0.6); // High Grey Color
   static Color lowGreyColor = Color.fromRGBO(255, 255, 255, 0.15);  // Low Grey Color
   static Color transparent = Color.fromRGBO(255, 255, 255, 0); // Transparent Color
+  static Color inputChipColor = Color.fromRGBO(217, 217, 217, 1.0);  // Low Grey Color
 }

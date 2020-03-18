@@ -30,7 +30,9 @@ class Information {
   List<Skill> skills;
   DreamCareer dreamCareer;
   DreamCompany dreamCompany;
-  Experiences experiences;
+  List<Education> education;
+  List<Certification> certification;
+  List<Experience> experience;
 
   Information(
       {this.acceptanceWage,
@@ -39,13 +41,23 @@ class Information {
       this.skills,
       this.dreamCareer,
       this.dreamCompany,
-      this.experiences});
+        this.education,
+      this.certification,
+      this.experience});
 
   factory Information.fromJson(Map<String, dynamic> parsedJson) {
 
     var list = parsedJson['skill'] as List;
-    print(list);
     List<Skill> skillsList = list.map((i) => Skill.fromJson(i)).toList();
+
+    var edList = parsedJson['education'] as List;
+    List<Education> educationList = edList.map((i) => Education.fromJson(i)).toList();
+
+    var certList = parsedJson['certification'] as List;
+    List<Certification> certificationList = certList.map((i) => Certification.fromJson(i)).toList();
+
+    var expList = parsedJson['experience'] as List;
+    List<Experience> experienceList = certList.map((i) => Experience.fromJson(i)).toList();
 
     return Information(
       acceptanceWage: double.parse(parsedJson['acceptance_wage']),
@@ -54,11 +66,72 @@ class Information {
       dreamCompany: DreamCompany(parsedJson['dream_company']),
       dreamCareer: DreamCareer(parsedJson['dream_career']),
       skills: skillsList,
+      education: educationList,
+      certification: certificationList,
+      experience: experienceList
     );
   }
 }
+//
+class Education {
 
-class Experiences {}
+  String edId;
+  String schoolName;
+  String startDate;
+  String gradDate;
+  String program;
+
+  Education({this.edId, this.schoolName, this.startDate, this.gradDate, this.program});
+
+  factory Education.fromJson(Map<String, dynamic> parsedJson) {
+    return Education(
+        edId: parsedJson['ed_id'].toString(),
+        schoolName: parsedJson['school_name'],
+        startDate: parsedJson['start_date'],
+        gradDate: parsedJson['grad_date'],
+        program: parsedJson['program']);
+  }
+}
+
+class Certification{
+
+  String cId;
+  String name;
+  String startDate;
+  String endDate;
+  String issuer;
+
+  Certification({this.cId, this.name, this.startDate, this.endDate, this.issuer});
+
+  factory Certification.fromJson(Map<String, dynamic> parsedJson) {
+    return Certification(
+        cId: parsedJson['c_id'].toString(),
+        name: parsedJson['cert_name'],
+        startDate: parsedJson['start_date'],
+        endDate: parsedJson['end_date'],
+        issuer: parsedJson['issuer']);
+  }
+}
+
+class Experience{
+
+  String expId;
+  String title;
+  String startDate;
+  String endDate;
+  String description;
+
+  Experience({this.expId, this.title, this.startDate, this.endDate, this.description});
+
+  factory Experience.fromJson(Map<String, dynamic> parsedJson) {
+    return Experience(
+        expId: parsedJson['exp_id'].toString(),
+        title: parsedJson['title'],
+        startDate: parsedJson['start_date'],
+        endDate: parsedJson['end_date'],
+        description: parsedJson['description']);
+  }
+}
 
 class DreamCareer {
   final List careers;

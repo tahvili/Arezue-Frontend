@@ -37,9 +37,9 @@ class Requests {
     }
   }
 
-  Future<List<Map<String, dynamic>>> skillsGetRequest(String uid) async {
+  Future<List<Map<String, dynamic>>> skillsGetRequest(String uid, String type) async {
     var response =
-        await http.get('https://api.daffychuy.com/api/v1/jobseeker/$uid/skill');
+        await http.get('https://api.daffychuy.com/api/v1/jobseeker/$uid/$type');
     if (response.statusCode == 200) {
       return List<Map<String, dynamic>>.from(json.decode(response.body));
     } else {
@@ -73,6 +73,29 @@ class Requests {
     int statusCode = response.statusCode;
     return statusCode;
   }
+
+  Future<int> profileEdExCertPostRequest(String uid, String fieldId, String firstVal,
+      String startDate, String endDate, String secondVal) async {
+    var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$fieldId';
+    http.Response response;
+    if(fieldId == "education"){
+      response = await http
+          .post(url, body: {'school_name': firstVal, 'start_date': startDate,
+        'grad_date': endDate, 'program': secondVal});
+    }else if(fieldId == "experience"){
+      response = await http
+          .post(url, body: {'title': firstVal, 'start_date': startDate,
+        'end_date': endDate, 'description': secondVal});
+    }else{
+      response = await http
+          .post(url, body: {'cert_name': firstVal, 'start_date': startDate,
+        'end_date': endDate, 'issuer': secondVal});
+    }
+    print("the status code in post is: ${response.statusCode}");
+    return response.statusCode;
+  }
+
+
 
   Future<Map<String, dynamic>> resumeGetList(Future<String> uid) async {
     var response = await http

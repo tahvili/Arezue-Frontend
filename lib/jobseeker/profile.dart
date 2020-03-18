@@ -1,4 +1,5 @@
 import 'package:arezue/components/inputChip2.dart';
+import 'package:arezue/components/inputChip3.dart';
 import 'package:arezue/components/textfield.dart';
 import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/services/auth.dart';
@@ -127,6 +128,33 @@ class _ProfilePageState extends State<Profile> {
                   fieldId: "skill",
                   fieldType: "text",
                   fieldData: snapshot.data.jobseeker.information.skills,
+                  handler: textFieldHandler,
+                ),
+                InputChipBuilder3(
+                  endpoint: "/api/jobseeker",
+                  uid: snapshot.data.jobseeker.uid,
+                  title: "Education ",
+                  fieldId: "education",
+                  fieldType: "text",
+                  fieldData: snapshot.data.jobseeker.information.education,
+                  handler: textFieldHandler,
+                ),
+                InputChipBuilder3(
+                  endpoint: "/api/jobseeker",
+                  uid: snapshot.data.jobseeker.uid,
+                  title: "Experience ",
+                  fieldId: "experience",
+                  fieldType: "text",
+                  fieldData: snapshot.data.jobseeker.information.experience,
+                  handler: textFieldHandler,
+                ),
+                InputChipBuilder3(
+                  endpoint: "/api/jobseeker",
+                  uid: snapshot.data.jobseeker.uid,
+                  title: "Certification ",
+                  fieldId: "certification",
+                  fieldType: "text",
+                  fieldData: snapshot.data.jobseeker.information.certification,
                   handler: textFieldHandler,
                 ),
               ],
