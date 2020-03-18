@@ -39,7 +39,6 @@ class NameValidator {
 
 class NumberValidator {
   static String validate(String value) {
-    print("did i even get here?");
     RegExp float =
         RegExp(r'^(?:-?(?:[0-9]+))?(?:\.[0-9]*)?(?:[eE][\+\-]?(?:[0-9]+))?$');
     if (!(float.hasMatch(value))) {

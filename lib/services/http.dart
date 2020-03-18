@@ -13,11 +13,8 @@ class Requests {
   //get request for jobseeker
 
   Future<Jobseeker> jobseekerGetRequest(Future<String> uid) async {
-    var response = await http.get(
-        'https://api.daffychuy.com/api/v1/jobseeker/${await uid}');
-    print(response.statusCode);
-    print("the status code is ${response.statusCode}");
-    print(response.body);
+    var response = await http
+        .get('https://api.daffychuy.com/api/v1/jobseeker/${await uid}');
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response, then parse the JSON.
       return Jobseeker.fromJson(json.decode(response.body));
@@ -28,30 +25,64 @@ class Requests {
   }
 
   Future<JobseekerInfo> profileGetRequest(Future<String> uid) async {
-    var response = await http.get(
-        'https://api.daffychuy.com/api/v1/jobseeker/${await uid}/profile');
-    print(response.statusCode);
-    print("the status code is ${response.statusCode}");
-    print(response.body);
+    var response = await http
+        .get('https://api.daffychuy.com/api/v1/jobseeker/${await uid}/profile');
+
     if (response.statusCode == 200) {
-      print("the response before sending is");
-      print(json.decode(response.body));
       // If the server did return a 200 OK response, then parse the JSON.
-        return new JobseekerInfo.fromJson(json.decode(response.body));
+      return new JobseekerInfo.fromJson(json.decode(response.body));
     } else {
       // If the server did not return a 200 OK response, then throw an exception.
       throw Exception('Failed to load album');
     }
   }
 
-  Future<Map<String,dynamic>> resumeGetList(Future<String> uid) async {
-    var response = await http.get(
-        'https://api.daffychuy.com/api/v1/jobseeker/${await uid}/resumes');
+  Future<List<Map<String, dynamic>>> skillsGetRequest(String uid) async {
+    var response =
+        await http.get('https://api.daffychuy.com/api/v1/jobseeker/$uid/skill');
+    if (response.statusCode == 200) {
+      return List<Map<String, dynamic>>.from(json.decode(response.body));
+    } else {
+      return [
+        {'0': 0}
+      ];
+    }
+  }
+
+  Future<int> skillDeleteRequest(String uid, String skill) async {
+    String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/skill/$skill';
+    http.Response response = await http.delete(url);
+    int statusCode = response.statusCode;
+    return statusCode;
+  }
+
+  Future<int> profileSkillPutRequest(String uid, String oldSkill,
+      String newSkill, String numExperience, String numExpertise) async {
+    if (await (skillDeleteRequest(uid, oldSkill)) == 200) {
+      Future<int> response = profileSkillPostRequest(
+          'jobseeker', uid, newSkill, numExpertise, numExperience);
+      return response;
+    }
+  }
+
+  Future<int> profileSkillPostRequest(String usertype, String uid, String skill,
+      String level, String years) async {
+    var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/skill';
+    var response = await http
+        .post(url, body: {'skill': skill, 'level': level, 'years': years});
+    int statusCode = response.statusCode;
+    return statusCode;
+  }
+
+  Future<Map<String, dynamic>> resumeGetList(Future<String> uid) async {
+    var response = await http
+        .get('https://api.daffychuy.com/api/v1/jobseeker/${await uid}/resumes');
     if (response.statusCode == 200) {
       var _list = json.decode(response.body);
-      Map<String,dynamic> returnList = new Map<String,dynamic>();
-      for(int i=0;i<(_list["data"]).length;i++){
-        returnList[(_list["data"][i]["resume_id"].toString())]=(_list["data"][i]["resume"]);
+      Map<String, dynamic> returnList = new Map<String, dynamic>();
+      for (int i = 0; i < (_list["data"]).length; i++) {
+        returnList[(_list["data"][i]["resume_id"].toString())] =
+            (_list["data"][i]["resume"]);
       }
       // If the server did return a 200 OK response, then parse the JSON.
       return returnList;
@@ -61,7 +92,8 @@ class Requests {
     }
   }
 
-  Future<Map<String,dynamic>> resumeGetData(String uid, String resumeId) async {
+  Future<Map<String, dynamic>> resumeGetData(
+      String uid, String resumeId) async {
     var response = await http.get(
         'https://api.daffychuy.com/api/v1/jobseeker/${uid}/resumes${resumeId}');
     if (response.statusCode == 200) {
@@ -76,85 +108,62 @@ class Requests {
 
   Future<int> resumePostRequest(String uid, Map<String, String> list) async {
     var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes';
-    var response = await http.post(url,
-        body: {'resume':json.encode(list)});
+    var response = await http.post(url, body: {'resume': json.encode(list)});
     int statusCode = response.statusCode;
     return statusCode;
   }
 
-  Future<int> resumePutRequest(String uid, String resumeId, Map<String, String> list) async {
-    String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes/$resumeId';
+  Future<int> resumePutRequest(
+      String uid, String resumeId, Map<String, String> list) async {
+    String url =
+        'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes/$resumeId';
     // the makes the PUT request
     http.Response response =
-    await http.put(url,
-        body: {'resume':json.encode(list)});
+        await http.put(url, body: {'resume': json.encode(list)});
     int statusCode = response.statusCode;
     return statusCode;
   }
 
   Future<int> resumeDeleteRequest(String uid, String resumeId) async {
-    String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes/$resumeId';
+    String url =
+        'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes/$resumeId';
     http.Response response = await http.delete(url);
     int statusCode = response.statusCode;
     return statusCode;
   }
 
-  Future<int> profilePostRequest(
-      String usertype, String uid, String command, String value, String preference, String rank) async {
+  Future<int> profilePostRequest(String usertype, String uid, String command,
+      String value, String preference, String rank) async {
     var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$command';
-    var response = await http.post(url,
-        body: {command: value, preference : rank});
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    var response =
+        await http.post(url, body: {command: value, preference: rank});
+
 //    Post p_response = Post.fromjson(json.decode(response.body));
     int statusCode = response.statusCode;
     return statusCode;
   }
 
-  Future<int> profileSkillPostRequest(
-      String usertype, String uid, String skill, String level, String years) async {
-    var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/skill';
-    var response = await http.post(url,
-        body: {'skill': skill, 'level' : level, 'years': years});
-    print('Response status skill: ${response.statusCode}');
-    print('Response body skill: ${response.body}');
-//    Post p_response = Post.fromjson(json.decode(response.body));
-    int statusCode = response.statusCode;
-    return statusCode;
-  }
-
-    void deleteRequest(String uid, String type, String value) async {
+  void deleteRequest(String uid, String type, String value) async {
     String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$type/$value';
     http.Response response = await http.delete(url);
   }
 
-  void putRequest(String userType, String uid, String command, String change) async {
+  void putRequest(
+      String userType, String uid, String command, String change) async {
     //URL for testing.
-    if(userType=="jobseeker"){
+    if (userType == "jobseeker") {
       String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid';
       // the makes the PUT request
-      http.Response response =
-      await http.put(url, body: {command: change});
-      print(response.statusCode);
+      http.Response response = await http.put(url, body: {command: change});
     }
-//    else if(userType=="employer"){
-//      String url = 'https://api.daffychuy.com/api/v1/employer/$uid';
-//      // the makes the PUT request
-//      http.Response response =
-//      await http.put(url, body: {command: change});
-//      print(response.statusCode);
-//    }
-
   }
 
   //get request for employer
 
   Future<Employer> employerGetRequest(Future<String> uid) async {
-    var response = await http.get(
-        'https://api.daffychuy.com/api/v1/employer/${await uid}');
-    print(response.statusCode);
-    print("the status code is ${response.statusCode}");
-    print(response.body);
+    var response = await http
+        .get('https://api.daffychuy.com/api/v1/employer/${await uid}');
+
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response, then parse the JSON.
       return Employer.fromJson(json.decode(response.body));
@@ -167,33 +176,24 @@ class Requests {
   Future<int> jobseekerPostRequest(
       String uid, String email, String name) async {
     var url = 'https://api.daffychuy.com/api/v1/jobseeker';
-    var response = await http.post(url,
-        body: {'firebaseID': uid, 'email': email, 'name': name});
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-//    Post p_response = Post.fromjson(json.decode(response.body));
-    int statusCode = response.statusCode;
-    return statusCode;
+    var response = await http
+        .post(url, body: {'firebaseID': uid, 'email': email, 'name': name});
+
+    return response.statusCode;
   }
 
   Future<int> employerPostRequest(
       String uid, String email, String name, String company) async {
     var url = 'https://api.daffychuy.com/api/v1/employer';
-    var response = await http.post(url,
-        body:{
-          'firebaseID': uid,
-          'email': email,
-          'name': name,
-          'company': company
-        });
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-//    Post p_response = Post.fromjson(json.decode(response.body));
-    int statusCode = response.statusCode;
-    return statusCode;
+    var response = await http.post(url, body: {
+      'firebaseID': uid,
+      'email': email,
+      'name': name,
+      'company': company
+    });
+
+    return response.statusCode;
   }
-
-
 
 //
 //  void patchRequest(String letter) async {

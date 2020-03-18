@@ -10,11 +10,13 @@ class MySearchTextField extends StatefulWidget {
   MySearchTextField(
       {@required this.title,
       this.uid,
+      this.skill,
       this.fieldData = "",
       @required this.fieldId = "",
       this.fieldType = "text",
       this.handler});
   final String uid;
+  final String skill;
   final String
       title; // this goes before the textfield, i.e. what textfield is this.
   final String
@@ -29,6 +31,7 @@ class MySearchTextField extends StatefulWidget {
     return _MySearchTextFieldState(
         title: this.title,
         uid: this.uid,
+        skill: this.skill,
         fieldData: this.fieldData,
         fieldType: this.fieldType,
         handler: this.handler);
@@ -42,12 +45,14 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
       {@required this.title,
       this.uid,
       this.endpoint,
+      this.skill,
       this.fieldData = "",
       @required this.fieldId = "",
       @required this.fieldType = "text",
       this.handler});
 
   final String uid;
+  final String skill;
   final String
       title; // this goes before the textfield, i.e. what textfield is this.
   final String
@@ -69,6 +74,14 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
     "numeric": TextInputType.numberWithOptions(decimal: true),
     "text": TextInputType.text
   };
+
+  @override
+  void initState() {
+    if (this.skill != null) {
+      controller.text = skill;
+    }
+    super.initState();
+  }
 
   // child handler that calls the API and then the parent handler.
   void submitHandler(text) {

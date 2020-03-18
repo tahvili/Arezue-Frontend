@@ -47,10 +47,8 @@ class Employer extends Object {
   bool changeStatus() {
     if (activeStates == true) {
       activeStates = false;
-      print(activeStates);
     } else {
       activeStates = true;
-      print(activeStates);
     }
     return activeStates;
   }
