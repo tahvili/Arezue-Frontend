@@ -76,7 +76,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
   @override
   void initState() {
     super.initState();
-    FetchData();
+   // FetchData();
     generateListSkills(fieldData);
   }
 
@@ -122,7 +122,6 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
       ),
       onPressed: () async {
         if (await (FetchData()) == 200) {
-          //Skill value = fieldData.singleWhere((skill) => skill.skill == text);
           Map<String, dynamic> value =
               arr.singleWhere((element) => element['skill'] == text);
           Navigator.push(

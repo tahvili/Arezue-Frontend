@@ -11,23 +11,26 @@ class FormPage2 extends StatefulWidget {
   FormPage2(
       {this.title,
       this.uid,
+        this.id,
       this.fieldId,
       this.handler,
       this.objectList,
       this.isNew});
 
   final String uid;
+  final String id;
   final String title;
   final String fieldId;
   final String isNew;
   Function handler;
-  Map<String, String> objectList;
+  Map<String, dynamic> objectList;
 
   @override
   State<StatefulWidget> createState() {
     return _FormPageState2(
         title: this.title,
         uid: this.uid,
+        id: this.id,
         fieldId: this.fieldId,
         handler: this.handler,
         objectList: this.objectList,
@@ -39,17 +42,19 @@ class _FormPageState2 extends State<FormPage2> {
   _FormPageState2(
       {this.uid,
       this.title,
+        this.id,
       this.fieldId,
       this.handler,
       this.objectList,
       this.isNew});
 
   final String uid;
+  final String id;
   final String title;
   final String fieldId;
   final String isNew;
   Function handler;
-  Map<String, String> objectList;
+  Map<String, dynamic> objectList;
   Requests request = new Requests();
 
   bool isFieldEmpty;
@@ -68,7 +73,7 @@ class _FormPageState2 extends State<FormPage2> {
     });
     if (isFieldEmpty) {
       _showPasswordResetSentDialog();
-    } else if (isNew == "true") {
+    } else{
       String firstVal, secondVal, startDate, endDate;
       int i = 0;
       for (var keys in objectList.keys) {
@@ -86,6 +91,7 @@ class _FormPageState2 extends State<FormPage2> {
           i++;
         }
       }
+      if (isNew == "true") {
       if (await (request.profileEdExCertPostRequest(
               uid, fieldId, firstVal, startDate, endDate, secondVal)) ==
           200) {
@@ -115,20 +121,27 @@ class _FormPageState2 extends State<FormPage2> {
       }
     } else {
       //make a put request here
+        if(await(request.profileEdExCertPutRequest(this.fieldId, uid, id,
+            firstVal, startDate, endDate, secondVal)) == 200){
+          Navigator.pop(context);
+          handler([firstVal, startDate, endDate, secondVal], id);
+          }
+        }
+        }
     }
-  }
 
   void formHandler(key, value) {
     setState(() {
+      print("key is $key and value is $value");
       objectList[key] = value;
     });
   }
 
-  List<Widget> listWidgets(Map<String, String> map) {
+  List<Widget> listWidgets(Map<String, dynamic> map) {
     List<Widget> list = new List<Widget>();
     map.forEach((key, value) {
       list.add(
-          MyTextField2(title: key, fieldData: value, handler: formHandler));
+          MyTextField2(title: key, fieldData: value.toString(), handler: formHandler));
     });
 
     return list;
@@ -177,10 +190,17 @@ class _FormPageState2 extends State<FormPage2> {
 
   Widget deleteButton() {
     return (isNew == "true")
-        ? null
+        ? SizedBox(
+            width: 1,
+          )
         : RaisedButton(
-            onPressed: () {
-              submitHandler();
+            onPressed: () async{
+                if(await (request.edExCertDeleteRequest(this.fieldId, uid, this.id)) == 200){
+                  Navigator.pop(context);
+                  handler(this.id, "delete");
+                }else{
+                  _showPasswordResetSentDialog();
+                }
             },
             child: Text("Delete",
                 style: TextStyle(color: ArezueColors.outPrimaryColor)),

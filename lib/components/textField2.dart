@@ -71,27 +71,18 @@ class _MyTextFieldState2 extends State<MyTextField2> {
     "text": TextInputType.text
   };
 
-  @override
-  void initState() {
-    if (this.fieldData != null) {
-      controller.text = fieldData;
-    }
-    super.initState();
-  }
-
   // child handler that calls the API and then the parent handler.
   void submitHandler(text) {
     setState(() {
       controller.text = text;
-      fieldData = text;
+      this.fieldData = text;
     });
-
     handler(this.title, text); //calling formHandler
   }
 
   // The actual object iself.
   Widget build(BuildContext context) {
-    //controller.text = this.fieldData;
+    controller.text = this.fieldData;
     return Container(
       padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
       margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
@@ -126,6 +117,8 @@ class _MyTextFieldState2 extends State<MyTextField2> {
               Expanded(
                 child: TextField(
                   textAlign: TextAlign.left,
+                  controller: controller,
+                  keyboardType: keyboards[this.fieldType],
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: "Enter something",

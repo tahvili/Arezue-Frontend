@@ -41,7 +41,15 @@ class Requests {
     var response =
         await http.get('https://api.daffychuy.com/api/v1/jobseeker/$uid/$type');
     if (response.statusCode == 200) {
-      return List<Map<String, dynamic>>.from(json.decode(response.body));
+      //print("the json in get is ${json.decode(response.body)}");
+      //print("the length in get is ${(json.decode(response.body))[type][1]}");
+      List<Map<String, dynamic>> newList = new List<Map<String, dynamic>>();
+      for(int i = 0; i < (json.decode(response.body)[type]).length; i++){
+        //print("the json in get is ${(json.decode(response.body))[type][i]}");
+        newList.add((json.decode(response.body))[type][i]);
+      }
+      //print("the new list in get is: $newList");
+      return newList;
     } else {
       return [
         {'0': 0}
@@ -55,6 +63,7 @@ class Requests {
     int statusCode = response.statusCode;
     return statusCode;
   }
+
 
   Future<int> profileSkillPutRequest(String uid, String oldSkill,
       String newSkill, String numExperience, String numExpertise) async {
@@ -93,6 +102,44 @@ class Requests {
     }
     print("the status code in post is: ${response.statusCode}");
     return response.statusCode;
+  }
+
+  Future<int> profileEdExCertPutRequest(String fieldId, String uid, String id, String firstVal,
+      String startDate, String endDate, String secondVal) async {
+    String url;
+    http.Response response;
+    if(fieldId =="education"){
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/education';
+      response = await http.put(url, body: {'ed_id': id, 'school_name': firstVal,
+      'start_date': startDate, 'grad_date': endDate, 'program': secondVal});
+    }else if(fieldId == "experience"){
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/exp';
+      response = await http.put(url, body: {'exp_id': id, 'title': firstVal,
+        'start_date': startDate, 'end_date': endDate, 'description': secondVal});
+    }else{
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/certification';
+      response = await http.put(url, body: {'c_id': id, 'cert_name': firstVal,
+        'start_date': startDate, 'end_date': endDate, 'issuer': secondVal});
+    }
+    // the makes the PUT request
+
+    int statusCode = response.statusCode;
+    return statusCode;
+
+  }
+
+  Future<int> edExCertDeleteRequest(String fieldId, String uid, String id) async {
+    String url;
+    if(fieldId =="education"){
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/education/$id';
+    }else if(fieldId == "experience"){
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/exp/$id';
+    }else{
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/certification/$id';
+    }
+    http.Response response = await http.delete(url);
+    int statusCode = response.statusCode;
+    return statusCode;
   }
 
 

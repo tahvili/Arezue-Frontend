@@ -19,7 +19,7 @@ class InputChipBuilder3 extends StatefulWidget {
       this.handler});
 
   final String uid;
-  final String id;
+  String id;
   final String
       title; // this goes before the textfield, i.e. what textfield is this.
   final String
@@ -64,8 +64,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
   Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
-
-  Map<String, String> sendList  = new  Map<String, String>();
+  Map<String, dynamic> sendList = new Map<String, dynamic>();
   //created a text-editing controller so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
   Requests serverRequest = new Requests();
@@ -84,7 +83,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
         objectList.add(education);
         this.id = education.edId;
       });
-    }else{
+    } else {
       List<Certification>.from(list).forEach((certification) {
         objectList.add(certification);
         this.id = certification.cId;
@@ -95,15 +94,15 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
   @override
   void initState() {
     super.initState();
-    FetchData();
+//    FetchData();
     generateObjectList(fieldData);
   }
 
-
   Future<int> FetchData() async {
     arr = await (serverRequest.skillsGetRequest(uid, this.fieldId));
+    //print("the array after get is: $arr");
     if (arr.length != 0) {
-//      return 200;
+      return 200;
     } else {
       return 0;
     }
@@ -125,47 +124,54 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
       });
     } else if (command == "delete") {
       setState(() {
-        this.objectList.remove(text);
+        if(this.fieldId == "education"){
+        this.objectList.removeWhere((element) => (element as Education).edId == text.toString());
+      }else  if(this.fieldId == "experience"){
+          this.objectList.removeWhere((element) => (element as Experience).expId == text.toString());
+        }else {
+          this.objectList.removeWhere((element) => (element as Certification).cId == text.toString());
+        }
       });
     } else {
-      setState(() {});
+      List lst = List<String>.from(text);
+      setState(() {
+        if(this.fieldId == "education"){
+          for(Object element in this.objectList){
+            Education ed = (element as Education);
+            if(ed.edId == command.toString()){
+              ed.schoolName = lst[0];
+              ed.startDate = lst[1];
+              ed.gradDate = lst[2];
+              ed.program = lst[3];
+            }
+          }
+        }else  if(this.fieldId == "experience"){
+          for(Object element in this.objectList){
+            Experience exp = (element as Experience);
+            if(exp.expId == command.toString()){
+              exp.title = lst[0];
+              exp.startDate = lst[1];
+              exp.endDate = lst[2];
+              exp.description = lst[3];
+            }
+          }
+        }else {
+          for(Object element in this.objectList){
+            Certification cert = (element as Certification);
+            if(cert.cId == command.toString()){
+              cert.name = lst[0];
+              cert.startDate = lst[1];
+              cert.endDate = lst[2];
+              cert.issuer = lst[3];
+            }
+          }
+        }
+      });
     }
     handler(text, command);
     // Once that's done, notify the parent so it knows to update its local state.
   }
 
-
-//
-//  Widget inputChips(text) {
-//    return InputChip(
-//      padding: EdgeInsets.all(2.0),
-//      label: Text(text),
-//      labelStyle: TextStyle(
-//        color: ArezueColors.secondaryColor,
-//      ),
-//      onPressed: () async {
-//        if (await (FetchData()) == 200) {
-//          //Skill value = fieldData.singleWhere((skill) => skill.skill == text);
-//          Map<String, dynamic> value =
-//              arr.singleWhere((element) => element['skill'] == text);
-//          Navigator.push(
-//              context,
-//              MaterialPageRoute(
-//                  builder: (context) => FormPage(
-//                      title: "Edit Your skill",
-//                      skill: value['skill'],
-//                      numExperience: value['years_of_expertise'],
-//                      numExpertise: value['level_expertise'],
-//                      handler: submitHandler,
-//                      uid: this.uid,
-//                      fieldId: this.fieldId)));
-//        }
-//      },
-//      onDeleted: () {
-//        submitHandler(text, "delete");
-//      }, //this is what happens when the x is pressed
-//    );
-//  }
 
   Widget getText(String text) {
     return Expanded(
@@ -187,7 +193,6 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
 
     return textList;
   }
-
 
   List<String> getStringList(Object list) {
     List arrStr = new List();
@@ -221,7 +226,39 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
         borderRadius: BorderRadius.all(Radius.circular(35.0)),
       ),
       child: Column(
-        children: getTextList(getStringList(elements)),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () async {
+                  Map<String, dynamic> val = await (sendEditListGenerator(this.fieldId, elements));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FormPage2(
+                              title: "Edit your $fieldId",
+                              isNew: "false",
+                              objectList: val,
+                              id: this.id,
+                              handler: submitHandler,
+                              uid: this.uid,
+                              fieldId: this.fieldId)));
+                },
+              ),
+            ],
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Column(
+                  children: getTextList(getStringList(elements)),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -297,22 +334,22 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
     return expList;
   }
 
-  Map<String, String> sendListGenerator(String fieldId) {
-    if(fieldId == "education"){
+  Map<String, dynamic> sendListGenerator(String fieldId) {
+    if (fieldId == "education") {
       sendList = {
-        "Name of Institution" : null,
-        "Start Date": null,
-        "End Date": null,
-        "Program": null,
+        "Name of Institution": "",
+        "Start Date": "",
+        "End Date": "",
+        "Program": "",
       };
-    }else if(fieldId == "experience"){
+    } else if (fieldId == "experience") {
       sendList = {
         "Job Title": null,
         "Start Date": null,
         "End Date": null,
         "Description": null,
       };
-    }else{
+    } else {
       sendList = {
         "Name": null,
         "Start Date": null,
@@ -321,5 +358,41 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
       };
     }
     return sendList;
+  }
+  Future<Map<String, dynamic>> sendEditListGenerator(String fieldId, Object element) async {
+    if (await(FetchData()) == 200) {
+      Map<String, dynamic> value;
+      if (fieldId == "education") {
+        value = arr.singleWhere((val) => val['school_name'] == ((element as Education).schoolName));
+        sendList = {
+          "Name of Institution": value['school_name'],
+          "Start Date": value['start_date'],
+          "End Date": value['grad_date'],
+          "Program": value['program'],
+          //"ed_id": value['ed_id'],
+        };
+      } else if (fieldId == "experience") {
+        value = arr.singleWhere((val) => val['title'] == ((element as Experience).title));
+        sendList = {
+          "Job Title": value['title'],
+          "Start Date": value['start_date'],
+          "End Date": value['end_date'],
+          "Description": value['description'],
+         // "exp_id": value['exp_id'],
+        };
+      } else {
+        value = arr.singleWhere((val) => val['school_name'] == ((element as Certification).name));
+        sendList = {
+          "Name": value['cert_name'],
+          "Start Date": value['start_date'],
+          "End Date": value['end_date'],
+          "Issuing Organization": value['issuer'],
+          //"cert_id": value['cert_id'],
+        };
+      }
+      return sendList;
+    }else{
+      return {};
+    }
   }
 }
