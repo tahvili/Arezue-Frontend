@@ -37,11 +37,16 @@ class Requests {
     }
   }
 
-  Future<List<Map<String, dynamic>>> skillsGetRequest(String uid) async {
+  Future<List<Map<String, dynamic>>> skillsGetRequest(String uid, String type) async {
     var response =
-        await http.get('https://api.daffychuy.com/api/v1/jobseeker/$uid/skill');
+        await http.get('https://api.daffychuy.com/api/v1/jobseeker/$uid/$type');
     if (response.statusCode == 200) {
-      return List<Map<String, dynamic>>.from(json.decode(response.body));
+
+      List<Map<String, dynamic>> newList = new List<Map<String, dynamic>>();
+      for(int i = 0; i < (json.decode(response.body)["data"]).length; i++){
+        newList.add((json.decode(response.body))["data"][i]);
+      }
+      return newList;
     } else {
       return [
         {'0': 0}
@@ -55,6 +60,7 @@ class Requests {
     int statusCode = response.statusCode;
     return statusCode;
   }
+
 
   Future<int> profileSkillPutRequest(String uid, String oldSkill,
       String newSkill, String numExperience, String numExpertise) async {
@@ -73,6 +79,67 @@ class Requests {
     int statusCode = response.statusCode;
     return statusCode;
   }
+
+  Future<int> profileEdExCertPostRequest(String uid, String fieldId, String firstVal,
+      String startDate, String endDate, String secondVal) async {
+    var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$fieldId';
+    http.Response response;
+    if(fieldId == "education"){
+      response = await http
+          .post(url, body: {'school_name': firstVal, 'start_date': startDate,
+        'grad_date': endDate, 'program': secondVal});
+    }else if(fieldId == "experience"){
+      response = await http
+          .post(url, body: {'title': firstVal, 'start_date': startDate,
+        'end_date': endDate, 'description': secondVal});
+    }else{
+      response = await http
+          .post(url, body: {'cert_name': firstVal, 'start_date': startDate,
+        'end_date': endDate, 'issuer': secondVal});
+    }
+    print("the status code in post is: ${response.statusCode}");
+    return response.statusCode;
+  }
+
+  Future<int> profileEdExCertPutRequest(String fieldId, String uid, String id, String firstVal,
+      String startDate, String endDate, String secondVal) async {
+    String url;
+    http.Response response;
+    if(fieldId =="education"){
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/education';
+      response = await http.put(url, body: {'ed_id': id, 'school_name': firstVal,
+      'start_date': startDate, 'grad_date': endDate, 'program': secondVal});
+    }else if(fieldId == "experience"){
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/exp';
+      response = await http.put(url, body: {'exp_id': id, 'title': firstVal,
+        'start_date': startDate, 'end_date': endDate, 'description': secondVal});
+    }else{
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/certification';
+      response = await http.put(url, body: {'c_id': id, 'cert_name': firstVal,
+        'start_date': startDate, 'end_date': endDate, 'issuer': secondVal});
+    }
+    // the makes the PUT request
+
+    int statusCode = response.statusCode;
+    return statusCode;
+
+  }
+
+  Future<int> edExCertDeleteRequest(String fieldId, String uid, String id) async {
+    String url;
+    if(fieldId =="education"){
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/education/$id';
+    }else if(fieldId == "experience"){
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/exp/$id';
+    }else{
+      url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/certification/$id';
+    }
+    http.Response response = await http.delete(url);
+    int statusCode = response.statusCode;
+    return statusCode;
+  }
+
+
 
   Future<Map<String, dynamic>> resumeGetList(Future<String> uid) async {
     var response = await http
