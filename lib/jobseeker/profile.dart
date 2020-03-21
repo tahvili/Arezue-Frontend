@@ -86,7 +86,7 @@ class _ProfilePageState extends State<Profile> {
                   title: "Your Goal Wage: ",
                   uid: snapshot.data.jobseeker.uid,
                   fieldId: "goal_wage",
-                  fieldType: "text",
+                  fieldType: "numeric",
                   fieldData:
                       snapshot.data.jobseeker.information.goalWage.toString(),
                   handler: textFieldHandler,

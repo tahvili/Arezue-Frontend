@@ -344,26 +344,27 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
       };
     } else if (fieldId == "experience") {
       sendList = {
-        "Job Title": null,
-        "Start Date": null,
-        "End Date": null,
-        "Description": null,
+        "Job Title": "",
+        "Start Date": "",
+        "End Date": "",
+        "Description": "",
       };
     } else {
       sendList = {
-        "Name": null,
-        "Start Date": null,
-        "End Date": null,
-        "Issuing Organization": null,
+        "Name": "",
+        "Start Date": "",
+        "End Date": "",
+        "Issuing Organization": "",
       };
     }
     return sendList;
   }
   Future<Map<String, dynamic>> sendEditListGenerator(String fieldId, Object element) async {
     if (await(FetchData()) == 200) {
+      print("arr is: $arr");
       Map<String, dynamic> value;
       if (fieldId == "education") {
-        value = arr.singleWhere((val) => val['school_name'] == ((element as Education).schoolName));
+        value = arr.singleWhere((val) => val['ed_id'].toString() == ((element as Education).edId).toString());
         sendList = {
           "Name of Institution": value['school_name'],
           "Start Date": value['start_date'],
@@ -372,7 +373,8 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
           //"ed_id": value['ed_id'],
         };
       } else if (fieldId == "experience") {
-        value = arr.singleWhere((val) => val['title'] == ((element as Experience).title));
+        value = arr.singleWhere((val) => val['exp_id'].toString() == ((element as Experience).expId).toString());
+        print("the value of value is: $value");
         sendList = {
           "Job Title": value['title'],
           "Start Date": value['start_date'],
@@ -381,7 +383,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
          // "exp_id": value['exp_id'],
         };
       } else {
-        value = arr.singleWhere((val) => val['school_name'] == ((element as Certification).name));
+        value = arr.singleWhere((val) => val['c_id'].toString() == ((element as Certification).cId).toString());
         sendList = {
           "Name": value['cert_name'],
           "Start Date": value['start_date'],

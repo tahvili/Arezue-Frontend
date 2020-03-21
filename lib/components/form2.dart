@@ -67,7 +67,7 @@ class _FormPageState2 extends State<FormPage2> {
 
   void submitHandler() async {
     objectList.forEach((k, v) {
-      if (v == null) {
+      if (v == "") {
         isFieldEmpty = true;
       }
     });

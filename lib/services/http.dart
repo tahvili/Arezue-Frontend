@@ -41,14 +41,11 @@ class Requests {
     var response =
         await http.get('https://api.daffychuy.com/api/v1/jobseeker/$uid/$type');
     if (response.statusCode == 200) {
-      //print("the json in get is ${json.decode(response.body)}");
-      //print("the length in get is ${(json.decode(response.body))[type][1]}");
+
       List<Map<String, dynamic>> newList = new List<Map<String, dynamic>>();
-      for(int i = 0; i < (json.decode(response.body)[type]).length; i++){
-        //print("the json in get is ${(json.decode(response.body))[type][i]}");
-        newList.add((json.decode(response.body))[type][i]);
+      for(int i = 0; i < (json.decode(response.body)["data"]).length; i++){
+        newList.add((json.decode(response.body))["data"][i]);
       }
-      //print("the new list in get is: $newList");
       return newList;
     } else {
       return [

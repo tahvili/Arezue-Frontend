@@ -95,6 +95,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
       });
     } else if (command == "delete") {
       setState(() {
+        serverRequest.skillDeleteRequest(this.uid, text);
         this.objectList.remove(text);
       });
     } else {
@@ -122,16 +123,17 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
       ),
       onPressed: () async {
         if (await (FetchData()) == 200) {
+          print(arr);
           Map<String, dynamic> value =
-              arr.singleWhere((element) => element['skill'] == text);
+              arr.singleWhere((element) => element['skill'] == text.toString().toLowerCase());
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => FormPage(
                       title: "Edit Your skill",
                       skill: value['skill'],
-                      numExperience: value['years_of_expertise'],
-                      numExpertise: value['level_expertise'],
+                      numExperience: value['years'],
+                      numExpertise: value['level'],
                       handler: submitHandler,
                       uid: this.uid,
                       fieldId: this.fieldId)));
@@ -192,8 +194,8 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
                                   builder: (context) => FormPage(
                                       title: "Add a skill",
                                       skill: null,
-                                      numExperience: null,
-                                      numExpertise: null,
+                                      numExperience: 0,
+                                      numExpertise: 5,
                                       handler: submitHandler,
                                       uid: this.uid,
                                       fieldId: this.fieldId)));
