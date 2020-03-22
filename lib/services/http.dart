@@ -162,7 +162,7 @@ class Requests {
   Future<Map<String, dynamic>> resumeGetData(
       String uid, String resumeId) async {
     var response = await http.get(
-        'https://api.daffychuy.com/api/v1/jobseeker/${uid}/resumes${resumeId}');
+        'https://api.daffychuy.com/api/v1/jobseeker/${uid}/resumes/${resumeId}');
     if (response.statusCode == 200) {
       var _list = json.decode(response.body);
       // If the server did return a 200 OK response, then parse the JSON.
@@ -220,7 +220,6 @@ class Requests {
     //URL for testing.
     if (userType == "jobseeker") {
       String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid';
-      // the makes the PUT request
       http.Response response = await http.put(url, body: {command: change});
     }
   }

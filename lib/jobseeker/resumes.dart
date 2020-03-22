@@ -52,8 +52,24 @@ class _ResumePageState extends State<ResumePage>{
   }
 
   Widget createButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ResumeFormPage(
+                  auth: widget.auth,
+                  resumeId: null,
+                  resumeName: '',
+                  uid: null
+              )),
+        );
+      },
+      child: Icon(Icons.add),
+      backgroundColor: ArezueColors.secondaryColor,
+    );
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0.0),
+      padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 50),
       child: RaisedButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
@@ -96,16 +112,8 @@ class _ResumePageState extends State<ResumePage>{
                 )
               ],
             ),
-            body: Center(
-              child: ListView(
-                children: <Widget>[
-                  Column(
-                    children: listWidgets(snapshot.data.jobseeker.uid),
-                  ),
-                  createButton(),
-                ],
-              ),
-            ),
+            body: bodyContent(snapshot.data.jobseeker.uid),
+            floatingActionButton: createButton(),
           );
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
@@ -120,9 +128,42 @@ class _ResumePageState extends State<ResumePage>{
 
     List<Widget> widgetlist = new List<Widget>();
     var keys;
+    int counter=0;
     for(keys in minidata.keys){
       widgetlist.add(selectResume(keys, minidata[keys]['name'], minidata[keys], uid));
+      counter++;
     }
     return widgetlist;
+  }
+
+  bodyContent(String uid) {
+    List<Widget> list = listWidgets(uid);
+    if(list.length==0){
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
+          child: Text(
+            "You have no resumes on your account! Press the + button to add a new resume.",
+            style: TextStyle(
+              color: ArezueColors.outPrimaryColor,
+              fontSize: 20,
+              fontFamily: 'Arezue',
+              fontWeight: FontWeight.w700,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+    return Center(
+      child: ListView(
+        padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
+        children: <Widget>[
+          Column(
+            children: list,
+          ),
+        ],
+      ),
+    );
   }
 }
