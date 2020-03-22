@@ -67,6 +67,7 @@ class _ProfilePageState extends State<Profile> {
               ],
             ),
             body: ListView(
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 50),
               children: <Widget>[
                 SizedBox(
                   height: 30,
@@ -104,7 +105,7 @@ class _ProfilePageState extends State<Profile> {
                 InputChipBuilder(
                   endpoint: "/api/jobseeker",
                   uid: snapshot.data.jobseeker.uid,
-                  title: "Dream Career(s): ",
+                  title: "Dream Careers: ",
                   fieldId: "dream_career",
                   fieldType: "text",
                   fieldData: List<String>.from(

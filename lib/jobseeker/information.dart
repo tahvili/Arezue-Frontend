@@ -14,9 +14,6 @@ class UserData {
   UserData({this.uid, this.information});
 
   factory UserData.fromJson(Map<String, dynamic> parsedJson) {
-    print("the uid in info class");
-    print(parsedJson['uid']);
-    print(parsedJson['info']);
     return UserData(
         uid: parsedJson['uid'],
         information: Information.fromJson(parsedJson['info']));

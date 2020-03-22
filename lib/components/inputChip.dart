@@ -142,15 +142,20 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
                     )),
                 new Spacer(),
                 Container(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                        icon: Icon(Icons.add),
-                        color: ArezueColors.secondaryColor,
-                        onPressed: () {
+                  width:50,
+                  child: MaterialButton(
+                      padding: EdgeInsets.all(12),
+                      shape: CircleBorder(),
+                      textColor: ArezueColors.primaryColor,
+                      child: Icon(
+                        Icons.add,
+                        size: 20,
+                      ),
+                      color: ArezueColors.secondaryColor,
+                      onPressed: () {
                           _showSearchBar(context, fieldId, submitHandler);
                         }),
-                  ),
+
                 ),
               ],
             ),

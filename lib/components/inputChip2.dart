@@ -182,10 +182,15 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
                     )),
                 new Spacer(),
                 Container(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                        icon: Icon(Icons.add),
+                  width:50,
+                  child: MaterialButton(
+                        padding: EdgeInsets.all(12),
+                        shape: CircleBorder(),
+                        textColor: ArezueColors.primaryColor,
+                        child: Icon(
+                      Icons.add,
+                      size: 20,
+                    ),
                         color: ArezueColors.secondaryColor,
                         onPressed: () {
                           Navigator.push(
@@ -200,7 +205,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
                                       uid: this.uid,
                                       fieldId: this.fieldId)));
                         }),
-                  ),
+
                 ),
               ],
             ),

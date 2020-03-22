@@ -187,11 +187,18 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
     );
   }
 
-  List<Widget> getTextList(List<String> list) {
-    List<Widget> textList = new List<Widget>();
-    list.forEach((element) => textList.add(getText(element)));
+  String getTextList(List<String> list) {
+    String text="";
+    for(int i = 0; i<list.length;i++){
+      if(i==2){
+        text+=" - ${list[i]}";
+      }
+      else {
+        text += "\n${list[i]}";
+      }
+    }
 
-    return textList;
+    return text;
   }
 
   List<String> getStringList(Object list) {
@@ -217,19 +224,20 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
 
   Widget getContainer(Object elements) {
     return Container(
-      padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+      padding: EdgeInsets.fromLTRB(5, 5, 5, 25),
       margin: const EdgeInsets.only(bottom: 20.0),
       width: MediaQuery.of(context).size.width - 150,
-      height: MediaQuery.of(context).size.width - 150,
       decoration: BoxDecoration(
         color: ArezueColors.inputChipColor,
-        borderRadius: BorderRadius.all(Radius.circular(35.0)),
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          Stack(
             children: <Widget>[
+              Align(
+                alignment: Alignment.topRight,
+              child:
               IconButton(
                 icon: Icon(Icons.edit),
                 onPressed: () async {
@@ -247,17 +255,24 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
                               fieldId: this.fieldId)));
                 },
               ),
+    ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child:Text(getTextList(getStringList(elements)),style: TextStyle(
+                color: ArezueColors.outPrimaryColor,
+                fontSize: 18,
+                fontFamily: 'Arezue',
+                fontWeight: FontWeight.w600,
+              ),
+              ),),
             ],
           ),
-          Expanded(
-            child: Row(
-              children: [
-                Column(
-                  children: getTextList(getStringList(elements)),
-                ),
-              ],
-            ),
-          ),
+
+//          Expanded(
+//            child: Column(
+//              children: getTextList(getStringList(elements)),
+//            ),
+//          ),
         ],
       ),
     );
@@ -294,12 +309,17 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
                 getText(this.title),
                 new Spacer(),
                 Container(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                        icon: Icon(Icons.add),
-                        color: ArezueColors.secondaryColor,
-                        onPressed: () {
+                  width:50,
+                  child: MaterialButton(
+                      padding: EdgeInsets.all(12),
+                      shape: CircleBorder(),
+                      textColor: ArezueColors.primaryColor,
+                      child: Icon(
+                        Icons.add,
+                        size: 20,
+                      ),
+                      color: ArezueColors.secondaryColor,
+                      onPressed: () {
                           sendList = sendListGenerator(this.fieldId);
                           Navigator.push(
                               context,
@@ -312,7 +332,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
                                       uid: this.uid,
                                       fieldId: this.fieldId)));
                         }),
-                  ),
+
                 ),
               ],
             ),

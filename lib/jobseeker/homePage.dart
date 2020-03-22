@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/utils/texts.dart';
+import 'package:arezue/services/http.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({this.auth, this.onSignOut, this.formType});
@@ -47,8 +48,6 @@ class _HomePageState extends State<HomePage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           // ignore: unrelated_type_equality_checks
-          print("user active state is:");
-          print(snapshot.data.activeStates);
           activelyLooking = snapshot.data.activeStates;
           if (activelyLooking) {
             return Padding(
@@ -78,10 +77,7 @@ class _HomePageState extends State<HomePage> {
                       topLeft: const Radius.circular(10),
                       bottomLeft: const Radius.circular(10)),
                 ),
-                onPressed: () => setState(() {activelyLooking = snapshot.data.changeStatus();
-                String sendValue='false';
-                if (activelyLooking){sendValue='true';}
-                serverRequest.putRequest('jobseeker', snapshot.data.uid, 'active_states', sendValue);}),
+                onPressed: () => setState(() {changeStatus(snapshot.data.uid);snapshot.data.activeStates=activelyLooking;}),
                 padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
                 color: ArezueColors.primaryColor,
                 child: Text(ArezueTexts.lookingForJob,
@@ -117,10 +113,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
                 color: ArezueColors.primaryColor,
-                onPressed: () => setState(() {activelyLooking = snapshot.data.changeStatus();
-                String sendValue='false';
-                if (activelyLooking){sendValue='true';}
-                serverRequest.putRequest('jobseeker', snapshot.data.uid, 'active_states', sendValue);}),
+                onPressed: () => setState(() {changeStatus(snapshot.data.uid);snapshot.data.activeStates=activelyLooking;}),
                 child: Text(ArezueTexts.notLookingAnymore,
                     style: TextStyle(
                         color: ArezueColors.secondaryColor, fontSize: 14)),
@@ -263,7 +256,12 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Column(
         children: <Widget>[
-          Text("0", textAlign: TextAlign.center),
+          Text("0",style: TextStyle(
+            color: ArezueColors.outPrimaryColor,
+            fontSize: 20,
+            fontFamily: 'Arezue',
+            fontWeight: FontWeight.w400,
+          ), textAlign: TextAlign.center),
           Text("pending interview requests", textAlign: TextAlign.center),
         ],
       ));
@@ -276,7 +274,12 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Column(
         children: <Widget>[
-          Text("0", textAlign: TextAlign.center),
+          Text("0",style: TextStyle(
+            color: ArezueColors.outPrimaryColor,
+            fontSize: 20,
+            fontFamily: 'Arezue',
+            fontWeight: FontWeight.w400,
+          ), textAlign: TextAlign.center),
           Text("employers scanned your account", textAlign: TextAlign.center),
         ],
       ));
@@ -289,10 +292,12 @@ class _HomePageState extends State<HomePage> {
     ),
     child: Column(
       children: <Widget>[
-        Text(
-          "0",
-          textAlign: TextAlign.center,
-        ),
+        Text("0",style: TextStyle(
+          color: ArezueColors.outPrimaryColor,
+          fontSize: 20,
+          fontFamily: 'Arezue',
+          fontWeight: FontWeight.w400,
+        ), textAlign: TextAlign.center),
         Text("employers viewed your resume ", textAlign: TextAlign.center),
       ],
     ),
@@ -354,6 +359,7 @@ class _HomePageState extends State<HomePage> {
   final activityBox = Container(
     margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
     //height: 200,
+    padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
     decoration: BoxDecoration(
       color: ArezueColors.primaryColor,
       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -374,21 +380,21 @@ class _HomePageState extends State<HomePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Text("We can't find your resume"),
+            Text("Let's add your resume!"),
             addNowButton,
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Text("What are your dream companies?"),
+            Text("Your dream companies?"),
             addNowButton,
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Text("What wage are you looking for?"),
+            Text("Your ideal wage?"),
             addNowButton,
           ],
         ),
@@ -724,5 +730,14 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  bool changeStatus(String uid) {
+    if (activelyLooking == true) {
+      activelyLooking = false;
+    } else {
+      activelyLooking = true;
+    }
+    request.putRequest("jobseeker",uid,"active_States",activelyLooking.toString());
   }
 }
