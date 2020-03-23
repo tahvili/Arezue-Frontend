@@ -21,7 +21,7 @@ class MySearchTextField extends StatefulWidget {
       title; // this goes before the textfield, i.e. what textfield is this.
   final String
       fieldType; // numeric or text, depending on that it displays the keyboard differently
-  final String
+  String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final String fieldData; // the actualy value of the key.
   Function handler;
@@ -32,6 +32,7 @@ class MySearchTextField extends StatefulWidget {
         title: this.title,
         uid: this.uid,
         skill: this.skill,
+        fieldId: this.fieldId,
         fieldData: this.fieldData,
         fieldType: this.fieldType,
         handler: this.handler);
@@ -47,7 +48,7 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
       this.endpoint,
       this.skill,
       this.fieldData = "",
-      @required this.fieldId = "",
+        this.fieldId,
       @required this.fieldType = "text",
       this.handler});
 
@@ -59,7 +60,7 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
       endpoint; // api endpoint, send the whole URL for now but we'll need to generalize this
   final String
       fieldType; // numeric or text, depending on that it displays the keyboard differently
-  final String
+  String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final String fieldData; // the actualy value of the key.
   Function
@@ -88,8 +89,12 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
     setState(() {
       controller.text = text;
     });
-
-    handler(text, "skill"); //calling formHandler
+    print("the fieldID of the search bar is ${this.fieldId}");
+    if(this.fieldId == "Position"){ //for employer job posting
+      handler(this.fieldId, text);
+    }else {
+      handler(text, "skill");
+    }//calling formHandler
   }
 
   // The actual object iself.

@@ -10,7 +10,7 @@ Employer _$EmployerFromJson(Map<String, dynamic> json) {
   return Employer(
     json['uid'] as String,
     json['fb_id'] as String,
-    json['companyID'] as String,
+    json['company_name'] as String,
     json['name'] as String,
     json['email_address'] as String,
     phoneNumber: json['phone_number'] as String,
@@ -39,5 +39,5 @@ Map<String, dynamic> _$EmployerToJson(Employer instance) => <String, dynamic>{
       'interview_request_sent': instance.interviewRequestSent,
       'accepted_interview_request': instance.acceptedInterviewRequest,
       'successful_searches': instance.successfulSearches,
-      'companyID': instance.companyID,
+      'company_name': instance.companyID,
     };

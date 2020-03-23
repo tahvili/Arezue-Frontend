@@ -27,6 +27,7 @@ class Employer extends Object {
   final int acceptedInterviewRequest;
   @JsonKey(name: 'successful_searches', nullable: true)
   final int successfulSearches;
+  @JsonKey(name: 'company_name')
   final String companyID;
 
   Employer(this.uid, this.fbId, this.companyID, this.name, this.email,

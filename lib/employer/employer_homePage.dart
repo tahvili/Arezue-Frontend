@@ -1,6 +1,6 @@
 import 'package:arezue/Settings.dart';
 import 'package:arezue/employer/employer.dart';
-import 'package:arezue/jobseeker/resumes.dart';
+import 'package:arezue/employer/job.dart';
 import 'package:arezue/loading.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
@@ -11,6 +11,8 @@ import 'package:arezue/components/searchPage.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:http/http.dart' as http;
 
+import '../jobseeker/resumes.dart';
+
 class EmployerHomePage extends StatefulWidget {
   EmployerHomePage({this.auth, this.onSignOut, this.formType});
   final BaseAuth auth;
@@ -18,7 +20,7 @@ class EmployerHomePage extends StatefulWidget {
   final VoidCallback onSignOut;
 
   @override
-  _EmployerPageState createState() => new _EmployerPageState(formType: this.formType);
+  _EmployerPageState createState() => new _EmployerPageState(formType: this.formType, auth: this.auth);
 }
 
 enum FormType4 { employer, jobseeker }
@@ -26,9 +28,10 @@ enum FormType4 { employer, jobseeker }
 class _EmployerPageState extends State<EmployerHomePage> {
   FormType4 formType;
 
-  _EmployerPageState({this.formType});
+  _EmployerPageState({this.formType, this.auth});
 
   Future<Jobseeker> futureUser;
+  final BaseAuth auth;
   Future<Employer> futureEmployer;
   Requests request = new Requests();
   bool activelyHiring = false;
@@ -400,7 +403,6 @@ class _EmployerPageState extends State<EmployerHomePage> {
   );
 
   List<Widget> submitWidgets(){
-
         return [
           ListView(
             children: <Widget>[
@@ -492,6 +494,39 @@ class _EmployerPageState extends State<EmployerHomePage> {
                 );
               },
             ),
+          ),new Positioned(
+            top: (155 / 2) + 10,
+            left: 65,
+            child: IconButton(
+              color: Colors.white,
+              icon: Icon(
+                Icons.edit,
+                color: Colors.white,
+              ),
+              onPressed: (){
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => JobPage(auth: this.auth,
+                    ))
+                );
+              },
+            ),
+          ),
+          new Positioned(
+            top: (155 / 2) + 10,
+            left: MediaQuery.of(context).size.width - 115,
+            child: IconButton(
+              color: Colors.white,
+              icon: Icon(Icons.layers, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ResumePage(
+                        auth: widget.auth,
+                      )),
+                );
+              },
+            ),
           ),
           new Positioned(
             top: (155 / 2) + 10,
@@ -507,7 +542,8 @@ class _EmployerPageState extends State<EmployerHomePage> {
                             auth: widget.auth,
                             onSignOut: widget.onSignOut,
                             formType: FormType2.employer,
-                          )),
+                          ),
+                  ),
                 );
               },
             ),

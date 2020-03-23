@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:arezue/employer/employer.dart';
+import 'package:arezue/employer/jobInformation.dart';
 import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:http/http.dart' as http;
@@ -24,6 +25,55 @@ class Requests {
     }
   }
 
+  Future<Job> jobGetRequest(uid) async {
+    var response =
+        await http.get('https://api.daffychuy.com/api/v1/employer/$uid/jobs');
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response, then parse the JSON.
+      return new Job.fromJson(json.decode(response.body));
+    } else {
+      // If the server did not return a 200 OK response, then throw an exception.
+      return new Job();
+    }
+  }
+
+  Future<int> jobPostRequest(
+      String uid, String companyName, List<String> lst) async {
+    var url = 'https://api.daffychuy.com/api/v1/employer/$uid/jobs';
+    var response = await http.post(url, body: {
+      'company_name': companyName,
+      'title': lst[0],
+      'wage': lst[2].toString(),
+      'position': lst[1],
+      'hours': lst[3].toString(),
+      'location': lst[4],
+      'description': lst[6],
+      'status': lst[5],
+      'max_candidate': lst[7]
+    });
+
+    int statusCode = response.statusCode;
+    return statusCode;
+  }
+
+  Future<int> jobPutRequest(
+      String uid, String jobId, Map<String, String> map) async {
+    String url = 'https://api.daffychuy.com/api/v1/employer/$uid/jobs/$jobId';
+    int statusCode;
+    Map<String, String> headers = {"Content-type": "application/json"};
+    http.Response response =
+        await http.put(url, headers: headers, body: json.encode(map));
+    statusCode = response.statusCode;
+    return statusCode;
+  }
+
+  Future<int> jobDeleteRequest(String uid, String jobId) async {
+    String url = 'https://api.daffychuy.com/api/v1/employer/$uid/jobs/$jobId';
+    http.Response response = await http.delete(url);
+    int statusCode = response.statusCode;
+    return statusCode;
+  }
+
   Future<JobseekerInfo> profileGetRequest(Future<String> uid) async {
     var response = await http
         .get('https://api.daffychuy.com/api/v1/jobseeker/${await uid}/profile');
@@ -37,13 +87,13 @@ class Requests {
     }
   }
 
-  Future<List<Map<String, dynamic>>> skillsGetRequest(String uid, String type) async {
+  Future<List<Map<String, dynamic>>> skillsGetRequest(
+      String uid, String type) async {
     var response =
         await http.get('https://api.daffychuy.com/api/v1/jobseeker/$uid/$type');
     if (response.statusCode == 200) {
-
       List<Map<String, dynamic>> newList = new List<Map<String, dynamic>>();
-      for(int i = 0; i < (json.decode(response.body)["data"]).length; i++){
+      for (int i = 0; i < (json.decode(response.body)["data"]).length; i++) {
         newList.add((json.decode(response.body))["data"][i]);
       }
       return newList;
@@ -61,13 +111,14 @@ class Requests {
     return statusCode;
   }
 
-
   Future<int> profileSkillPutRequest(String uid, String oldSkill,
       String newSkill, String numExperience, String numExpertise) async {
     if (await (skillDeleteRequest(uid, oldSkill)) == 200) {
       Future<int> response = profileSkillPostRequest(
           'jobseeker', uid, newSkill, numExpertise, numExperience);
       return response;
+    } else {
+      throw Exception('Failed to do a put request');
     }
   }
 
@@ -80,66 +131,99 @@ class Requests {
     return statusCode;
   }
 
-  Future<int> profileEdExCertPostRequest(String uid, String fieldId, String firstVal,
-      String startDate, String endDate, String secondVal) async {
+  Future<int> profileEdExCertPostRequest(
+      String uid,
+      String fieldId,
+      String firstVal,
+      String startDate,
+      String endDate,
+      String secondVal) async {
     var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$fieldId';
     http.Response response;
-    if(fieldId == "education"){
-      response = await http
-          .post(url, body: {'school_name': firstVal, 'start_date': startDate,
-        'grad_date': endDate, 'program': secondVal});
-    }else if(fieldId == "experience"){
-      response = await http
-          .post(url, body: {'title': firstVal, 'start_date': startDate,
-        'end_date': endDate, 'description': secondVal});
-    }else{
-      response = await http
-          .post(url, body: {'cert_name': firstVal, 'start_date': startDate,
-        'end_date': endDate, 'issuer': secondVal});
+    if (fieldId == "education") {
+      response = await http.post(url, body: {
+        'school_name': firstVal,
+        'start_date': startDate,
+        'grad_date': endDate,
+        'program': secondVal
+      });
+    } else if (fieldId == "experience") {
+      response = await http.post(url, body: {
+        'title': firstVal,
+        'start_date': startDate,
+        'end_date': endDate,
+        'description': secondVal
+      });
+    } else {
+      response = await http.post(url, body: {
+        'cert_name': firstVal,
+        'start_date': startDate,
+        'end_date': endDate,
+        'issuer': secondVal
+      });
     }
-    print("the status code in post is: ${response.statusCode}");
     return response.statusCode;
   }
 
-  Future<int> profileEdExCertPutRequest(String fieldId, String uid, String id, String firstVal,
-      String startDate, String endDate, String secondVal) async {
+  Future<int> profileEdExCertPutRequest(
+      String fieldId,
+      String uid,
+      String id,
+      String firstVal,
+      String startDate,
+      String endDate,
+      String secondVal) async {
     String url;
+    Map<String, String> headers = {"Content-type": "Application/json"};
     http.Response response;
-    if(fieldId =="education"){
+    if (fieldId == "education") {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/education';
-      response = await http.put(url, body: {'ed_id': id, 'school_name': firstVal,
-      'start_date': startDate, 'grad_date': endDate, 'program': secondVal});
-    }else if(fieldId == "experience"){
+      response = await http.put(url, headers: headers, body: {
+        'ed_id': id,
+        'school_name': firstVal,
+        'start_date': startDate,
+        'grad_date': endDate,
+        'program': secondVal
+      });
+    } else if (fieldId == "experience") {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/exp';
-      response = await http.put(url, body: {'exp_id': id, 'title': firstVal,
-        'start_date': startDate, 'end_date': endDate, 'description': secondVal});
-    }else{
+      response = await http.put(url, headers: headers, body: {
+        'exp_id': id,
+        'title': firstVal,
+        'start_date': startDate,
+        'end_date': endDate,
+        'description': secondVal
+      });
+    } else {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/certification';
-      response = await http.put(url, body: {'c_id': id, 'cert_name': firstVal,
-        'start_date': startDate, 'end_date': endDate, 'issuer': secondVal});
+      response = await http.put(url, headers: headers, body: {
+        'c_id': id,
+        'cert_name': firstVal,
+        'start_date': startDate,
+        'end_date': endDate,
+        'issuer': secondVal
+      });
     }
     // the makes the PUT request
 
     int statusCode = response.statusCode;
     return statusCode;
-
   }
 
-  Future<int> edExCertDeleteRequest(String fieldId, String uid, String id) async {
+  Future<int> edExCertDeleteRequest(
+      String fieldId, String uid, String id) async {
     String url;
-    if(fieldId =="education"){
+    if (fieldId == "education") {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/education/$id';
-    }else if(fieldId == "experience"){
+    } else if (fieldId == "experience") {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/exp/$id';
-    }else{
+    } else {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/certification/$id';
     }
     http.Response response = await http.delete(url);
     int statusCode = response.statusCode;
     return statusCode;
   }
-
-
 
   Future<Map<String, dynamic>> resumeGetList(Future<String> uid) async {
     var response = await http
@@ -184,9 +268,10 @@ class Requests {
       String uid, String resumeId, Map<String, String> list) async {
     String url =
         'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes/$resumeId';
-    // the makes the PUT request
-    http.Response response =
-        await http.put(url, body: {'resume': json.encode(list)});
+
+    Map<String, String> headers = {"Content-type": "Application/json"};
+    http.Response response = await http
+        .put(url, headers: headers, body: {'resume': json.encode(list)});
     int statusCode = response.statusCode;
     return statusCode;
   }
@@ -217,10 +302,11 @@ class Requests {
 
   void putRequest(
       String userType, String uid, String command, String change) async {
-    //URL for testing.
+    Map<String, String> headers = {"Content-type": "Application/json"};
     if (userType == "jobseeker") {
       String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid';
-      http.Response response = await http.put(url, body: {command: change});
+      http.Response response =
+          await http.put(url, headers: headers, body: {command: change});
     }
   }
 
