@@ -68,30 +68,6 @@ class _ResumePageState extends State<ResumePage>{
       child: Icon(Icons.add),
       backgroundColor: ArezueColors.secondaryColor,
     );
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 50),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ResumeFormPage(
-                    auth: widget.auth,
-                    resumeId: null,
-                    resumeName: '',
-                    uid: null
-                )),
-          );
-        },
-        padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
-        color: ArezueColors.outSecondaryColor,
-        child: Text('Create a New Resume',
-            style: TextStyle(color: ArezueColors.outPrimaryColor)),
-      ),
-    );
   }
 
   @override
