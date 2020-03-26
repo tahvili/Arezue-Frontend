@@ -1,5 +1,4 @@
 import 'package:arezue/Settings.dart';
-import 'package:arezue/employer/employer.dart';
 import 'package:arezue/jobseeker/profile.dart';
 import 'package:arezue/jobseeker/resumes.dart';
 import 'package:arezue/loading.dart';
@@ -27,7 +26,6 @@ class _HomePageState extends State<HomePage> {
   FormType3 formType;
   _HomePageState({this.formType});
   Future<Jobseeker> futureUser;
-  Future<Employer> futureEmployer;
   Requests request = new Requests();
   bool activelyLooking = false;
   Requests serverRequest = new Requests();
@@ -37,8 +35,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     if(this.formType == FormType3.jobseeker) {
       futureUser = request.jobseekerGetRequest(widget.auth.currentUser());
-    }else{
-      futureEmployer = request.employerGetRequest(widget.auth.currentUser());
     }
   }
 
@@ -153,12 +149,18 @@ class _HomePageState extends State<HomePage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var fullName = snapshot.data.name.split(" ");
+          var name = "";
+          for (int i = 0; i < fullName.length;i++){
+            if(fullName[i].length>0) {
+              name += fullName[i][0];
+            }
+          }
           if (snapshot.data.profilePicture == null) {
             return CircleAvatar(
               backgroundColor: ArezueColors.primaryColor,
               foregroundColor: ArezueColors.secondaryColor,
               radius: 50,
-              child: Text(fullName[0][0] + fullName[fullName.length - 1][0],
+              child: Text(name,
                   style:
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
             );
@@ -303,59 +305,6 @@ class _HomePageState extends State<HomePage> {
     ),
   );
 
-  final middleSectionEmployer = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-      decoration: BoxDecoration(
-        color: ArezueColors.primaryColor,
-        boxShadow: [
-          BoxShadow(
-            color: ArezueColors.shadowColor,
-            blurRadius: 10.0,
-            spreadRadius: 5.0,
-            offset: Offset(
-              0.0, // horizontal, move right 10
-              0.0, // vertical, move down 10
-            ),
-          ),
-        ],
-      ),
-      child: Column(
-        children: <Widget>[
-          Text("0", textAlign: TextAlign.center),
-          Text("accepted interview requests", textAlign: TextAlign.center),
-        ],
-      ));
-  final leftSectionEmployer = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-      decoration: BoxDecoration(
-        borderRadius: new BorderRadius.only(
-            topLeft: const Radius.circular(10),
-            bottomLeft: const Radius.circular(10)),
-      ),
-      child: Column(
-        children: <Widget>[
-          Text("0", textAlign: TextAlign.center),
-          Text("successful job searches made", textAlign: TextAlign.center),
-        ],
-      ));
-  final rightSectionEmployer = Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-    decoration: BoxDecoration(
-      borderRadius: new BorderRadius.only(
-          topRight: const Radius.circular(10),
-          bottomRight: const Radius.circular(10)),
-    ),
-    child: Column(
-      children: <Widget>[
-        Text(
-          "0",
-          textAlign: TextAlign.center,
-        ),
-        Text("interview requests sent", textAlign: TextAlign.center),
-      ],
-    ),
-  );
-
   final activityBox = Container(
     margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
     //height: 200,
@@ -402,51 +351,6 @@ class _HomePageState extends State<HomePage> {
     ),
   );
 
-  final activityBoxEmployer = Container(
-    margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
-    //height: 200,
-    decoration: BoxDecoration(
-      color: ArezueColors.primaryColor,
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-      boxShadow: [
-        BoxShadow(
-          color: ArezueColors.shadowColor,
-          blurRadius: 10.0,
-          spreadRadius: 5.0,
-          offset: Offset(
-            0.0, // horizontal, move right 10
-            0.0, // vertical, move down 10
-          ),
-        ),
-      ],
-    ),
-    child: Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text("What's your company's logo?"),
-            addNowButton,
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text("Company's address?"),
-            addNowButton,
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text("Have a website?"),
-            addNowButton,
-          ],
-        ),
-      ],
-    ),
-  );
-
   static final addNowButton = RaisedButton(
     child: Text('Add now!'),
     onPressed: () {},
@@ -454,119 +358,6 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> submitWidgets() {
     switch (formType) {
-      case FormType3.employer:
-        return [
-          ListView(
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(
-                    right: 50, left: 50, bottom: 20, top: 230),
-                alignment: Alignment.center,
-                child: FutureBuilder<Jobseeker>(
-                  future: futureUser,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Text(
-                        "Hey, " + snapshot.data.name + "!",
-                        style: TextStyle(
-                          color: ArezueColors.outPrimaryColor,
-                          fontSize: 25,
-                          fontFamily: 'Arezue',
-                          fontWeight: FontWeight.w400,
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text("${snapshot.error}");
-                    } // By default, show a loading spinner.
-                    return CircularProgressIndicator();
-                  },
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(
-                    right: 50, left: 50, bottom: 20, top: 0),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(child: lookingButton()),
-                    Expanded(child: notLookingButton()),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(
-                    right: 50, left: 50, bottom: 20, top: 0),
-                height: 125,
-                decoration: BoxDecoration(
-                  color: ArezueColors.primaryColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: ArezueColors.shadowColor,
-                      blurRadius: 10.0,
-                      spreadRadius: 5.0,
-                      offset: Offset(
-                        0.0, // horizontal, move right 10
-                        0.0, // vertical, move down 10
-                      ),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Expanded(child: leftSectionEmployer),
-                    Expanded(child: middleSectionEmployer),
-                    Expanded(child: rightSectionEmployer),
-                  ],
-                ),
-              ),
-              activityBoxEmployer,
-            ],
-          ),
-          new Container(
-            color: ArezueColors.appBarColor,
-            height: 150,
-          ),
-          new Positioned(
-            top: (155 / 2) + 10,
-            left: 15,
-            child: IconButton(
-              color: Colors.white,
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              onPressed: null,
-            ),
-          ),
-          new Positioned(
-            top: (155 / 2) + 10,
-            left: MediaQuery.of(context).size.width - 65,
-            child: IconButton(
-              color: Colors.white,
-              icon: Icon(Icons.settings, color: Colors.white),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SettingsPage(
-                            auth: widget.auth,
-                            onSignOut: widget.onSignOut,
-                            formType: FormType2.employer,
-                          )),
-                );
-              },
-            ),
-          ),
-          new Positioned(
-            top: (155 / 2),
-            left: (MediaQuery.of(context).size.width / 2) - (155 / 2),
-            height: 155,
-            width: 155,
-            child: Center(child: userProfile()),
-          ),
-        ];
-        break;
       case FormType3.jobseeker:
         return [
           ListView(
@@ -579,8 +370,16 @@ class _HomePageState extends State<HomePage> {
                   future: futureUser,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      var fullName = snapshot.data.name.split(" ");
+                      var name = "";
+                      for (int i = 0; i < fullName.length;i++){
+                        if(fullName[i].length>0) {
+                          name += " ";
+                          name += fullName[i];
+                        }
+                      }
                       return Text(
-                        "Hey, " + snapshot.data.name + "!",
+                        "Hey," + name + "!",
                         style: TextStyle(
                           color: ArezueColors.outPrimaryColor,
                           fontSize: 25,
@@ -715,6 +514,9 @@ class _HomePageState extends State<HomePage> {
             child: Center(child: userProfile()),
           ),
         ];
+        break;
+      case FormType3.employer:
+        // TODO: Handle this case.
         break;
     }
     return null;

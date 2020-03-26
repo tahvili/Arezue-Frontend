@@ -6,10 +6,12 @@ class Search extends SearchDelegate<String> {
   Search({
     this.handler,
     this.fieldId,
+    this.category,
   });
 
   Function handler;
   final String fieldId;
+  final String category;
   Requests serverRequest = new Requests();
   final List<String> list = [
     "App Dev",

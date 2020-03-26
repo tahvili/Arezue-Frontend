@@ -76,18 +76,20 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
   void submitHandler(String text, String preference, String command) {
     // Handle PUT request to the api here
     if (command == "add") {
-      serverRequest.profilePostRequest(
-          'jobseeker', uid, fieldId, text, preference, "1");
-      setState(() {this.fieldData.add(text);});
+      if (uid != null) {serverRequest.profilePostRequest(
+          'jobseeker', uid, fieldId, text, preference, "1");}
+      setState(() {
+        this.fieldData.add(text);
+      });
     } else if (command == "delete") {
       //make a delete request to API here
-      serverRequest.deleteRequest(uid, fieldId, text);
-      setState(() {this.fieldData.remove(text);});
-    } else {
-      print("why am I here?");
-    }
+      if (uid != null) {serverRequest.deleteRequest(uid, fieldId, text);}
+      setState(() {
+        this.fieldData.remove(text);
+      });
+    } else {}
     print("child handler triggered: $text");
-    
+
     handler(text, command);
     // Once that's done, notify the parent so it knows to update its local state.
   }

@@ -125,7 +125,7 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
         onTap: () {
           _showSearchBar(context, fieldId, submitHandler);
         },
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.right,
         controller: controller,
         keyboardType: keyboards[this.fieldType],
         decoration: InputDecoration(

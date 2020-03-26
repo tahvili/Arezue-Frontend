@@ -148,6 +148,8 @@ class _LoginPageState extends State<LoginPage> {
       }
     } else {
       setState(() {
+        loading = false;
+        _errorMessage = "";
         //_authHint = '';
       });
     }
@@ -299,6 +301,10 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(32.0),
             borderSide: BorderSide(color: Colors.red, width: 1),
           ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: Colors.red, width: 1),
+          ),
         ),
       ),
     );
@@ -339,6 +345,10 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(32.0),
             borderSide: BorderSide(color: Colors.red, width: 1),
           ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: Colors.red, width: 1),
+          ),
         ),
       ),
     );
@@ -371,6 +381,10 @@ class _LoginPageState extends State<LoginPage> {
             borderSide: BorderSide(color: ArezueColors.highGreyColor, width: 1),
           ),
           focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: Colors.red, width: 1),
+          ),
+          errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
             borderSide: BorderSide(color: Colors.red, width: 1),
           ),
@@ -410,6 +424,10 @@ class _LoginPageState extends State<LoginPage> {
             borderSide: BorderSide(color: ArezueColors.highGreyColor, width: 1),
           ),
           focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+            borderSide: BorderSide(color: Colors.red, width: 1),
+          ),
+          errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32.0),
             borderSide: BorderSide(color: Colors.red, width: 1),
           ),

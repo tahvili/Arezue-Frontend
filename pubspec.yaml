@@ -33,6 +33,8 @@ dependencies:
   json_annotation: ^3.0.1
   data_connection_checker: ^0.3.4
   flappy_search_bar: ^1.7.2
+  flutter_fluid_slider: ^1.0.2
+  flutter_svg: ^0.17.3+1
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +63,8 @@ flutter:
     - assets/Slideshow/slide03.png
     - assets/Slideshow/slide04.png
     - assets/profile.jpg
+    - assets/content.svg
+    - assets/new-page.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

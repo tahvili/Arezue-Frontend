@@ -1,5 +1,6 @@
 import 'package:arezue/Settings.dart';
 import 'package:arezue/employer/employer.dart';
+import 'package:arezue/employer/searchIntroduction.dart';
 import 'package:arezue/employer/job.dart';
 import 'package:arezue/loading.dart';
 import 'package:arezue/services/http.dart';
@@ -47,125 +48,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
       futureEmployer = request.employerGetRequest(widget.auth.currentUser());
     }
   }
-  Widget hiringButton() {
-    return FutureBuilder<Employer>(
-      future: futureEmployer,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          // ignore: unrelated_type_equality_checks
-          print("user active state is:");
-          print(snapshot.data.activeStates);
-          activelyHiring = snapshot.data.activeStates;
-          if (activelyHiring) {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-              child: RaisedButton(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(10),
-                      bottomLeft: const Radius.circular(10)),
-                ),
-                onPressed: () {},
-                padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
-                color: ArezueColors.greenColor,
-                child: Text('Looking to Hire',
-                    style: TextStyle(
-                        color: ArezueColors.secondaryColor, fontSize: 14)),
-              ),
-            );
-          } else {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-              child: RaisedButton(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(10),
-                      bottomLeft: const Radius.circular(10)),
-                ),
-                onPressed: () => setState(() {activelyHiring = snapshot.data.changeStatus();
-                String sendValue='false';
-                if (activelyHiring){sendValue='true';}
-                serverRequest.putRequest('jobseeker', snapshot.data.uid, 'active_states', sendValue);}),
-                padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
-                color: ArezueColors.primaryColor,
-                child: Text('Looking to Hire',
-                    style: TextStyle(
-                        color: ArezueColors.secondaryColor, fontSize: 14)),
-              ),
-            );
-          }
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        // By default, show a loading spinner.
-        return CircularProgressIndicator();
-      },
-    );
-  }
 
-  Widget notHiringButton() {
-    return FutureBuilder<Employer>(
-      future: futureEmployer,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          // ignore: unrelated_type_equality_checks
-          if (activelyHiring) {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-              child: RaisedButton(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topRight: const Radius.circular(10),
-                      bottomRight: const Radius.circular(10)),
-                ),
-                padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
-                color: ArezueColors.primaryColor,
-                onPressed: () =>
-                    setState(() {
-                      activelyHiring = snapshot.data.changeStatus();
-                      String sendValue = 'false';
-                      if (activelyHiring) {
-                        sendValue = 'true';
-                      }
-                      serverRequest.putRequest(
-                          'jobseeker', snapshot.data.uid, 'active_states',
-                          sendValue);
-                    }),
-                child: Text('Not Hiring',
-                    style: TextStyle(
-                        color: ArezueColors.secondaryColor, fontSize: 14)),
-              ),
-            );
-          } else {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-              child: RaisedButton(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topRight: const Radius.circular(10),
-                      bottomRight: const Radius.circular(10)),
-                ),
-                padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
-                onPressed: () {},
-                color: ArezueColors.yellowColor,
-                child: Text('Not Hiring',
-                    style: TextStyle(
-                        color: ArezueColors.secondaryColor, fontSize: 14)),
-              ),
-            );
-          }
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        // By default, show a loading spinner.
-        return Loading();
-      },
-    );
-  }
   Widget _getProfile() {
     return FutureBuilder<Employer>(
       future: futureEmployer,
@@ -274,7 +157,12 @@ class _EmployerPageState extends State<EmployerHomePage> {
       ),
       child: Column(
         children: <Widget>[
-          Text("0", textAlign: TextAlign.center),
+          Text("0",style: TextStyle(
+            color: ArezueColors.outPrimaryColor,
+            fontSize: 20,
+            fontFamily: 'Arezue',
+            fontWeight: FontWeight.w400,
+          ), textAlign: TextAlign.center),
           Text("accepted interview requests", textAlign: TextAlign.center),
         ],
       ));
@@ -287,7 +175,12 @@ class _EmployerPageState extends State<EmployerHomePage> {
       ),
       child: Column(
         children: <Widget>[
-          Text("0", textAlign: TextAlign.center),
+          Text("0",style: TextStyle(
+            color: ArezueColors.outPrimaryColor,
+            fontSize: 20,
+            fontFamily: 'Arezue',
+            fontWeight: FontWeight.w400,
+          ), textAlign: TextAlign.center),
           Text("successful job searches made", textAlign: TextAlign.center),
         ],
       ));
@@ -300,15 +193,18 @@ class _EmployerPageState extends State<EmployerHomePage> {
     ),
     child: Column(
       children: <Widget>[
-        Text(
-          "0",
-          textAlign: TextAlign.center,
-        ),
+        Text("0",style: TextStyle(
+          color: ArezueColors.outPrimaryColor,
+          fontSize: 20,
+          fontFamily: 'Arezue',
+          fontWeight: FontWeight.w400,
+        ), textAlign: TextAlign.center),
         Text("interview requests sent", textAlign: TextAlign.center),
       ],
     ),
   );
   final activityBox = Container(
+
     margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
     //height: 200,
     decoration: BoxDecoration(
@@ -353,6 +249,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
     ),
   );
   final activityBoxEmployer = Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
     margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
     //height: 200,
     decoration: BoxDecoration(
@@ -414,8 +311,16 @@ class _EmployerPageState extends State<EmployerHomePage> {
                   future: futureEmployer,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      var fullName = snapshot.data.name.split(" ");
+                      var name = "";
+                      for (int i = 0; i < fullName.length;i++){
+                        if(fullName[i].length>0) {
+                          name += " ";
+                          name += fullName[i];
+                        }
+                      }
                       return Text(
-                        "Hey, " + snapshot.data.name + "!",
+                        "Hey," + name + "!",
                         style: TextStyle(
                           color: ArezueColors.outPrimaryColor,
                           fontSize: 25,
@@ -430,16 +335,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
                   },
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(
-                    right: 50, left: 50, bottom: 20, top: 0),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(child: hiringButton()),
-                    Expanded(child: notHiringButton()),
-                  ],
-                ),
-              ),
+
               Container(
                 margin: const EdgeInsets.only(
                     right: 50, left: 50, bottom: 20, top: 0),
@@ -488,7 +384,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SearchPage(
+                    builder: (context) => SearchIntro(
                       auth: widget.auth,
                     )),
                 );
@@ -517,15 +413,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
             child: IconButton(
               color: Colors.white,
               icon: Icon(Icons.layers, color: Colors.white),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ResumePage(
-                        auth: widget.auth,
-                      )),
-                );
-              },
+              onPressed: () {},
             ),
           ),
           new Positioned(

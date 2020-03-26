@@ -40,18 +40,18 @@ class Requests {
   Future<int> jobPostRequest(
       String uid, String companyName, List<String> lst) async {
     var url = 'https://api.daffychuy.com/api/v1/employer/$uid/jobs';
-    var response = await http.post(url, body: {
-      'company_name': companyName,
-      'title': lst[0],
+    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
+    var response = await http.post(url, headers: headers, body: {
+      'company_name': companyName.toString(),
+      'title': lst[0].toString(),
       'wage': lst[2].toString(),
-      'position': lst[1],
+      'position': lst[1].toString(),
       'hours': lst[3].toString(),
-      'location': lst[4],
-      'description': lst[6],
-      'status': lst[5],
-      'max_candidate': lst[7]
+      'location': lst[4].toString(),
+      'description': lst[6].toString(),
+      'status': lst[5].toString(),
+      'max_candidate': lst[7].toString()
     });
-
     int statusCode = response.statusCode;
     return statusCode;
   }
@@ -77,6 +77,19 @@ class Requests {
   Future<JobseekerInfo> profileGetRequest(Future<String> uid) async {
     var response = await http
         .get('https://api.daffychuy.com/api/v1/jobseeker/${await uid}/profile');
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response, then parse the JSON.
+      return new JobseekerInfo.fromJson(json.decode(response.body));
+    } else {
+      // If the server did not return a 200 OK response, then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+  Future<JobseekerInfo> profileGetRequest2(String uid) async {
+    var response = await http
+        .get('https://api.daffychuy.com/api/v1/jobseeker/${uid}/profile');
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response, then parse the JSON.
@@ -243,6 +256,24 @@ class Requests {
     }
   }
 
+  Future<Map<String, dynamic>> resumeGetList2(String uid) async {
+    var response = await http
+        .get('https://api.daffychuy.com/api/v1/jobseeker/${uid}/resumes');
+    if (response.statusCode == 200) {
+      var _list = json.decode(response.body);
+      Map<String, dynamic> returnList = new Map<String, dynamic>();
+      for (int i = 0; i < (_list["data"]).length; i++) {
+        returnList[(_list["data"][i]["resume_id"].toString())] =
+        (_list["data"][i]["resume"]);
+      }
+      // If the server did return a 200 OK response, then parse the JSON.
+      return returnList;
+    } else {
+      // If the server did not return a 200 OK response, then throw an exception.
+      return {};
+    }
+  }
+
   Future<Map<String, dynamic>> resumeGetData(
       String uid, String resumeId) async {
     var response = await http.get(
@@ -259,7 +290,8 @@ class Requests {
 
   Future<int> resumePostRequest(String uid, Map<String, String> list) async {
     var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes';
-    var response = await http.post(url, body: {'resume': json.encode(list)});
+    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
+    var response = await http.post(url, headers:headers, body: {'resume': json.encode(list)});
     int statusCode = response.statusCode;
     return statusCode;
   }
@@ -268,8 +300,7 @@ class Requests {
       String uid, String resumeId, Map<String, String> list) async {
     String url =
         'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes/$resumeId';
-
-    Map<String, String> headers = {"Content-type": "Application/json"};
+    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
     http.Response response = await http
         .put(url, headers: headers, body: {'resume': json.encode(list)});
     int statusCode = response.statusCode;
@@ -302,7 +333,7 @@ class Requests {
 
   void putRequest(
       String userType, String uid, String command, String change) async {
-    Map<String, String> headers = {"Content-type": "Application/json"};
+    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
     if (userType == "jobseeker") {
       String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid';
       http.Response response =
