@@ -1,3 +1,4 @@
+import 'package:arezue/components/searchPage.dart';
 import 'package:arezue/employer/jobForm.dart';
 import 'package:arezue/employer/jobInformation.dart';
 import 'package:arezue/utils/colors.dart';
@@ -7,8 +8,8 @@ import 'package:arezue/services/http.dart';
 import '../loading.dart';
 import 'employer.dart';
 
-class JobPage extends StatefulWidget {
-  JobPage({
+class SearchIntro extends StatefulWidget {
+  SearchIntro({
     this.auth,
   });
   final BaseAuth auth;
@@ -16,7 +17,7 @@ class JobPage extends StatefulWidget {
   _JobPageState createState() => new _JobPageState(this.auth);
 }
 
-class _JobPageState extends State<JobPage> {
+class _JobPageState extends State<SearchIntro> {
   _JobPageState(this.auth);
 
   final BaseAuth auth;
@@ -57,15 +58,11 @@ class _JobPageState extends State<JobPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => JobForm(
-                      title: "Edit your job Posting",
-                      auth: widget.auth,
-                      objectList: sendList,
-                      companyName: c,
-                      isNew: false,
-                      uid: uid,
-                      jobId: job.jobId,
-                    )),
+                builder: (context) => SearchPage(
+                  auth: widget.auth,
+                  uid: uid,
+                  jobId: job.jobId,
+                )),
           );
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
@@ -117,13 +114,13 @@ class _JobPageState extends State<JobPage> {
           context,
           MaterialPageRoute(
               builder: (context) => JobForm(
-                    auth: widget.auth,
-                    uid: this.uid,
-                    objectList: this.sendList,
-                    isNew: true,
-                    companyName: c,
-                    title: "Add a new Job Posting",
-                  )),
+                auth: widget.auth,
+                uid: this.uid,
+                objectList: this.sendList,
+                isNew: true,
+                companyName: c,
+                title: "Add a new Job Posting",
+              )),
         );
       },
       child: Icon(Icons.add),
@@ -140,7 +137,7 @@ class _JobPageState extends State<JobPage> {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: ArezueColors.secondaryColor,
-              title: Text('Your Job Postings'),
+              title: Text('Job Search'),
               actions: <Widget>[
                 IconButton(
                   color: Colors.white,
@@ -196,6 +193,21 @@ class _JobPageState extends State<JobPage> {
       child: ListView(
         padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
         children: <Widget>[
+          Center(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(50, 0, 50, 15),
+              child: Text(
+                "Please select a job to start the search...",
+                style: TextStyle(
+                  color: ArezueColors.outPrimaryColor,
+                  fontSize: 16,
+                  fontFamily: 'Arezue',
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
           Column(
             children: list,
           ),

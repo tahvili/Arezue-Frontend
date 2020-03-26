@@ -39,7 +39,7 @@ class RadioWidgetState extends State<RadioWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
+      padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
       margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
       //height: 200,
       decoration: BoxDecoration(

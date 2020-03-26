@@ -10,6 +10,7 @@ class ArezueColors {
   static Color outPrimaryColor = Color.fromRGBO(0, 0, 0, 1.0); // Outside UI - Black Color
   static Color outSecondaryColor = Color.fromRGBO(255, 255, 255, 1.0); // Outside UI - White Color
   static Color highGreyColor = Color.fromRGBO(255, 255, 255, 0.6); // High Grey Color
+  static Color greyColor = Color.fromRGBO(115, 115, 115, 1.0); // Grey Color
   static Color lowGreyColor = Color.fromRGBO(255, 255, 255, 0.15);  // Low Grey Color
   static Color transparent = Color.fromRGBO(255, 255, 255, 0); // Transparent Color
   static Color inputChipColor = Color.fromRGBO(217, 217, 217, 1.0);  // Low Grey Color

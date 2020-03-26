@@ -1,5 +1,6 @@
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
 
 class SliderWidget extends StatefulWidget {
   SliderWidget({this.numExperience, this.handler});
@@ -35,56 +36,92 @@ class SliderWidgetState extends State<SliderWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
+        //color: Colors.white,
+        //padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
         margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
         width: MediaQuery.of(context).size.width - 100,
         child: Column(
           children: <Widget>[
-            Text(
-              "Experience",
-              style: TextStyle(
-                color: ArezueColors.outPrimaryColor,
-                fontSize: 18,
-                fontFamily: 'Arezue',
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            Material(
-              child: SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: Colors.red[700],
-                  inactiveTrackColor: Colors.red[100],
-                  trackShape: RoundedRectSliderTrackShape(),
-                  trackHeight: 4.0,
-                  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                  thumbColor: Colors.redAccent,
-                  overlayColor: Colors.red.withAlpha(32),
-                  overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
-                  tickMarkShape: RoundSliderTickMarkShape(),
-                  activeTickMarkColor: Colors.red[700],
-                  inactiveTickMarkColor: Colors.red[100],
-                  valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-                  valueIndicatorColor: Colors.redAccent,
-                  valueIndicatorTextStyle: TextStyle(
-                    color: Colors.white,
+
+            Center(child:Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10.0),
+                      topLeft: Radius.circular(10.0)),
+                  color:ArezueColors.primaryColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: ArezueColors.shadowColor,
+                      blurRadius: 10.0,
+                      spreadRadius: 5.0,
+                      offset: Offset(
+                        0.0, // horizontal, move right 10
+                        0.0, // vertical, move down 10
+                      ),
+                    ),
+                  ],
+                ),
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 7),
+                child: Text(
+                  "Years of Experience",
+                  style: TextStyle(
+                    backgroundColor: ArezueColors.primaryColor,
+                    color: ArezueColors.secondaryColor,
+                    fontSize: 18,
+                    fontFamily: 'Arezue',
+                    fontWeight: FontWeight.w600,
                   ),
-                ),
-                child: Slider(
-                  min: 0,
-                  max: 10,
-                  divisions: 10,
-                  value: _value,
-                  label: '$_value',
-                  onChanged: (value) {
-                    setState(() {
-                      _value = value;
-                    });
-                    submitHandler(value.toInt());
-                  },
-                ),
-              ),
-            ),
+                ))),
+
+
+    Center(child:Container(
+    decoration: BoxDecoration(
+    borderRadius: BorderRadius.only(
+    topRight: Radius.circular(10.0),
+    topLeft: Radius.circular(10.0),
+    bottomRight: Radius.circular(10.0),
+    bottomLeft: Radius.circular(10.0)),
+    color:ArezueColors.primaryColor,
+    boxShadow: [
+    BoxShadow(
+    color: ArezueColors.shadowColor,
+    blurRadius: 10.0,
+    spreadRadius: 5.0,
+    offset: Offset(
+    0.0, // horizontal, move right 10
+    0.0, // vertical, move down 10
+    ),
+    ),
+    ],
+    ),child:FluidSlider(
+      value: _value,
+      onChanged: (value) {
+        setState(() {
+          _value = value;
+        });
+        submitHandler(value.toInt());
+      },
+      min: 0.0,
+      max: 10.0,
+      sliderColor: ArezueColors.secondaryColor,
+      thumbColor: ArezueColors.primaryColor,
+      start: Text("0",
+        style: TextStyle(
+          color: ArezueColors.primaryColor,
+          fontSize: 24,
+          fontFamily: 'Arezue',
+          fontWeight: FontWeight.w600,
+        ),),
+      end: Text("10",
+        style: TextStyle(
+          color: ArezueColors.primaryColor,
+          fontSize: 24,
+          fontFamily: 'Arezue',
+          fontWeight: FontWeight.w600,
+        ),),
+    )
+    )),
+
           ],
         ));
   }
