@@ -19,12 +19,12 @@ class _ResumePageState extends State<ResumePage>{
   Map<String,dynamic> minidata;
   List<String> resumeData;
 
-  Future<JobseekerInfo> FetchData() async {
+  Future<JobseekerInfo> fetchData() async {
     minidata = await request.resumeGetList(widget.auth.currentUser());
     return await request.profileGetRequest(widget.auth.currentUser());
   }
 
-  Widget selectResume(String resumeID, String Name, Map<String,dynamic> Data, String uid) {
+  Widget selectResume(String resumeID, String name, Map<String,dynamic> data, String uid) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 0.0),
       child: RaisedButton(
@@ -38,14 +38,14 @@ class _ResumePageState extends State<ResumePage>{
                 builder: (context) => ResumeFormPage(
                     auth: widget.auth,
                     resumeId: resumeID,
-                    resumeName: Name,
+                    resumeName: name,
                     uid: uid
                 )),
           );
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
         color: ArezueColors.outSecondaryColor,
-        child: Text(Name,
+        child: Text(name,
             style: TextStyle(color: ArezueColors.outPrimaryColor)),
       ),
     );
@@ -73,7 +73,7 @@ class _ResumePageState extends State<ResumePage>{
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<JobseekerInfo>(
-      future: FetchData(),
+      future: fetchData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -104,10 +104,8 @@ class _ResumePageState extends State<ResumePage>{
 
     List<Widget> widgetlist = new List<Widget>();
     var keys;
-    int counter=0;
     for(keys in minidata.keys){
       widgetlist.add(selectResume(keys, minidata[keys]['name'], minidata[keys], uid));
-      counter++;
     }
     return widgetlist;
   }

@@ -12,7 +12,7 @@ class InputChipBuilder2 extends StatefulWidget {
       this.uid,
       this.endpoint,
       this.fieldData,
-      @required this.fieldId = "",
+      this.fieldId = "",
       this.fieldType = "text",
       this.handler});
 
@@ -26,7 +26,7 @@ class InputChipBuilder2 extends StatefulWidget {
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final List<Object> fieldData; // the actualy value of the key.
-  Function
+  final Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
   @override
@@ -37,8 +37,8 @@ class InputChipBuilder2 extends StatefulWidget {
 }
 
 class _InputChipBuilderState2 extends State<InputChipBuilder2> {
-  _InputChipBuilderState2(@required this.title, this.uid, this.endpoint,
-      this.fieldData, @required this.fieldId, this.fieldType, this.handler);
+  _InputChipBuilderState2(this.title, this.uid, this.endpoint,
+      this.fieldData, this.fieldId, this.fieldType, this.handler);
 
   final String uid;
   final String
@@ -53,7 +53,6 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
   Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
-  //created a texteditting controll so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
   Requests serverRequest = new Requests();
 
@@ -61,22 +60,17 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
   List<Map<String, dynamic>> arr = new List<Map<String, dynamic>>();
 
   void generateListSkills(List<Object> list) {
-    if(fieldId == "skill") {
+    if (fieldId == "skill") {
       List<Skill>.from(list).forEach((skill) {
         objectList.add(skill.skill);
       });
     }
-//    else if(fieldId == "education"){
-//      List<Education>.from(list).forEach((education) {
-//        objectList.add(education.schoolName);
-//      });
-//    }
   }
 
   @override
   void initState() {
     super.initState();
-   // FetchData();
+    // FetchData();
     generateListSkills(fieldData);
   }
 
@@ -105,7 +99,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
     // Once that's done, notify the parent so it knows to update its local state.
   }
 
-  Future<int> FetchData() async {
+  Future<int> fetchData() async {
     arr = await (serverRequest.skillsGetRequest(uid, this.fieldId));
     if (arr.length != 0) {
       return 200;
@@ -122,10 +116,10 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
         color: ArezueColors.secondaryColor,
       ),
       onPressed: () async {
-        if (await (FetchData()) == 200) {
+        if (await (fetchData()) == 200) {
           print(arr);
-          Map<String, dynamic> value =
-              arr.singleWhere((element) => element['skill'] == text.toString().toLowerCase());
+          Map<String, dynamic> value = arr.singleWhere(
+              (element) => element['skill'] == text.toString().toLowerCase());
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -182,30 +176,29 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
                     )),
                 new Spacer(),
                 Container(
-                  width:50,
+                  width: 50,
                   child: MaterialButton(
-                        padding: EdgeInsets.all(12),
-                        shape: CircleBorder(),
-                        textColor: ArezueColors.primaryColor,
-                        child: Icon(
-                      Icons.add,
-                      size: 20,
-                    ),
-                        color: ArezueColors.secondaryColor,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FormPage(
-                                      title: "Add a skill",
-                                      skill: null,
-                                      numExperience: 0,
-                                      numExpertise: 5,
-                                      handler: submitHandler,
-                                      uid: this.uid,
-                                      fieldId: this.fieldId)));
-                        }),
-
+                      padding: EdgeInsets.all(12),
+                      shape: CircleBorder(),
+                      textColor: ArezueColors.primaryColor,
+                      child: Icon(
+                        Icons.add,
+                        size: 20,
+                      ),
+                      color: ArezueColors.secondaryColor,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FormPage(
+                                    title: "Add a skill",
+                                    skill: null,
+                                    numExperience: 0,
+                                    numExpertise: 5,
+                                    handler: submitHandler,
+                                    uid: this.uid,
+                                    fieldId: this.fieldId)));
+                      }),
                 ),
               ],
             ),

@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:arezue/components/search.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +11,7 @@ class MyTextField2 extends StatefulWidget {
       this.uid,
       this.skill,
       this.fieldData = "",
-      @required this.fieldId = "",
+      this.fieldId = "",
       this.fieldType = "text",
       this.handler});
   final String uid;
@@ -24,7 +23,7 @@ class MyTextField2 extends StatefulWidget {
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final String fieldData; // the actualy value of the key.
-  Function handler;
+  final Function handler;
 
   @override
   State<StatefulWidget> createState() {
@@ -45,8 +44,8 @@ class _MyTextFieldState2 extends State<MyTextField2> {
       this.uid,
       //this.endpoint,
       this.fieldData = "",
-      @required this.fieldId = "",
-      @required this.fieldType = "text",
+      this.fieldId = "",
+      this.fieldType = "text",
       this.handler});
 
   final String uid;
@@ -57,12 +56,12 @@ class _MyTextFieldState2 extends State<MyTextField2> {
       fieldType; // numeric or text, depending on that it displays the keyboard differently
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
-  String fieldData; // the actualy value of the key.
+  String fieldData; // the actually value of the key.
   Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
   Requests serverRequest = new Requests();
-  //created a texteditting controll so that we can modify the text on init of this widget if need be.
+  //created a text editing controller so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
 
   //keyboard map
@@ -78,6 +77,11 @@ class _MyTextFieldState2 extends State<MyTextField2> {
       this.fieldData = text;
     });
     handler(this.title, text); //calling formHandler
+  }
+
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   // The actual object iself.
@@ -108,7 +112,8 @@ class _MyTextFieldState2 extends State<MyTextField2> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Padding(padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
                   child: Text(this.title)),
             ],
           ),

@@ -5,12 +5,12 @@ import 'package:flutter/services.dart';
 
 import '../services/http.dart';
 
-class MyTextField extends StatefulWidget {
-  MyTextField(
+class MySwitchTextField extends StatefulWidget {
+  MySwitchTextField(
       {@required this.title,
       this.uid,
       this.endpoint,
-      this.fieldData = "",
+      this.fieldData,
       this.fieldId,
       this.fieldType = "text",
       this.handler});
@@ -23,12 +23,12 @@ class MyTextField extends StatefulWidget {
       fieldType; // numeric or text, depending on that it displays the keyboard differently
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
-  final String fieldData; // the actualy value of the key.
+  final bool fieldData; // the actualy value of the key.
   final Function handler;
 
   @override
   State<StatefulWidget> createState() {
-    return _MyTextFieldState(
+    return _MySwitchTextFieldState(
         title: this.title,
         uid: this.uid,
         endpoint: this.endpoint,
@@ -39,14 +39,14 @@ class MyTextField extends StatefulWidget {
   } // the parent handler function that updates the parent state, this is passed from the parent.
 }
 
-class _MyTextFieldState extends State<MyTextField> {
+class _MySwitchTextFieldState extends State<MySwitchTextField> {
   //Constructor of the child widget
   @override
-  _MyTextFieldState(
+  _MySwitchTextFieldState(
       {@required this.title,
       this.uid,
       this.endpoint,
-      this.fieldData = "",
+      this.fieldData,
       this.fieldId,
       this.fieldType,
       this.handler});
@@ -60,12 +60,18 @@ class _MyTextFieldState extends State<MyTextField> {
       fieldType; // numeric or text, depending on that it displays the keyboard differently
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
-  String fieldData; // the actualy value of the key.
+  bool fieldData; // the actualy value of the key.
   final Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
   Requests serverRequest = new Requests();
-  var controller = TextEditingController();
+  bool isSwitched;
+
+  @override
+  void initState() {
+    this.isSwitched = this.fieldData;
+    super.initState();
+  }
 
   //keyboard map
   final Map<String, TextInputType> keyboards = {
@@ -75,19 +81,13 @@ class _MyTextFieldState extends State<MyTextField> {
 
   // child handler that calls the API and then the parent handler.
   void submitHandler(String fieldId, text) {
-    controller.text = text;
-    if (this.fieldId == "Wage" || this.fieldId == "Hours") {
-      this.fieldData = text;
-      handler(fieldId, text); //this is for the employer job posting section
-    } else {
-      // Handle PUT request to the api here
-      serverRequest.putRequest('jobseeker', uid, fieldId, text);
-    }
+    // Handle PUT request to the api here
+    serverRequest.putRequest('jobseeker', uid, fieldId, text);
     // Once that's done, notify the parent so it knows to update its local state.
   }
 
   Widget build(BuildContext context) {
-    controller.text = this.fieldData;
+//    controller.text = this.fieldData;
     return Container(
         padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
         margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
@@ -118,21 +118,20 @@ class _MyTextFieldState extends State<MyTextField> {
                   fontFamily: 'Arezue',
                   fontWeight: FontWeight.w600,
                 )),
-            SizedBox(width: 15),
+            SizedBox(width: 40),
             Expanded(
-              child: TextField(
-                textAlign: TextAlign.right,
-                controller: controller,
-                keyboardType: keyboards[this.fieldType],
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Enter something",
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(32.0),
-                    borderSide: BorderSide(color: Colors.red, width: 1),
-                  ),
-                ),
-                onSubmitted: (text) => submitHandler(this.fieldId, text),
+              child: Switch(
+                value: isSwitched,
+                onChanged: (value) {
+                  setState(() {
+                    isSwitched = value;
+                    submitHandler(this.fieldId, value.toString());
+                    print(isSwitched);
+                  });
+                },
+                activeTrackColor: Colors.grey,
+                inactiveThumbColor: Colors.grey,
+                activeColor: Colors.black87,
               ),
             ),
           ],

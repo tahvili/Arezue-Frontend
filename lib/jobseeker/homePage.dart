@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/utils/texts.dart';
-import 'package:arezue/services/http.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({this.auth, this.onSignOut, this.formType});
@@ -534,7 +533,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  bool changeStatus(String uid) {
+  void changeStatus(String uid) {
     if (activelyLooking == true) {
       activelyLooking = false;
     } else {

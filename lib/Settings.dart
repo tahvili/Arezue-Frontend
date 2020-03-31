@@ -1,4 +1,5 @@
 import 'package:arezue/employer/employer.dart';
+import 'package:arezue/loading.dart';
 import 'package:arezue/login_page.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/jobseeker/jobseeker.dart';
@@ -6,19 +7,20 @@ import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/services/auth.dart';
 
-import 'loading.dart';
-
 class SettingsPage extends StatefulWidget {
   SettingsPage({this.auth, this.onSignOut, this.formType});
   final BaseAuth auth;
   final FormType2 formType;
   final VoidCallback onSignOut;
   @override
-  _SettingsPageState createState() => new _SettingsPageState(formType: this.formType);
+  _SettingsPageState createState() =>
+      new _SettingsPageState(formType: this.formType);
 }
 
 enum FormType2 { employer, jobseeker }
-enum AuthStatus { notSignedIn, signedIn,
+enum AuthStatus {
+  notSignedIn,
+  signedIn,
 }
 
 class _SettingsPageState extends State<SettingsPage> {
@@ -37,13 +39,20 @@ class _SettingsPageState extends State<SettingsPage> {
   Requests request = new Requests();
 
   @override
-  void initState() {   //calling the appropriate http get request
+  void initState() {
+    //calling the appropriate http get request
     super.initState();
     loading = false;
-    if(this.formType == FormType2.jobseeker) {
-      futureUser = request.jobseekerGetRequest(widget.auth.currentUser());
-    }else{
-      futureEmployer = request.employerGetRequest(widget.auth.currentUser());
+  }
+
+//  Future<Object> fetchData() async {
+//    return await request.profileGetRequest(widget.auth.currentUser());
+//  }
+  Future<Object> fetchData() async {
+    if (this.formType == FormType2.jobseeker) {
+      return await request.jobseekerGetRequest(widget.auth.currentUser());
+    } else {
+      return await request.employerGetRequest(widget.auth.currentUser());
     }
   }
 
@@ -70,95 +79,88 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  Widget nameField(){
-    if(this.formType == FormType2.jobseeker) {
-      return FutureBuilder<Jobseeker>(
-          future: futureUser,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Container(
-                width: 40,
-                height: 40,
-                color: Colors.redAccent,
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(
-                    right: 50, left: 50, bottom: 10, top: 35),
-                child: Text(
-                  snapshot.data.name,
-                  style: textStyle,
-                  textAlign: TextAlign.center,
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
-            return CircularProgressIndicator();
-          }
-      );
-    }else{
-      return FutureBuilder<Employer>(
-          future: futureEmployer,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Container(
-                width: 40,
-                height: 40,
-                color: Colors.redAccent,
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(
-                    right: 50, left: 50, bottom: 10, top: 35),
-                child: Text(
-                  snapshot.data.name,
-                  style: textStyle,
-                  textAlign: TextAlign.center,
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
-            return CircularProgressIndicator();
-          }
-      );
-    }
+  Widget nameField(String text) {
+    return Container(
+      width: 40,
+      height: 40,
+      //color: Colors.redAccent,
+      decoration: BoxDecoration(
+        color: ArezueColors.primaryColor,
+        boxShadow: [
+          BoxShadow(
+            color: ArezueColors.shadowColor,
+            blurRadius: 10.0,
+            spreadRadius: 5.0,
+            offset: Offset(
+              0.0, // horizontal, move right 10
+              0.0, // vertical, move down 10
+            ),
+          ),
+        ],
+      ),
+      alignment: Alignment.center,
+      margin: const EdgeInsets.only(right: 50, left: 50, bottom: 10, top: 35),
+      child: Text(
+        text,
+        style: textStyle,
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 
-
-  Widget phoneNumberField(){
+  Widget phoneNumberField(String number) {
     var phone;
-    return FutureBuilder<Jobseeker>(
-      future: futureUser,
-      builder: (context, snapshot){
-        if (snapshot.hasData) {
-          if(snapshot.data.phoneNumber == null){
-              phone = "--";
-          }else {
-              phone = snapshot.data.phoneNumber;
-          }
-          return Container(
-            width: 40,
-            height: 40,
-            color: Colors.redAccent,
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(
-                right: 50, left: 50, bottom: 10, top: 10),
+    if (number == null) {
+      phone = '--';
+    } else {
+      phone = number;
+    }
+    return Container(
+      width: 40,
+      height: 40,
+      //color: Colors.redAccent,
+      decoration: BoxDecoration(
+        color: ArezueColors.primaryColor,
+        boxShadow: [
+          BoxShadow(
+            color: ArezueColors.shadowColor,
+            blurRadius: 10.0,
+            spreadRadius: 5.0,
+            offset: Offset(
+              0.0, // horizontal, move right 10
+              0.0, // vertical, move down 10
+            ),
+          ),
+        ],
+      ),
+      alignment: Alignment.center,
+      margin: const EdgeInsets.only(right: 50, left: 50, bottom: 10, top: 10),
 
-            child:
-            Text(
-              phone,
-              style: textStyle,
-              textAlign: TextAlign.center,
-              ),
-          );
-        }
-        return CircularProgressIndicator();
-      }
+      child: Text(phone,
+        style: textStyle,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
   final Widget appLanguageField = Container(
     width: 40,
     height: 40,
-    color: Colors.redAccent,
+    //color: Colors.redAccent,
+    decoration: BoxDecoration(
+      color: ArezueColors.primaryColor,
+      boxShadow: [
+        BoxShadow(
+          color: ArezueColors.shadowColor,
+          blurRadius: 10.0,
+          spreadRadius: 5.0,
+          offset: Offset(
+            0.0, // horizontal, move right 10
+            0.0, // vertical, move down 10
+          ),
+        ),
+      ],
+    ),
     alignment: Alignment.center,
     margin: const EdgeInsets.only(right: 50, left: 50, bottom: 10, top: 10),
     child: Text(
@@ -174,7 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      onPressed: null,
+      onPressed: () {},
       padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
       color: ArezueColors.outSecondaryColor,
       child: Text("Change Password", style: textStyle),
@@ -187,7 +189,7 @@ class _SettingsPageState extends State<SettingsPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      onPressed: null,
+      onPressed: () {},
       padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
       color: ArezueColors.outSecondaryColor,
       child: Text("Billing & Payments", style: textStyle),
@@ -200,7 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      onPressed: null,
+      onPressed: () {},
       padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
       color: ArezueColors.outSecondaryColor,
       child: Text('Upgrade to Premium', style: textStyle),
@@ -213,7 +215,7 @@ class _SettingsPageState extends State<SettingsPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      onPressed: null,
+      onPressed: () {},
       padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
       color: ArezueColors.outSecondaryColor,
       child: Text('Download Resume', style: textStyle),
@@ -226,7 +228,7 @@ class _SettingsPageState extends State<SettingsPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      onPressed: null,
+      onPressed: () {},
       padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
       color: ArezueColors.outSecondaryColor,
       child: Text('Connected Accounts', style: textStyle),
@@ -239,7 +241,7 @@ class _SettingsPageState extends State<SettingsPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      onPressed: null,
+      onPressed: () {},
       padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
       color: ArezueColors.outSecondaryColor,
       child: Text('User Agreement', style: textStyle),
@@ -252,7 +254,7 @@ class _SettingsPageState extends State<SettingsPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      onPressed: null,
+      onPressed: () {},
       padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
       color: ArezueColors.outSecondaryColor,
       child: Text('Help Center', style: textStyle),
@@ -265,7 +267,7 @@ class _SettingsPageState extends State<SettingsPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      onPressed: null,
+      onPressed: () {},
       padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
       color: ArezueColors.outSecondaryColor,
       child: Text('Privacy', style: textStyle),
@@ -273,12 +275,12 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   final Widget versionButton = Padding(
-    padding: EdgeInsets.fromLTRB(50.0, 10.0, 0.0, 10.0),
+    padding: EdgeInsets.fromLTRB(50.0, 10.0, 0, 10.0),
     child: RaisedButton(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      onPressed: null,
+      onPressed: () {},
       padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
       color: ArezueColors.outSecondaryColor,
       child: Text('Version', style: textStyle),
@@ -313,68 +315,102 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  List<Widget> submitWidgets() {
-    switch (formType) {
-      case FormType2.employer:
-        return [
-          nameField(),
-          appLanguageField,
-          changePasswordButton,
-          billingButton,
-          premiumButton,
-          agreementButton,
-          Row(
-            children: <Widget>[helpCenterButton, privacyButton],
-          ),
-          Row(
-            children: <Widget>[
-              versionButton,
-              signOutButton(),
-            ],
-          ),
-        ];
-        break;
-      case FormType2.jobseeker:
-        return [
-          nameField(),
-          phoneNumberField(),
-          appLanguageField,
-          changePasswordButton,
-          connectedAccounts,
-          downloadResume,
-          agreementButton,
-          Row(
-            children: <Widget>[helpCenterButton, privacyButton],
-          ),
-          Row(
-            children: <Widget>[
-              versionButton,
-              signOutButton(),
-            ],
-          ),
-        ];
-        break;
-    }
-    return null;
+  List<Widget> submitWidgetsEmployer(String name) {
+    return [
+      nameField(name),
+      appLanguageField,
+      changePasswordButton,
+      billingButton,
+      premiumButton,
+      agreementButton,
+      Row(
+        children: <Widget>[helpCenterButton, privacyButton],
+      ),
+      Row(
+        children: <Widget>[
+          versionButton,
+          signOutButton(),
+        ],
+      ),
+    ];
+  }
+
+  List<Widget> submitWidgetsJobseeker(String name, String phoneNumber) {
+    return [
+      nameField(name),
+      phoneNumberField(phoneNumber),
+      appLanguageField,
+      changePasswordButton,
+      connectedAccounts,
+      downloadResume,
+      agreementButton,
+      Row(
+        children: <Widget>[helpCenterButton, privacyButton],
+      ),
+      Row(
+        children: <Widget>[
+          versionButton,
+          signOutButton(),
+        ],
+      ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return loading ? Loading() : Scaffold(
-      appBar: AppBar(
-        backgroundColor: ArezueColors.secondaryColor,
-        title: Text('Settings'),
-        actions: <Widget>[
-          IconButton(
-            color: Colors.white,
-            icon: Icon(Icons.help, color: Colors.white),
-            onPressed: null,
-          )
-        ],
-      ),
-      body: ListView(
-        children: submitWidgets(),
-      ),
+    return FutureBuilder<Object>(
+      future: fetchData(), // function where you call your api
+      builder: (BuildContext context, AsyncSnapshot<Object> snapshot) {
+        // AsyncSnapshot<Your object type>
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return new Text('Press button to start');
+          case ConnectionState.waiting:
+            return Loading();
+          default:
+            if (snapshot.hasError)
+              return new Text('Error: ${snapshot.error}');
+            else {
+              if (this.formType == FormType2.jobseeker) {
+                return Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: ArezueColors.secondaryColor,
+                    title: Text('Settings'),
+                    actions: <Widget>[
+                      IconButton(
+                        color: Colors.white,
+                        icon: Icon(Icons.help, color: Colors.white),
+                        onPressed: null,
+                      )
+                    ],
+                  ),
+                  body: ListView(
+                    children: submitWidgetsJobseeker(
+                        (((snapshot.data) as Jobseeker).name),
+                        (((snapshot.data) as Jobseeker).phoneNumber)),
+                  ),
+                );
+              } else
+                return Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: ArezueColors.secondaryColor,
+                    title: Text('Settings'),
+                    actions: <Widget>[
+                      IconButton(
+                        color: Colors.white,
+                        icon: Icon(Icons.help, color: Colors.white),
+                        onPressed: null,
+                      )
+                    ],
+                  ),
+                  body: ListView(
+                    children: submitWidgetsEmployer(
+                        (((snapshot.data) as Employer).name)),
+                  ),
+                );
+            }
+        }
+      },
     );
   }
 }

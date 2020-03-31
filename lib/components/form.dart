@@ -161,7 +161,7 @@ class _FormPageState extends State<FormPage> {
               SizedBox(
                 height: 35,
               ),
-              MySearchTextField(skill: this.skill, handler: formHandler),
+              MySearchTextField(title: "Skills", skill: this.skill, handler: formHandler),
               SliderWidget(
                   numExperience: this.numExperience, handler: formHandler),
               RadioWidget(numExpertise: this.numExpertise, handler: formHandler),

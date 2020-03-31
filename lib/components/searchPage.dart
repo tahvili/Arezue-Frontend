@@ -1,13 +1,6 @@
-import 'package:arezue/employer/employer.dart';
-import 'package:arezue/employer/employer_homePage.dart';
-import 'package:arezue/employer/jobForm.dart';
-import 'package:arezue/employer/jobInformation.dart';
-import 'package:arezue/jobseeker/resumeForm.dart';
 import 'package:arezue/jobseeker/resumeView.dart';
-import 'package:arezue/login_page.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/services/http.dart';
-import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/utils/colors.dart';
 
@@ -30,7 +23,7 @@ class _SearchPageState extends State<SearchPage> {
   void searchFieldHandler(String text, String command){
   }
 
-  Widget selectResume(String resumeID, String Name, Map<String,dynamic> Data, String uid) {
+  Widget selectResume(String resumeID, String name, Map<String,dynamic> data, String uid) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 0.0),
       child: RaisedButton(
@@ -42,21 +35,21 @@ class _SearchPageState extends State<SearchPage> {
             context,
             MaterialPageRoute(
                 builder: (context) => ResumeView(
-                    data: Data,
-                    resumeName: Name,
+                    data: data,
+                    resumeName: name,
                     uid: "4f6cf401-091a-49b0-bf89-7df29a4ab1f1"
                 )),
           );
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
         color: ArezueColors.outSecondaryColor,
-        child: Text(Name,
+        child: Text(name,
             style: TextStyle(color: ArezueColors.outPrimaryColor)),
       ),
     );
   }
 
-  void FetchData() async {
+  void fetchData() async {
     minidata = await request.resumeGetList2("4f6cf401-091a-49b0-bf89-7df29a4ab1f1");
     widgetList = listWidgets(uid);
   }
@@ -70,13 +63,15 @@ class _SearchPageState extends State<SearchPage> {
       handler: searchFieldHandler,
     ),);
     var keys;
-    int counter=0;
+    //int counter=0;
     if(minidata==null){
       return widgetlist;
     }
     for(keys in minidata.keys){
-      widgetlist.add(Container(margin: const EdgeInsets.only(right: 50, left: 50, bottom: 10, top: 0),child:selectResume(keys, minidata[keys]['name'], minidata[keys], uid)));
-      counter++;
+      widgetlist.add(Container(margin: const EdgeInsets.only(right: 50,
+          left: 50, bottom: 10, top: 0),child:selectResume(keys, minidata[keys]['name'],
+          minidata[keys], uid)));
+      //counter++;
     }
     return widgetlist;
   }
@@ -95,7 +90,7 @@ class _SearchPageState extends State<SearchPage> {
 
 
   Widget build(BuildContext context) {
-    FetchData();
+    fetchData();
     return new Scaffold(
           appBar: AppBar(
               backgroundColor: ArezueColors.secondaryColor,

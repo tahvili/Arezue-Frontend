@@ -11,8 +11,8 @@ class InputChipBuilder extends StatefulWidget {
       this.uid,
       this.endpoint,
       this.fieldData,
-      @required this.fieldId = "",
-      @required this.fieldType = "text",
+      this.fieldId = "",
+      this.fieldType = "text",
       this.handler});
 
   final String uid;
@@ -25,7 +25,7 @@ class InputChipBuilder extends StatefulWidget {
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final List<String> fieldData; // the actualy value of the key.
-  Function
+  final Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
   @override
@@ -37,12 +37,12 @@ class InputChipBuilder extends StatefulWidget {
 
 class _InputChipBuilderState extends State<InputChipBuilder> {
   _InputChipBuilderState(
-      @required this.title,
+      this.title,
       this.uid,
       this.endpoint,
       this.fieldData,
-      @required this.fieldId,
-      @required this.fieldType,
+      this.fieldId,
+      this.fieldType,
       this.handler);
 
   final String uid;
@@ -57,8 +57,7 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
   final List<String> fieldData; // the actualy value of the key.
   Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
-  
-  //created a texteditting controll so that we can modify the text on init of this widget if need be.
+
   var controller = TextEditingController();
   Requests serverRequest = new Requests();
 
