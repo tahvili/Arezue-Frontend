@@ -33,7 +33,7 @@ class _JobPageState extends State<JobPage> {
     super.initState();
   }
 
-  Future<Job> FetchData() async {
+  Future<Job> fetchData() async {
     uid = await (widget.auth.currentUser());
     this.futureEmployer = request.employerGetRequest(widget.auth.currentUser());
     return await request.jobGetRequest(uid);
@@ -79,7 +79,7 @@ class _JobPageState extends State<JobPage> {
   Map<String, dynamic> sendListGenerator() {
     Map<String, dynamic> sendList = {
       "Title": "",
-      "Position": "",
+      //"Position": "",
       "Wage": "",
       "Hours": "",
       "Location": "",
@@ -94,7 +94,7 @@ class _JobPageState extends State<JobPage> {
   Map<String, dynamic> sendEditListGenerator(JobData job) {
     Map<String, dynamic> sendList = {
       "Title": job.title,
-      "Position": job.position,
+      //"Position": job.position,
       "Wage": job.wage,
       "Hours": job.hours,
       "Location": job.location,
@@ -134,7 +134,7 @@ class _JobPageState extends State<JobPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Job>(
-      future: FetchData(),
+      future: fetchData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(

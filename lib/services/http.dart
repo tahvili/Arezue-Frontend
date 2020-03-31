@@ -44,13 +44,13 @@ class Requests {
     var response = await http.post(url, headers: headers, body: {
       'company_name': companyName.toString(),
       'title': lst[0].toString(),
-      'wage': lst[2].toString(),
-      'position': lst[1].toString(),
-      'hours': lst[3].toString(),
-      'location': lst[4].toString(),
-      'description': lst[6].toString(),
-      'status': lst[5].toString(),
-      'max_candidate': lst[7].toString()
+      'wage': lst[1].toString(),
+      'position': lst[0].toString(),
+      'hours': lst[2].toString(),
+      'location': lst[3].toString(),
+      'description': lst[5].toString(),
+      'status': lst[4].toString(),
+      'max_candidate': lst[6].toString()
     });
     int statusCode = response.statusCode;
     return statusCode;
@@ -89,7 +89,7 @@ class Requests {
 
   Future<JobseekerInfo> profileGetRequest2(String uid) async {
     var response = await http
-        .get('https://api.daffychuy.com/api/v1/jobseeker/${uid}/profile');
+        .get('https://api.daffychuy.com/api/v1/jobseeker/$uid/profile');
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response, then parse the JSON.
@@ -258,7 +258,7 @@ class Requests {
 
   Future<Map<String, dynamic>> resumeGetList2(String uid) async {
     var response = await http
-        .get('https://api.daffychuy.com/api/v1/jobseeker/${uid}/resumes');
+        .get('https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes');
     if (response.statusCode == 200) {
       var _list = json.decode(response.body);
       Map<String, dynamic> returnList = new Map<String, dynamic>();
@@ -277,7 +277,7 @@ class Requests {
   Future<Map<String, dynamic>> resumeGetData(
       String uid, String resumeId) async {
     var response = await http.get(
-        'https://api.daffychuy.com/api/v1/jobseeker/${uid}/resumes/${resumeId}');
+        'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes/$resumeId');
     if (response.statusCode == 200) {
       var _list = json.decode(response.body);
       // If the server did return a 200 OK response, then parse the JSON.
@@ -326,19 +326,22 @@ class Requests {
     return statusCode;
   }
 
-  void deleteRequest(String uid, String type, String value) async {
+  Future<int> deleteRequest(String uid, String type, String value) async {
     String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$type/$value';
     http.Response response = await http.delete(url);
+    return response.statusCode;
   }
 
-  void putRequest(
+  Future<int> putRequest(
       String userType, String uid, String command, String change) async {
     Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
+    http.Response response;
     if (userType == "jobseeker") {
       String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid';
-      http.Response response =
+      response =
           await http.put(url, headers: headers, body: {command: change});
     }
+    return response.statusCode;
   }
 
   //get request for employer

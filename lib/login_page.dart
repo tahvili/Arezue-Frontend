@@ -71,50 +71,42 @@ class _LoginPageState extends State<LoginPage> {
     if (validateAndSave()) {
       try {
         if (formType == FormType.login) {
-          Object value = await widget.auth.signInWithEmailAndPassword(_email, _password);
-          if (value !=
-              null) {
+          Object value =
+              await widget.auth.signInWithEmailAndPassword(_email, _password);
+          if (value != null) {
             //setState(() => loading = true);
             setState(() {
               //_authHint = 'Signed In';
               Navigator.pop(context);
-              if (value is Employer){
+              if (value is Employer) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => EmployerHomePage(
-                        auth: widget.auth,
-                        onSignOut: () =>
-                            _updateAuthStatus(AuthStatus.notSignedIn),
-                        formType: FormType4.employer,
-                      ),
+                            auth: widget.auth,
+                            onSignOut: () =>
+                                _updateAuthStatus(AuthStatus.notSignedIn),
+                            formType: FormType4.employer,
+                          ),
                       fullscreenDialog: true),
                 );
               }
-              if (value is Jobseeker){
+              if (value is Jobseeker) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => HomePage(
-                        auth: widget.auth,
-                        onSignOut: () =>
-                            _updateAuthStatus(AuthStatus.notSignedIn),
-                        formType: FormType3.jobseeker,
-                      ),
+                            auth: widget.auth,
+                            onSignOut: () =>
+                                _updateAuthStatus(AuthStatus.notSignedIn),
+                            formType: FormType3.jobseeker,
+                          ),
                       fullscreenDialog: true),
                 );
               }
-
             });
             widget.onSignIn();
           }
-//          else
-//            {
-//            setState(() {
-//              loading = false;
-//              _errorMessage = 'Could not sign in with those credentials';
-//            });
-//          }
         } else if (formType == FormType.jobseekerRegister) {
           if (await widget.auth.createUserWithEmailAndPassword(
                   _name, _email, _password, null, "jobseeker") !=
@@ -128,13 +120,6 @@ class _LoginPageState extends State<LoginPage> {
             _showVerifyEmailSentDialog();
           }
         }
-//          else
-//            {
-//            setState(() {
-//              loading = false;
-//              _errorMessage = 'Please supply a valid email';
-//            });
-//          }
         setState(() {
           loading = false;
         });
@@ -142,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
         print(e);
         setState(() {
           loading = false;
-         // _authHint = 'Sign In Error\n\n${e.toString()}';
+          // _authHint = 'Sign In Error\n\n${e.toString()}';
           _errorMessage = e.message;
         });
       }
@@ -173,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
       }
     } else {
       setState(() {
-       // _authHint = '';
+        // _authHint = '';
       });
     }
   }
@@ -443,10 +428,6 @@ class _LoginPageState extends State<LoginPage> {
         style: TextStyle(color: ArezueColors.outSecondaryColor, fontSize: 16),
       ),
       onPressed: () {
-//        Navigator.push(
-//          context,
-//          MaterialPageRoute(builder: (context) => Intermediate()),
-//        );
         moveToLogin();
       },
     );
@@ -500,10 +481,6 @@ class _LoginPageState extends State<LoginPage> {
         style: TextStyle(color: ArezueColors.outSecondaryColor, fontSize: 16),
       ),
       onPressed: () {
-//        Navigator.push(
-//          context,
-//          MaterialPageRoute(builder: (context) => Intermediate()),
-//        );
         moveToLogin();
       },
     );
@@ -734,19 +711,29 @@ class _LoginPageState extends State<LoginPage> {
         ? Loading()
         : new Form(
             key: _formKey,
-            child: Stack(
-              children: <Widget>[
-                Scaffold(
-                  backgroundColor: ArezueColors.outPrimaryColor,
-                  body: Center(
-                    child: ListView(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.only(left: 24.0, right: 24.0),
-                      children: submitWidgets(),
+            child: GestureDetector(
+              onTap: () {
+                //allows us to hide the soft keyboard when the user
+                // taps anywhere on the screen
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                if (!currentFocus.hasPrimaryFocus) {
+                  currentFocus.unfocus();
+                }
+              },
+              child: Stack(
+                children: <Widget>[
+                  Scaffold(
+                    backgroundColor: ArezueColors.outPrimaryColor,
+                    body: Center(
+                      child: ListView(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                        children: submitWidgets(),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
   }

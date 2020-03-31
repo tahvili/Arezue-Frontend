@@ -12,7 +12,7 @@ class MySearchTextField extends StatefulWidget {
       this.uid,
       this.skill,
       this.fieldData = "",
-      @required this.fieldId = "",
+      this.fieldId = "",
       this.fieldType = "text",
       this.handler});
   final String uid;
@@ -21,10 +21,10 @@ class MySearchTextField extends StatefulWidget {
       title; // this goes before the textfield, i.e. what textfield is this.
   final String
       fieldType; // numeric or text, depending on that it displays the keyboard differently
-  String
+  final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final String fieldData; // the actualy value of the key.
-  Function handler;
+  final Function handler;
 
   @override
   State<StatefulWidget> createState() {
@@ -47,9 +47,9 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
       this.uid,
       this.endpoint,
       this.skill,
-      this.fieldData = "",
+      this.fieldData,
         this.fieldId,
-      @required this.fieldType = "text",
+      this.fieldType,
       this.handler});
 
   final String uid;

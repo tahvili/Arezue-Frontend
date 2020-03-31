@@ -1,9 +1,7 @@
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:arezue/services/auth.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/jobseeker/information.dart';
-import 'package:arezue/components/resumeField.dart';
 import '../loading.dart';
 
 class ResumeView extends StatefulWidget {
@@ -21,8 +19,8 @@ class _ResumeView extends State<ResumeView> {
   Map<String, dynamic> data;
   Requests request = new Requests();
   Future<JobseekerInfo> uData;
-  List<String> dream_career = [];
-  List<String> dream_company = [];
+  List<String> dreamCareer = [];
+  List<String> dreamCompany = [];
   List<String> skill = [];
   List<String> education = [];
   List<String> experience = [];
@@ -31,20 +29,20 @@ class _ResumeView extends State<ResumeView> {
   final regExp = new RegExp(r'(?:\[)?(\[[^\]]*?\](?:,?))(?:\])?');
   bool update = false;
 
-  Future<JobseekerInfo> FetchData() async {
+  Future<JobseekerInfo> fetchData() async {
     return await request.profileGetRequest2(widget.uid);
   }
 
   @override
   void initState() {
     super.initState();
-    uData = FetchData();
+    uData = fetchData();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<JobseekerInfo>(
-      future: FetchData(),
+      future: fetchData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -135,12 +133,12 @@ class _ResumeView extends State<ResumeView> {
                       width: MediaQuery.of(context).size.width,
                       child: Text("My Experiences",style: TextStyle(color:ArezueColors.primaryColor,),)),
               Column(
-                children: ExperienceList((widget.data["experience"])
+                children: experienceList((widget.data["experience"])
                           .replaceAll(RegExp(r'[\[\]]'), '')
                           .split(', '), snapshot.data.jobseeker.information.experience, MediaQuery.of(context).size.width),
                     ),
                   Column(
-                    children: SkillList((widget.data["skill"])
+                    children: skillList((widget.data["skill"])
                         .replaceAll(RegExp(r'[\[\]]'), '')
                         .split(', '), MediaQuery.of(context).size.width),
                   ),
@@ -167,7 +165,7 @@ class _ResumeView extends State<ResumeView> {
                       width: MediaQuery.of(context).size.width,
                       child: Text("My Education Background",style: TextStyle(color:ArezueColors.primaryColor,),)),
                   Column(
-                    children: EducationList((widget.data["education"])
+                    children: educationList((widget.data["education"])
                         .replaceAll(RegExp(r'[\[\]]'), '')
                         .split(', '), snapshot.data.jobseeker.information.education, MediaQuery.of(context).size.width),
                   ),
@@ -194,7 +192,7 @@ class _ResumeView extends State<ResumeView> {
                       width: MediaQuery.of(context).size.width,
                       child: Text("My Certificates",style: TextStyle(color:ArezueColors.primaryColor,),)),
                   Column(
-                    children: CertificateList((widget.data["certification"])
+                    children: certificateList((widget.data["certification"])
                         .replaceAll(RegExp(r'[\[\]]'), '')
                         .split(', '), snapshot.data.jobseeker.information.certification, MediaQuery.of(context).size.width),
                   ),
@@ -212,7 +210,7 @@ class _ResumeView extends State<ResumeView> {
   }
 }
 
-List<Widget> SkillList(List<String> list, double width) {
+List<Widget> skillList(List<String> list, double width) {
   List<Widget> widgetList = new List();
   String minilist = "";
   for (int i = 0; i<list.length;i++){
@@ -271,7 +269,7 @@ List<Widget> SkillList(List<String> list, double width) {
   return widgetList;
 }
 
-List<Widget> ExperienceList(List<String> list, List<Experience> experience, double width) {
+List<Widget> experienceList(List<String> list, List<Experience> experience, double width) {
   List<Widget> widgetList = new List();
   experience.forEach((experience) {
     for (int i = 0; i<list.length;i++){
@@ -307,7 +305,7 @@ List<Widget> ExperienceList(List<String> list, List<Experience> experience, doub
   return widgetList;
 }
 
-List<Widget> EducationList(List<String> list, List<Education> education, double width) {
+List<Widget> educationList(List<String> list, List<Education> education, double width) {
   List<Widget> widgetList = new List();
   education.forEach((education) {
     for (int i = 0; i<list.length;i++){
@@ -343,7 +341,7 @@ List<Widget> EducationList(List<String> list, List<Education> education, double 
   return widgetList;
 }
 
-List<Widget> CertificateList(List<String> list, List<Certification> certification, double width) {
+List<Widget> certificateList(List<String> list, List<Certification> certification, double width) {
   List<Widget> widgetList = new List();
   certification.forEach((certification) {
     for (int i = 0; i<list.length;i++){

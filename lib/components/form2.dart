@@ -11,7 +11,7 @@ class FormPage2 extends StatefulWidget {
   FormPage2(
       {this.title,
       this.uid,
-        this.id,
+      this.id,
       this.fieldId,
       this.handler,
       this.objectList,
@@ -22,7 +22,7 @@ class FormPage2 extends StatefulWidget {
   final String title;
   final String fieldId;
   final String isNew;
-  Function handler;
+  final Function handler;
   Map<String, dynamic> objectList;
 
   @override
@@ -42,7 +42,7 @@ class _FormPageState2 extends State<FormPage2> {
   _FormPageState2(
       {this.uid,
       this.title,
-        this.id,
+      this.id,
       this.fieldId,
       this.handler,
       this.objectList,
@@ -73,7 +73,7 @@ class _FormPageState2 extends State<FormPage2> {
     });
     if (isFieldEmpty) {
       _showPasswordResetSentDialog();
-    } else{
+    } else {
       String firstVal, secondVal, startDate, endDate;
       int i = 0;
       for (var keys in objectList.keys) {
@@ -92,43 +92,44 @@ class _FormPageState2 extends State<FormPage2> {
         }
       }
       if (isNew == "true") {
-      if (await (request.profileEdExCertPostRequest(
-              uid, fieldId, firstVal, startDate, endDate, secondVal)) ==
-          200) {
-        Navigator.pop(context);
-        if (fieldId == "education") {
-          Education ed = new Education();
-          ed.schoolName = firstVal;
-          ed.program = secondVal;
-          ed.startDate = startDate;
-          ed.gradDate = endDate;
-          handler(ed, "add");
-        } else if (fieldId == "experience") {
-          Experience exp = new Experience();
-          exp.description = secondVal;
-          exp.title = firstVal;
-          exp.startDate = startDate;
-          exp.endDate = endDate;
-          handler(exp, "add");
-        } else {
-          Certification cert = new Certification();
-          cert.name = firstVal;
-          cert.startDate = startDate;
-          cert.endDate = endDate;
-          cert.issuer = secondVal;
-          handler(cert, "add");
-        }
-      }
-    } else {
-      //make a put request here
-        if(await(request.profileEdExCertPutRequest(this.fieldId, uid, id,
-            firstVal, startDate, endDate, secondVal)) == 200){
+        if (await (request.profileEdExCertPostRequest(
+                uid, fieldId, firstVal, startDate, endDate, secondVal)) ==
+            200) {
           Navigator.pop(context);
-          handler([firstVal, startDate, endDate, secondVal], id);
+          if (fieldId == "education") {
+            Education ed = new Education();
+            ed.schoolName = firstVal;
+            ed.program = secondVal;
+            ed.startDate = startDate;
+            ed.gradDate = endDate;
+            handler(ed, "add");
+          } else if (fieldId == "experience") {
+            Experience exp = new Experience();
+            exp.description = secondVal;
+            exp.title = firstVal;
+            exp.startDate = startDate;
+            exp.endDate = endDate;
+            handler(exp, "add");
+          } else {
+            Certification cert = new Certification();
+            cert.name = firstVal;
+            cert.startDate = startDate;
+            cert.endDate = endDate;
+            cert.issuer = secondVal;
+            handler(cert, "add");
           }
         }
+      } else {
+        //make a put request here
+        if (await (request.profileEdExCertPutRequest(this.fieldId, uid, id,
+                firstVal, startDate, endDate, secondVal)) ==
+            200) {
+          Navigator.pop(context);
+          handler([firstVal, startDate, endDate, secondVal], id);
         }
+      }
     }
+  }
 
   void formHandler(key, value) {
     setState(() {
@@ -140,8 +141,8 @@ class _FormPageState2 extends State<FormPage2> {
   List<Widget> listWidgets(Map<String, dynamic> map) {
     List<Widget> list = new List<Widget>();
     map.forEach((key, value) {
-      list.add(
-          MyTextField2(title: key, fieldData: value.toString(), handler: formHandler));
+      list.add(MyTextField2(
+          title: key, fieldData: value.toString(), handler: formHandler));
     });
 
     return list;
@@ -194,13 +195,15 @@ class _FormPageState2 extends State<FormPage2> {
             width: 1,
           )
         : RaisedButton(
-            onPressed: () async{
-                if(await (request.edExCertDeleteRequest(this.fieldId, uid, this.id)) == 200){
-                  Navigator.pop(context);
-                  handler(this.id, "delete");
-                }else{
-                  _showPasswordResetSentDialog();
-                }
+            onPressed: () async {
+              if (await (request.edExCertDeleteRequest(
+                      this.fieldId, uid, this.id)) ==
+                  200) {
+                Navigator.pop(context);
+                handler(this.id, "delete");
+              } else {
+                _showPasswordResetSentDialog();
+              }
             },
             child: Text("Delete",
                 style: TextStyle(color: ArezueColors.outPrimaryColor)),

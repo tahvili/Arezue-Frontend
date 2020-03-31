@@ -34,7 +34,7 @@ class _JobPageState extends State<SearchIntro> {
     super.initState();
   }
 
-  Future<Job> FetchData() async {
+  Future<Job> fetchData() async {
     uid = await (widget.auth.currentUser());
     this.futureEmployer = request.employerGetRequest(widget.auth.currentUser());
     return await request.jobGetRequest(uid);
@@ -53,7 +53,7 @@ class _JobPageState extends State<SearchIntro> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () async {
-          String c = (await futureEmployer).companyID.toString();
+          //String c = (await futureEmployer).companyID.toString();
           sendList = sendEditListGenerator(job);
           Navigator.push(
             context,
@@ -131,7 +131,7 @@ class _JobPageState extends State<SearchIntro> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Job>(
-      future: FetchData(),
+      future: fetchData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(

@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:arezue/components/searchTextField.dart';
 import 'package:arezue/components/textField2.dart';
 import 'package:arezue/components/textfield.dart';
 import 'package:arezue/services/auth.dart';
@@ -20,12 +19,13 @@ class JobForm extends StatefulWidget {
       this.objectList});
 
   final String uid;
-  bool isNew;
+  final bool isNew;
   final String jobId;
   final String companyName;
   final BaseAuth auth;
   final String title;
   final Map<String, dynamic> objectList;
+
   @override
   State<StatefulWidget> createState() {
     return _JobFormState(
@@ -53,7 +53,7 @@ class _JobFormState extends State<JobForm> {
   final String companyName;
   final String title;
   final String jobId;
-  bool isNew;
+  final bool isNew;
   final BaseAuth auth;
   final Map<String, dynamic> objectList;
   bool isFieldEmpty;
@@ -102,8 +102,6 @@ class _JobFormState extends State<JobForm> {
     if (!(this.isNew)) {
       if (key == "Title") {
         finalEditList['title'] = value.toString();
-      } else if (key == "Position") {
-        finalEditList['position'] = value.toString();
       } else if (key == "Wage") {
         finalEditList['wage'] = value.toString();
       } else if (key == "Hours") {
@@ -131,12 +129,6 @@ class _JobFormState extends State<JobForm> {
             fieldType: "numeric",
             fieldData: value.toString(),
             handler: formHandler));
-      } else if (key == "Position") {
-        list.add(MySearchTextField(
-            title: "Enter the Position",
-            fieldId: key,
-            handler: formHandler,
-            skill: value.toString()));
       } else {
         list.add(MyTextField2(
             title: key, fieldData: value.toString(), handler: formHandler));

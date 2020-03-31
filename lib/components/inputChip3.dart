@@ -8,18 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class InputChipBuilder3 extends StatefulWidget {
+
   InputChipBuilder3(
       {@required this.title,
       this.uid,
       this.id,
       this.endpoint,
       this.fieldData,
-      @required this.fieldId = "",
+      this.fieldId = "",
       this.fieldType = "text",
       this.handler});
 
   final String uid;
-  String id;
+  final String id;
   final String
       title; // this goes before the textfield, i.e. what textfield is this.
   final String
@@ -29,7 +30,7 @@ class InputChipBuilder3 extends StatefulWidget {
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final List<Object> fieldData; // the actualy value of the key.
-  Function
+  final Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
   @override
@@ -41,12 +42,12 @@ class InputChipBuilder3 extends StatefulWidget {
 
 class _InputChipBuilderState3 extends State<InputChipBuilder3> {
   _InputChipBuilderState3(
-      @required this.title,
+      this.title,
       this.id,
       this.uid,
       this.endpoint,
       this.fieldData,
-      @required this.fieldId,
+      this.fieldId,
       this.fieldType,
       this.handler);
 
@@ -61,7 +62,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final List<Object> fieldData; // the actual value of the key.
-  Function
+  final Function
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
   Map<String, dynamic> sendList = new Map<String, dynamic>();
@@ -98,7 +99,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
     generateObjectList(fieldData);
   }
 
-  Future<int> FetchData() async {
+  Future<int> fetchData() async {
     arr = await (serverRequest.skillsGetRequest(uid, this.fieldId));
     //print("the array after get is: $arr");
     if (arr.length != 0) {
@@ -380,7 +381,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
     return sendList;
   }
   Future<Map<String, dynamic>> sendEditListGenerator(String fieldId, Object element) async {
-    if (await(FetchData()) == 200) {
+    if (await(fetchData()) == 200) {
       print("arr is: $arr");
       Map<String, dynamic> value;
       if (fieldId == "education") {

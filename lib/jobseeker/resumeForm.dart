@@ -22,8 +22,8 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   Map<String, dynamic> data;
   Requests request = new Requests();
   Future<JobseekerInfo> uData;
-  List<String> dream_career = [];
-  List<String> dream_company = [];
+  List<String> dreamCareer = [];
+  List<String> dreamCompany = [];
   List<String> skill = [];
   List<String> education = [];
   List<String> experience = [];
@@ -35,10 +35,10 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   void updateHandler(String endpoint, List list) {
     update = true;
     if (endpoint == "/dream_career") {
-      dream_career = list;
+      dreamCareer = list;
     }
     else if (endpoint == "/dream_company") {
-      dream_company = list;
+      dreamCompany = list;
     }
     else if (endpoint == "/skill") {
       skill = list;
@@ -78,13 +78,13 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
     super.dispose();
   }
 
-  Future<JobseekerInfo> FetchData() async {
+  Future<JobseekerInfo> fetchData() async {
     if (widget.resumeId != null && !update) {
       data = await request.resumeGetData(widget.uid, widget.resumeId);
-      dream_career = (data['resume']['dream_career'])
+      dreamCareer = (data['resume']['dream_career'])
           .replaceAll(RegExp(r'[\[\]]'), '')
           .split(', ');
-      dream_company = (data['resume']['dream_company'])
+      dreamCompany = (data['resume']['dream_company'])
           .replaceAll(RegExp(r'[\[\]]'), '')
           .split(', ');
       skill = (data['resume']['skill'])
@@ -141,9 +141,9 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
         onPressed: () async {
           if (resumeNameController.text == '') {
             _showErrorDialog("Resume Name");
-          } else if (dream_career.length==0 || (dream_career.length>0 && dream_career[0].length==0)) {
+          } else if (dreamCareer.length==0 || (dreamCareer.length>0 && dreamCareer[0].length==0)) {
             _showErrorDialog("Dream Career");
-          } else if (dream_company.length==0 || (dream_company.length>0 && dream_company[0].length==0)) {
+          } else if (dreamCompany.length==0 || (dreamCompany.length>0 && dreamCompany[0].length==0)) {
             _showErrorDialog("Dream Company");
           } else if (skill.length==0 || (skill.length>0 && skill[0].length==0)) {
             _showErrorDialog("Skill");
@@ -156,8 +156,8 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
           } else {
             var finalData = {
               "name": resumeNameController.text,
-              "dream_career": dream_career.toString(),
-              "dream_company": dream_company.toString(),
+              "dream_career": dreamCareer.toString(),
+              "dream_company": dreamCompany.toString(),
               "skill": skill.toString(),
               "education": education.toString(),
               "certification": certification.toString(),
@@ -263,14 +263,14 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   @override
   void initState() {
     super.initState();
-    uData = FetchData();
+    uData = fetchData();
     resumeNameController = TextEditingController(text: widget.resumeName);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<JobseekerInfo>(
-      future: FetchData(),
+      future: fetchData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -309,13 +309,13 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
                       "/dream_career",
                       List<String>.from(snapshot
                           .data.jobseeker.information.dreamCareer.careers),
-                      dream_career),
+                      dreamCareer),
                   resumeButton(
                       "Choose Your Dream Company",
                       "/dream_company",
                       List<String>.from(snapshot
                           .data.jobseeker.information.dreamCompany.companies),
-                      dream_company),
+                      dreamCompany),
                   resumeButton(
                       "Choose Your Skill Sets",
                       "/skill",
