@@ -34,7 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
     color: ArezueColors.outPrimaryColor,
     fontSize: 18,
     fontFamily: 'Arezue',
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w400,
   );
   Requests request = new Requests();
 

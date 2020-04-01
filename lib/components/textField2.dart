@@ -64,28 +64,6 @@ class _MyTextFieldState2 extends State<MyTextField2> {
   //created a text editing controller so that we can modify the text on init of this widget if need be.
   var controller = TextEditingController();
 
-  FocusNode _node; // focus node to add a focus handler to keyboard.
-
-  @override
-  void initState() {
-    super.initState();
-    // create a FocusNode instance https://api.flutter.dev/flutter/widgets/FocusNode-class.html
-    // this gets attached to the textfield see below
-    // FocusNode class is used to manage keyboard events such as "focusing"
-    _node = FocusNode();
-
-    //Create a listener, on switch focus (which could happen when a user clicks a different textfield)
-    _node.addListener(() {
-      //print("Focus " + _node.hasFocus.toString() + " " + this.fieldId + " " + controller.text);
-      //call call submit handler when focus switches to False
-      if (_node.hasFocus == false) {
-        print("submit handler called here");
-        //controller.text access the current text in the textfield
-        submitHandler(controller.text);
-      }
-    });
-  }
-
   //keyboard map
   final Map<String, TextInputType> keyboards = {
     "numeric": TextInputType.numberWithOptions(decimal: true),
@@ -106,7 +84,7 @@ class _MyTextFieldState2 extends State<MyTextField2> {
     super.dispose();
   }
 
-  // The actual object itself.
+  // The actual object iself.
   Widget build(BuildContext context) {
     controller.text = this.fieldData;
     return Container(
@@ -144,7 +122,6 @@ class _MyTextFieldState2 extends State<MyTextField2> {
               Expanded(
                 child: TextField(
                   textAlign: TextAlign.left,
-                  focusNode: _node,
                   controller: controller,
                   keyboardType: keyboards[this.fieldType],
                   decoration: InputDecoration(

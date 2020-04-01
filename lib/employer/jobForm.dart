@@ -152,35 +152,27 @@ class _JobFormState extends State<JobForm> {
           )
         ],
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 25,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 25,
+            ),
+            Container(
+              //width: MediaQuery.of(context).size.width,
+              child: Column(
+                children: listWidgets(this.objectList),
               ),
-              Container(
-                //width: MediaQuery.of(context).size.width,
-                child: Column(
-                  children: listWidgets(this.objectList),
-                ),
-              ),
-              RaisedButton(
-                onPressed: () {
-                  submitHandler();
-                },
-                child: Text("Submit",
-                    style: TextStyle(color: ArezueColors.outPrimaryColor)),
-              ),
-              deleteButton(),
-            ],
-          ),
+            ),
+            RaisedButton(
+              onPressed: () {
+                submitHandler();
+              },
+              child: Text("Submit",
+                  style: TextStyle(color: ArezueColors.outPrimaryColor)),
+            ),
+            deleteButton(),
+          ],
         ),
       ),
     );
