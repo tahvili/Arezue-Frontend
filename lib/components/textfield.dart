@@ -67,6 +67,29 @@ class _MyTextFieldState extends State<MyTextField> {
   Requests serverRequest = new Requests();
   var controller = TextEditingController();
 
+  FocusNode _node; // focus node to add a focus handler to keyboard.
+
+  @override
+  void initState() {
+    super.initState();
+    // create a FocusNode instance https://api.flutter.dev/flutter/widgets/FocusNode-class.html
+    // this gets attached to the textfield see below
+    // FocusNode class is used to manage keyboard events such as "focusing"
+    _node = FocusNode(); 
+
+    //Create a listener, on switch focus (which could happen when a user clicks a different textfield)
+    _node.addListener(() { 
+        //print("Focus " + _node.hasFocus.toString() + " " + this.fieldId + " " + controller.text);
+        //call call submit handler when focus switches to False
+        if (_node.hasFocus == false) {
+          //print("submit handler called here");
+          //controller.text access the current text in the textfield
+          submitHandler(this.fieldId, controller.text);
+        }
+      });
+  }
+
+
   //keyboard map
   final Map<String, TextInputType> keyboards = {
     "numeric": TextInputType.numberWithOptions(decimal: true),
@@ -122,6 +145,7 @@ class _MyTextFieldState extends State<MyTextField> {
             Expanded(
               child: TextField(
                 textAlign: TextAlign.right,
+                focusNode: _node, /******  ATTACHING FocusNode to TextField */
                 controller: controller,
                 keyboardType: keyboards[this.fieldType],
                 decoration: InputDecoration(
