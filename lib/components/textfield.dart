@@ -79,16 +79,12 @@ class _MyTextFieldState extends State<MyTextField> {
 
     //Create a listener, on switch focus (which could happen when a user clicks a different textfield)
     _node.addListener(() { 
-        print("Focus " + _node.hasFocus.toString() + " " + this.fieldId + " " + controller.text); 
+        //print("Focus " + _node.hasFocus.toString() + " " + this.fieldId + " " + controller.text);
         //call call submit handler when focus switches to False
         if (_node.hasFocus == false) {
-          print("submit handler called here");
-
-          /*
-          // controller.text access the current text in the textfield 
+          //print("submit handler called here");
+          //controller.text access the current text in the textfield
           submitHandler(this.fieldId, controller.text);
-          */
-
         }
       });
   }
