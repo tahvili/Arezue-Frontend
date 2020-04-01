@@ -136,7 +136,8 @@ class _SettingsPageState extends State<SettingsPage> {
       alignment: Alignment.center,
       margin: const EdgeInsets.only(right: 50, left: 50, bottom: 10, top: 10),
 
-      child: Text(phone,
+      child: Text(
+        phone,
         style: textStyle,
         textAlign: TextAlign.center,
       ),
