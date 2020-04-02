@@ -144,7 +144,7 @@ class Requests {
     return statusCode;
   }
 
-  Future<int> profileEdExCertPostRequest(
+  Future<Map<String, dynamic>> profileEdExCertPostRequest(
       String uid,
       String fieldId,
       String firstVal,
@@ -175,7 +175,10 @@ class Requests {
         'issuer': secondVal
       });
     }
-    return response.statusCode;
+    Map<String, dynamic> returnList = new Map<String, dynamic>();
+    returnList["statusCode"] = response.statusCode;
+    returnList["body"] = json.decode(response.body);
+    return returnList;
   }
 
   Future<int> profileEdExCertPutRequest(
@@ -187,17 +190,17 @@ class Requests {
       String endDate,
       String secondVal) async {
     String url;
-    Map<String, String> headers = {"Content-type": "Application/json"};
+    Map<String, String> headers = {"Content-type": "application/json"};
     http.Response response;
     if (fieldId == "education") {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/education';
-      response = await http.put(url, headers: headers, body: {
+      response = await http.put(url, headers: headers, body: json.encode({
         'ed_id': id,
         'school_name': firstVal,
         'start_date': startDate,
         'grad_date': endDate,
         'program': secondVal
-      });
+      }));
     } else if (fieldId == "experience") {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/exp';
       response = await http.put(url, headers: headers, body: {
