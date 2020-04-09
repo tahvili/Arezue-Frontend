@@ -73,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
         if (formType == FormType.login) {
           Object value =
               await widget.auth.signInWithEmailAndPassword(_email, _password);
+
           if (value != null) {
             //setState(() => loading = true);
             setState(() {
@@ -120,6 +121,9 @@ class _LoginPageState extends State<LoginPage> {
             _showVerifyEmailSentDialog();
           }
         }
+        if(!await widget.auth.checkEmailVerification()){
+          _errorMessage = "Something didn't go as plan!";
+        }
         setState(() {
           loading = false;
         });
@@ -127,14 +131,13 @@ class _LoginPageState extends State<LoginPage> {
         print(e);
         setState(() {
           loading = false;
-          // _authHint = 'Sign In Error\n\n${e.toString()}';
           _errorMessage = e.message;
         });
       }
     } else {
       setState(() {
         loading = false;
-        _errorMessage = "";
+        _errorMessage = "Something didn't go as plan!";
         //_authHint = '';
       });
     }
@@ -153,12 +156,15 @@ class _LoginPageState extends State<LoginPage> {
           });
         }
       } catch (e) {
-        print(e);
-        _errorMessage = e.message;
+        setState(() {
+          loading = false;
+          _errorMessage = e.message;
+        });
       }
     } else {
       setState(() {
-        // _authHint = '';
+        loading = false;
+        _errorMessage = "Something didn't go as plan!";
       });
     }
   }
@@ -743,9 +749,9 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: new Text("Thank You"),
+            title: new Text("Check your Email!"),
             content:
-                new Text("A verification Link has been sent to your email"),
+                new Text("We have sent you the verification link to be able to active your account."),
             actions: <Widget>[
               new FlatButton(
                   onPressed: () {
@@ -763,9 +769,9 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: new Text("Thank You"),
+            title: new Text("Check your Email!"),
             content:
-                new Text("A Password Reset link has been sent to your email"),
+                new Text("A Password Reset link has been sent to you."),
             actions: <Widget>[
               new FlatButton(
                   onPressed: () {
@@ -782,6 +788,7 @@ class _LoginPageState extends State<LoginPage> {
     return new Text(
       _errorMessage,
       style: TextStyle(fontSize: 14.0, color: Colors.red),
+      textAlign: TextAlign.center,
     );
   }
 }

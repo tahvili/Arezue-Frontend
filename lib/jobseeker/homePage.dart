@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   _HomePageState({this.formType});
   Future<Jobseeker> futureUser;
   Requests request = new Requests();
-  bool activelyLooking = false;
+  bool activelyLooking = true;
   Requests serverRequest = new Requests();
 
   @override

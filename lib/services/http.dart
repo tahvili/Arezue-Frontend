@@ -56,6 +56,17 @@ class Requests {
     return statusCode;
   }
 
+  Future<List<dynamic>> searchPostRequest(List<String> lst) async {
+    var url = 'https://api.daffychuy.com/api/v1/search';
+    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
+    var response = await http.post(url, headers: headers, body: {
+      "skills": lst.join(',').toLowerCase()
+    });
+    int statusCode = response.statusCode;
+    var _list = json.decode(response.body);
+    return _list["payload"];
+  }
+
   Future<int> jobPutRequest(
       String uid, String jobId, Map<String, String> map) async {
     String url = 'https://api.daffychuy.com/api/v1/employer/$uid/jobs/$jobId';

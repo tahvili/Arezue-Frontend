@@ -281,15 +281,15 @@ class _SettingsPageState extends State<SettingsPage> {
         borderRadius: BorderRadius.circular(24),
       ),
       onPressed: () {},
-      padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+      padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
       color: ArezueColors.outSecondaryColor,
-      child: Text('Version', style: textStyle),
+      child: Text('Version: 1.0.1', style: textStyle),
     ),
   );
 
   Widget signOutButton() {
     return Padding(
-      padding: EdgeInsets.fromLTRB(60.0, 10.0, 50.0, 10.0),
+      padding: EdgeInsets.fromLTRB(23.0, 0.0, 0.0, 0.0),
       child: RaisedButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
@@ -308,7 +308,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     )),
           );
         },
-        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+        padding: EdgeInsets.fromLTRB(35, 10, 35, 10),
         color: ArezueColors.outSecondaryColor,
         child: Text('Sign out', style: textStyle),
       ),

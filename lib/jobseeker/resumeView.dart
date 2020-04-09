@@ -48,7 +48,7 @@ class _ResumeView extends State<ResumeView> {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: ArezueColors.secondaryColor,
-              title: Text(widget.uid),
+              title: Text("#${widget.uid.substring(0, 8)}${widget.resumeName}"),
               actions: <Widget>[
                 IconButton(
                   color: Colors.white,
@@ -133,12 +133,12 @@ class _ResumeView extends State<ResumeView> {
                       width: MediaQuery.of(context).size.width,
                       child: Text("My Experiences",style: TextStyle(color:ArezueColors.primaryColor,),)),
               Column(
-                children: experienceList((widget.data["experience"])
+                children: experienceList((widget.data["experience"]).toString()
                           .replaceAll(RegExp(r'[\[\]]'), '')
                           .split(', '), snapshot.data.jobseeker.information.experience, MediaQuery.of(context).size.width),
                     ),
                   Column(
-                    children: skillList((widget.data["skill"])
+                    children: skillList((widget.data["skill"]).toString()
                         .replaceAll(RegExp(r'[\[\]]'), '')
                         .split(', '), MediaQuery.of(context).size.width),
                   ),
@@ -165,7 +165,7 @@ class _ResumeView extends State<ResumeView> {
                       width: MediaQuery.of(context).size.width,
                       child: Text("My Education Background",style: TextStyle(color:ArezueColors.primaryColor,),)),
                   Column(
-                    children: educationList((widget.data["education"])
+                    children: educationList((widget.data["education"]).toString()
                         .replaceAll(RegExp(r'[\[\]]'), '')
                         .split(', '), snapshot.data.jobseeker.information.education, MediaQuery.of(context).size.width),
                   ),
@@ -192,7 +192,7 @@ class _ResumeView extends State<ResumeView> {
                       width: MediaQuery.of(context).size.width,
                       child: Text("My Certificates",style: TextStyle(color:ArezueColors.primaryColor,),)),
                   Column(
-                    children: certificateList((widget.data["certification"])
+                    children: certificateList((widget.data["certification"]).toString()
                         .replaceAll(RegExp(r'[\[\]]'), '')
                         .split(', '), snapshot.data.jobseeker.information.certification, MediaQuery.of(context).size.width),
                   ),
