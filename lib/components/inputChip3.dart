@@ -122,6 +122,18 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
     if (command == "add") {
       setState(() {
         this.objectList.add(text);
+        // this is important to be able to support immediate edit after
+        // creating the entity. Otherwise "this.id" would be undefined when
+        // entering the edit view.
+        setState(() {
+        if(this.fieldId == "education"){
+          this.id = (text as Education).edId;
+        }else  if(this.fieldId == "experience"){
+          this.id =  (text as Experience).expId;
+        }else {
+          this.id = (text as Certification).cId;
+        }
+      });
       });
     } else if (command == "delete") {
       setState(() {
@@ -391,7 +403,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
           "Start Date": value['start_date'],
           "End Date": value['grad_date'],
           "Program": value['program'],
-          //"ed_id": value['ed_id'],
+          // "ed_id": value['ed_id'],
         };
       } else if (fieldId == "experience") {
         value = arr.singleWhere((val) => val['exp_id'].toString() == ((element as Experience).expId).toString());

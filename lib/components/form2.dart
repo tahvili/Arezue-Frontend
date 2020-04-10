@@ -61,8 +61,8 @@ class _FormPageState2 extends State<FormPage2> {
 
   @override
   initState() {
-    isFieldEmpty = false;
     super.initState();
+    isFieldEmpty = false;
   }
 
   void submitHandler() async {
@@ -92,12 +92,12 @@ class _FormPageState2 extends State<FormPage2> {
         }
       }
       if (isNew == "true") {
-        if (await (request.profileEdExCertPostRequest(
-                uid, fieldId, firstVal, startDate, endDate, secondVal)) ==
-            200) {
-          Navigator.pop(context);
+        Map<String, dynamic> postResponse = await request.profileEdExCertPostRequest(
+                uid, fieldId, firstVal, startDate, endDate, secondVal);
+        if (postResponse["statusCode"] == 200) {
           if (fieldId == "education") {
             Education ed = new Education();
+            ed.edId = postResponse["body"]["ed_id"].toString();
             ed.schoolName = firstVal;
             ed.program = secondVal;
             ed.startDate = startDate;
@@ -105,6 +105,8 @@ class _FormPageState2 extends State<FormPage2> {
             handler(ed, "add");
           } else if (fieldId == "experience") {
             Experience exp = new Experience();
+            // ###There is a bug in the response value of experience's post response body.###
+            // exp.expId = postResponse["body"]["exp_id"].toString();
             exp.description = secondVal;
             exp.title = firstVal;
             exp.startDate = startDate;
@@ -112,12 +114,16 @@ class _FormPageState2 extends State<FormPage2> {
             handler(exp, "add");
           } else {
             Certification cert = new Certification();
+            cert.cId = postResponse["body"]["c_id"].toString();
             cert.name = firstVal;
             cert.startDate = startDate;
             cert.endDate = endDate;
             cert.issuer = secondVal;
             handler(cert, "add");
           }
+          Navigator.pop(context);
+        } else {
+          print("Request Error");
         }
       } else {
         //make a put request here
@@ -196,6 +202,7 @@ class _FormPageState2 extends State<FormPage2> {
           )
         : RaisedButton(
             onPressed: () async {
+              print(this.id.toString() + " " + uid.toString());
               if (await (request.edExCertDeleteRequest(
                       this.fieldId, uid, this.id)) ==
                   200) {
