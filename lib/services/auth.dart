@@ -66,7 +66,6 @@ class Auth implements BaseAuth {
       if (type == "employer") {
         status = request.employerPostRequest(user.uid, email, name, company);
       } else {
-
         status = request.jobseekerPostRequest(user.uid, email, name);
       }
       if ((await status) == 200) {
@@ -74,8 +73,10 @@ class Auth implements BaseAuth {
         return user;
       } else if ((await status) == 400) {
         print("User could not be created");
+        user.delete();
         return null;
       } else {
+        user.delete();
         print("server error");
         return null;
       }

@@ -141,18 +141,18 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
         onPressed: () async {
           if (resumeNameController.text == '') {
             _showErrorDialog("Resume Name");
-          } else if (dreamCareer.length==0 || (dreamCareer.length>0 && dreamCareer[0].length==0)) {
-            _showErrorDialog("Dream Career");
-          } else if (dreamCompany.length==0 || (dreamCompany.length>0 && dreamCompany[0].length==0)) {
-            _showErrorDialog("Dream Company");
+//          } else if (dreamCareer.length==0 || (dreamCareer.length>0 && dreamCareer[0].length==0)) {
+//            _showErrorDialog("Dream Career");
+//          } else if (dreamCompany.length==0 || (dreamCompany.length>0 && dreamCompany[0].length==0)) {
+//            _showErrorDialog("Dream Company");
           } else if (skill.length==0 || (skill.length>0 && skill[0].length==0)) {
             _showErrorDialog("Skill");
-          }else if (education.length==0 || (education.length>0 && education[0].length==0)) {
-            _showErrorDialog("Education");
-          }else if (experience.length==0 || (experience.length>0 && experience[0].length==0)) {
-            _showErrorDialog("Experiences");
-          }else if (certification.length==0 || (certification.length>0 && certification[0].length==0)) {
-            _showErrorDialog("Certificates");
+//          }else if (education.length==0 || (education.length>0 && education[0].length==0)) {
+//            _showErrorDialog("Education");
+//          }else if (experience.length==0 || (experience.length>0 && experience[0].length==0)) {
+//            _showErrorDialog("Experiences");
+//          }else if (certification.length==0 || (certification.length>0 && certification[0].length==0)) {
+//            _showErrorDialog("Certificates");
           } else {
             var finalData = {
               "name": resumeNameController.text,
