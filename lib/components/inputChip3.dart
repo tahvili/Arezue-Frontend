@@ -236,6 +236,14 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
   }
 
   Widget getContainer(Object elements) {
+    var id;
+    if (fieldId == "experience") {
+      id = (elements as Experience).expId;
+    } else if(fieldId == "education") {
+      id = (elements as Education).edId;
+    } else if(fieldId == "certification") {
+      id = (elements as Certification).cId;
+    }
     return Container(
       padding: EdgeInsets.fromLTRB(5, 5, 5, 25),
       margin: const EdgeInsets.only(bottom: 20.0),
@@ -262,7 +270,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
                               title: "Edit your $fieldId",
                               isNew: "false",
                               objectList: val,
-                              id: this.id,
+                              id: id,
                               handler: submitHandler,
                               uid: this.uid,
                               fieldId: this.fieldId)));

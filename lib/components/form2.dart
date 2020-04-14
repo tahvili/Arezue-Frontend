@@ -147,8 +147,8 @@ class _FormPageState2 extends State<FormPage2> {
         if (await (request.profileEdExCertPutRequest(this.fieldId, uid, id,
                 firstVal, startDate, endDate, secondVal)) ==
             200) {
-          Navigator.pop(context);
           handler([firstVal, startDate, endDate, secondVal], id);
+          Navigator.pop(context);
         }
       }
     }

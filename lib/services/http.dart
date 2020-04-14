@@ -214,22 +214,22 @@ class Requests {
       }));
     } else if (fieldId == "experience") {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/exp';
-      response = await http.put(url, headers: headers, body: {
+      response = await http.put(url, headers: headers, body: json.encode({
         'exp_id': id,
         'title': firstVal,
         'start_date': startDate,
         'end_date': endDate,
         'description': secondVal
-      });
+      }));
     } else {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/certification';
-      response = await http.put(url, headers: headers, body: {
+      response = await http.put(url, headers: headers, body: json.encode({
         'c_id': id,
         'cert_name': firstVal,
         'start_date': startDate,
         'end_date': endDate,
         'issuer': secondVal
-      });
+      }));
     }
     // the makes the PUT request
 
