@@ -13,7 +13,7 @@ class MyTextField2 extends StatefulWidget {
       this.fieldData = "",
       this.fieldId = "",
       this.fieldType = "text",
-      this.handler});
+      this.controller});
   final String uid;
   final String skill;
   final String
@@ -23,7 +23,7 @@ class MyTextField2 extends StatefulWidget {
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final String fieldData; // the actualy value of the key.
-  final Function handler;
+  final TextEditingController controller;
 
   @override
   State<StatefulWidget> createState() {
@@ -32,7 +32,7 @@ class MyTextField2 extends StatefulWidget {
         uid: this.uid,
         fieldData: this.fieldData,
         fieldType: this.fieldType,
-        handler: this.handler);
+        controller: this.controller);
   } // the parent handler function that updates the parent state, this is passed from the parent.
 }
 
@@ -46,7 +46,7 @@ class _MyTextFieldState2 extends State<MyTextField2> {
       this.fieldData = "",
       this.fieldId = "",
       this.fieldType = "text",
-      this.handler});
+      this.controller});
 
   final String uid;
   final String
@@ -57,32 +57,21 @@ class _MyTextFieldState2 extends State<MyTextField2> {
   final String
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   String fieldData; // the actually value of the key.
-  Function
-      handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
+  // Using this controller instead of a handler now. controller.text gives the text in the textfield.
+  TextEditingController controller;
+  
   Requests serverRequest = new Requests();
   //created a text editing controller so that we can modify the text on init of this widget if need be.
-  var controller = TextEditingController();
-
-  FocusNode _node; // focus node to add a focus handler to keyboard.
+  // var controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // create a FocusNode instance https://api.flutter.dev/flutter/widgets/FocusNode-class.html
-    // this gets attached to the textfield see below
-    // FocusNode class is used to manage keyboard events such as "focusing"
-    _node = FocusNode();
 
-    //Create a listener, on switch focus (which could happen when a user clicks a different textfield)
-    _node.addListener(() {
-      // print("Focus " + _node.hasFocus.toString() + " " + this.fieldId + " " + controller.text);
-      //call call submit handler when focus switches to False
-      if (_node.hasFocus == false) {
-        //controller.text access the current text in the textfield
-        submitHandler(controller.text);
-      }
-    });
+    if (this.controller == null) {
+      this.controller = TextEditingController();
+    }
   }
 
   //keyboard map
@@ -90,15 +79,6 @@ class _MyTextFieldState2 extends State<MyTextField2> {
     "numeric": TextInputType.numberWithOptions(decimal: true),
     "text": TextInputType.text
   };
-
-  // child handler that calls the API and then the parent handler.
-  void submitHandler(text) {
-    setState(() {
-      controller.text = text;
-      this.fieldData = text;
-    });
-    handler(this.title, text); //calling formHandler
-  }
 
   void dispose() {
     controller.dispose();
@@ -153,8 +133,10 @@ class _MyTextFieldState2 extends State<MyTextField2> {
                       borderSide: BorderSide(color: Colors.red, width: 1),
                     ),
                   ),
-                  onSubmitted: (text) => submitHandler(text),
-                  onChanged: (text) => submitHandler(text),
+                  // ########## We do not need this anymore, we're passing in a controller #####
+                  // ### Keeping this comment temporarily
+                  // onSubmitted: (text) => submitHandler(text),
+                  // onChanged: (text) => submitHandler(text),
                 ),
               ),
             ],

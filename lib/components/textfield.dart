@@ -13,7 +13,8 @@ class MyTextField extends StatefulWidget {
       this.fieldData = "",
       this.fieldId,
       this.fieldType = "text",
-      this.handler});
+      this.handler,
+      this.controller});
   final String uid;
   final String
       title; // this goes before the textfield, i.e. what textfield is this.
@@ -25,6 +26,8 @@ class MyTextField extends StatefulWidget {
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final String fieldData; // the actualy value of the key.
   final Function handler;
+  final TextEditingController controller;
+
 
   @override
   State<StatefulWidget> createState() {
@@ -35,7 +38,8 @@ class MyTextField extends StatefulWidget {
         fieldId: this.fieldId,
         handler: this.handler,
         fieldData: this.fieldData,
-        fieldType: this.fieldType);
+        fieldType: this.fieldType,
+        controller: this.controller);
   } // the parent handler function that updates the parent state, this is passed from the parent.
 }
 
@@ -49,7 +53,8 @@ class _MyTextFieldState extends State<MyTextField> {
       this.fieldData = "",
       this.fieldId,
       this.fieldType,
-      this.handler});
+      this.handler,
+      this.controller});
 
   final String uid;
   final String
@@ -65,7 +70,16 @@ class _MyTextFieldState extends State<MyTextField> {
       handler; // the parent handler function that updates the parent state, this is passed from the parent.
 
   Requests serverRequest = new Requests();
-  var controller = TextEditingController();
+  TextEditingController controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (this.controller == null) {
+      this.controller = TextEditingController();
+    }
+  }
 
   //keyboard map
   final Map<String, TextInputType> keyboards = {

@@ -59,6 +59,7 @@ class _JobFormState extends State<JobForm> {
   bool isFieldEmpty;
   Requests request = new Requests();
   Map<String, String> finalEditList = new Map<String, String>();
+  Map<String, TextEditingController> controllers = new Map();
 
   @override
   initState() {
@@ -67,6 +68,13 @@ class _JobFormState extends State<JobForm> {
   }
 
   void submitHandler() async {
+    controllers.forEach((k, v) {
+      if (v.text == "") {
+        isFieldEmpty = true;
+      }
+      objectList[k] = v.text;
+      print(k + " " + v.text);
+    });
     objectList.forEach((k, v) {
       if (v == "") {
         this.isFieldEmpty = true;
@@ -74,6 +82,7 @@ class _JobFormState extends State<JobForm> {
     });
     if (isFieldEmpty) {
       _showPasswordResetSentDialog();
+      this.isFieldEmpty = false; //sets to default, assuming everything is perfect.
     } else {
       List<String> arr = new List<String>();
       for (var keys in objectList.keys) {
@@ -122,16 +131,18 @@ class _JobFormState extends State<JobForm> {
   List<Widget> listWidgets(Map<String, dynamic> map) {
     List<Widget> list = new List<Widget>();
     map.forEach((key, value) {
+      controllers[key] = new TextEditingController();
       if (key == "Wage" || key == "Hours") {
         list.add(MyTextField(
             title: key,
             fieldId: key,
             fieldType: "numeric",
             fieldData: value.toString(),
-            handler: formHandler));
+            handler: formHandler,
+            controller: controllers[key]));
       } else {
         list.add(MyTextField2(
-            title: key, fieldData: value.toString(), handler: formHandler));
+            title: key, fieldData: value.toString(), controller: controllers[key]));
       }
     });
     return list;

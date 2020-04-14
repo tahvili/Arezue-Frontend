@@ -55,6 +55,7 @@ class _FormPageState2 extends State<FormPage2> {
   final String isNew;
   Function handler;
   Map<String, dynamic> objectList;
+  Map<String, TextEditingController> controllers = new Map();
   Requests request = new Requests();
 
   bool isFieldEmpty;
@@ -63,9 +64,24 @@ class _FormPageState2 extends State<FormPage2> {
   initState() {
     super.initState();
     isFieldEmpty = false;
+
+    /* TODO: NEW ISSUES
+      if isNew == "false"
+        make_get_request to using the id to update the fields
+        or
+        after modifying when the put request goes through update the field data in the parent
+        by potentially calling handele(.., ..)
+
+    */
   }
 
   void submitHandler() async {
+    controllers.forEach((k, v) {
+      if (v.text == "") {
+        isFieldEmpty = true;
+      }
+      objectList[k] = v.text;
+    });
     objectList.forEach((k, v) {
       if (v == "") {
         isFieldEmpty = true;
@@ -73,6 +89,7 @@ class _FormPageState2 extends State<FormPage2> {
     });
     if (isFieldEmpty) {
       _showPasswordResetSentDialog();
+      this.isFieldEmpty = false; //sets to default, assuming everything is perfect.
     } else {
       String firstVal, secondVal, startDate, endDate;
       int i = 0;
@@ -137,18 +154,12 @@ class _FormPageState2 extends State<FormPage2> {
     }
   }
 
-  void formHandler(key, value) {
-    setState(() {
-      print("key is $key and value is $value");
-      objectList[key] = value;
-    });
-  }
-
   List<Widget> listWidgets(Map<String, dynamic> map) {
     List<Widget> list = new List<Widget>();
     map.forEach((key, value) {
+      controllers[key] = new TextEditingController();
       list.add(MyTextField2(
-          title: key, fieldData: value.toString(), handler: formHandler));
+          title: key, fieldData: value.toString(), controller: controllers[key]));
     });
 
     return list;
