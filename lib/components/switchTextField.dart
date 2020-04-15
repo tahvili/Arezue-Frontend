@@ -127,7 +127,6 @@ class _MySwitchTextFieldState extends State<MySwitchTextField> {
                   setState(() {
                     isSwitched = value;
                     submitHandler(this.fieldId, value.toString());
-                    print(isSwitched);
                   });
                 },
                 activeTrackColor: Colors.grey,

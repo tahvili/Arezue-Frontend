@@ -144,6 +144,13 @@ class Requests {
     }
   }
 
+  searchListGetRequest(String uid, String category, String query) async {
+    var response =
+        await http.get('http://api.daffychuy.com/api/v1/jobseeker/$uid/$category/search?q=$query&limit=10' );
+    var _list = (json.decode(response.body))["data"];
+    return _list;
+  }
+
   Future<int> profileSkillPostRequest(String usertype, String uid, String skill,
       String level, String years) async {
     var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/skill';

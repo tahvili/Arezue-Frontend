@@ -91,7 +91,6 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
     setState(() {
       controller.text = text;
     });
-    print("the fieldID of the search bar is ${this.fieldId}");
     if(this.fieldId == "Position"){ //for employer job posting
       handler(this.fieldId, text);
     }else {
@@ -125,9 +124,10 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
       width: MediaQuery.of(context).size.width,
       child: TextField(
         onTap: () {
-          _showSearchBar(context, fieldId, submitHandler);
+          _showSearchBar(context, fieldId, submitHandler, this.uid, "skill");
         },
         textAlign: TextAlign.right,
+        textInputAction: TextInputAction.done,
         controller: controller,
         keyboardType: keyboards[this.fieldType],
         decoration: InputDecoration(
@@ -144,12 +144,14 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
     );
   }
 
-  void _showSearchBar(BuildContext context, String id, Function handler) async {
+  void _showSearchBar(BuildContext context, String id, Function handler, String uid, String category) async {
     final result = await showSearch(
         context: context,
         delegate: Search(
           fieldId: id,
           handler: handler,
+          uid: uid,
+          category: category
         ));
     if (result != null) {
       handler(result);

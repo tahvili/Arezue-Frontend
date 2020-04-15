@@ -1,7 +1,7 @@
 /// Search page when clicked on searching for anything, except the main candidate search
 
 import 'package:arezue/services/http.dart';
-import 'package:arezue/utils/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Search extends SearchDelegate<String> {
@@ -9,20 +9,16 @@ class Search extends SearchDelegate<String> {
     this.handler,
     this.fieldId,
     this.category,
+    this.uid
   });
 
   Function handler;
+  final String uid;
   final String fieldId;
   final String category;
   Requests serverRequest = new Requests();
-  final List<String> list = [
-    "App Dev",
-    "Software Dev",
-    "Program Manager",
-    "Data Analyst",
-    "Business Analyst"
-  ];
   final List<String> nonSearchList = [];
+  List<String> suggestionList;
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -51,36 +47,52 @@ class Search extends SearchDelegate<String> {
     return buildSuggestions(context);
   }
 
+   getList() async{
+    this.suggestionList = List<String>.from(await serverRequest.searchListGetRequest(this.uid, this.category, query));
+    if(this.suggestionList.isEmpty && query.isNotEmpty){
+      this.suggestionList.add(query);
+    }
+  }
+
   @override
   Widget buildSuggestions(BuildContext context) {
-    final List<String> suggestionList = query.isEmpty
-        ? nonSearchList
-        : list
-            .where((p) => p.toLowerCase().startsWith(query.toLowerCase()))
-            .toList();
-    return ListView.builder(
-      itemBuilder: (context, index) => ListTile(
-        onTap: () {
-          //when the user selects the option
-//          showResults(context);
-          close(context, suggestionList[index]);
-          //handler(suggestionList[index], 'ranking', "add");
-        },
-        leading: Icon(Icons.business_center),
-        title: RichText(
-            text: TextSpan(
-          text: suggestionList[index].substring(0, query.length),
-          style: TextStyle(
-              color: ArezueColors.secondaryColor, fontWeight: FontWeight.bold),
-          children: [
-            TextSpan(
-              text: suggestionList[index].substring(query.length),
-              style: TextStyle(color: Colors.grey),
-            )
-          ],
-        )),
-      ),
-      itemCount: suggestionList.length,
+    if(query.isEmpty){
+      this.suggestionList = [];
+    }
+    return FutureBuilder(
+      future: getList(),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        return ListView.builder(
+          itemBuilder: (context, index) => ListTile(
+            onTap: () {
+              //when the user selects the option
+              close(context, suggestionList[index]);
+            },
+            leading: Icon(Icons.business_center),
+            title: RichText(
+                text: TextSpan(
+                  text: suggestionList[index],
+                  style: TextStyle(
+                      color: Colors.black87, fontWeight: FontWeight.normal),
+//          children: [
+//            TextSpan(
+//              text: suggestionList[index].substring(suggestionList[index].indexOf(query),
+//                  suggestionList[index].indexOf(query) + query.length),
+//              style: TextStyle(color: Colors.black),
+//            ),
+//            TextSpan(
+//              text: suggestionList[index].substring(suggestionList[index].
+//              indexOf(query) + query.length),
+//              style: TextStyle(color: Colors.grey),
+//            ),
+//          ],
+                )),
+          ),
+          itemCount: suggestionList.length,
+        );
+      }
     );
+
   }
 }
+
