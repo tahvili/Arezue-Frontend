@@ -150,7 +150,7 @@ class _JobFormState extends State<JobForm> {
     // Text field for regular inputs
     List<Widget> list = new List<Widget>();
     map.forEach((key, value) {
-      controllers[key] = new TextEditingController();
+      controllers[key] = new TextEditingController(text: value);
       if (key == "Wage" || key == "Hours") {
         list.add(MyTextField(
             title: key,

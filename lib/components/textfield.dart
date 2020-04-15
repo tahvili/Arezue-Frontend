@@ -92,7 +92,6 @@ class _MyTextFieldState extends State<MyTextField> {
   }
 
   Widget build(BuildContext context) {
-    controller.text = this.fieldData;
     return Container(
         padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
         margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),

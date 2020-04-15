@@ -89,6 +89,7 @@ class _ProfilePageState extends State<Profile> {
                         .data.jobseeker.information.acceptanceWage
                         .toString(),
                     handler: textFieldHandler,
+                    controller: new TextEditingController(text: snapshot.data.jobseeker.information.acceptanceWage.toString()),
                   ),
                   MyTextField(
                     endpoint: "/api/jobseeker",
@@ -99,6 +100,7 @@ class _ProfilePageState extends State<Profile> {
                     fieldData:
                         snapshot.data.jobseeker.information.goalWage.toString(),
                     handler: textFieldHandler,
+                    controller: new TextEditingController(text: snapshot.data.jobseeker.information.goalWage.toString())
                   ),
                   MySwitchTextField(
                     endpoint: "/api/jobseeker",

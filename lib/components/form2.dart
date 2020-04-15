@@ -160,7 +160,7 @@ class _FormPageState2 extends State<FormPage2> {
   List<Widget> listWidgets(Map<String, dynamic> map) {
     List<Widget> list = new List<Widget>();
     map.forEach((key, value) {
-      controllers[key] = new TextEditingController();
+      controllers[key] = new TextEditingController(text: value);
       list.add(MyTextField2(
           title: key,
           fieldData: value.toString(),
