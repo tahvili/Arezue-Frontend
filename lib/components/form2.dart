@@ -75,6 +75,13 @@ class _FormPageState2 extends State<FormPage2> {
     */
   }
 
+  void formHandler(key, value) {
+    setState(() {
+      // print("key is $key and value is $value");
+      objectList[key] = value;
+    });
+  }
+
   void submitHandler() async {
     controllers.forEach((k, v) {
       if (v.text == "") {
@@ -157,9 +164,9 @@ class _FormPageState2 extends State<FormPage2> {
   List<Widget> listWidgets(Map<String, dynamic> map) {
     List<Widget> list = new List<Widget>();
     map.forEach((key, value) {
-      controllers[key] = new TextEditingController();
+      controllers[key] = new TextEditingController(text: value);
       list.add(MyTextField2(
-          title: key, fieldData: value.toString(), controller: controllers[key]));
+          title: key, fieldData: value.toString(), handler: formHandler, controller: controllers[key]));
     });
 
     return list;

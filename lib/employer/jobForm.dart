@@ -142,7 +142,7 @@ class _JobFormState extends State<JobForm> {
             controller: controllers[key]));
       } else {
         list.add(MyTextField2(
-            title: key, fieldData: value.toString(), controller: controllers[key]));
+            title: key, fieldData: value.toString(), handler: formHandler, controller: controllers[key]));
       }
     });
     return list;

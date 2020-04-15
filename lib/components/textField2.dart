@@ -13,7 +13,8 @@ class MyTextField2 extends StatefulWidget {
       this.fieldData = "",
       this.fieldId = "",
       this.fieldType = "text",
-      this.controller});
+      this.controller,
+      this.handler});
   final String uid;
   final String skill;
   final String
@@ -24,6 +25,7 @@ class MyTextField2 extends StatefulWidget {
       fieldId; // the "key" in the data object defined in the parent stateful widget and DB.
   final String fieldData; // the actualy value of the key.
   final TextEditingController controller;
+  final Function handler;
 
   @override
   State<StatefulWidget> createState() {
@@ -32,7 +34,8 @@ class MyTextField2 extends StatefulWidget {
         uid: this.uid,
         fieldData: this.fieldData,
         fieldType: this.fieldType,
-        controller: this.controller);
+        controller: this.controller,
+        handler: this.handler);
   } // the parent handler function that updates the parent state, this is passed from the parent.
 }
 
@@ -46,7 +49,8 @@ class _MyTextFieldState2 extends State<MyTextField2> {
       this.fieldData = "",
       this.fieldId = "",
       this.fieldType = "text",
-      this.controller});
+      this.controller,
+      this.handler});
 
   final String uid;
   final String
@@ -60,7 +64,7 @@ class _MyTextFieldState2 extends State<MyTextField2> {
 
   // Using this controller instead of a handler now. controller.text gives the text in the textfield.
   TextEditingController controller;
-  
+  Function handler;
   Requests serverRequest = new Requests();
   //created a text editing controller so that we can modify the text on init of this widget if need be.
   // var controller = TextEditingController();
@@ -70,7 +74,7 @@ class _MyTextFieldState2 extends State<MyTextField2> {
     super.initState();
 
     if (this.controller == null) {
-      this.controller = TextEditingController();
+      this.controller = TextEditingController(text: fieldData);
     }
   }
 
@@ -80,6 +84,15 @@ class _MyTextFieldState2 extends State<MyTextField2> {
     "text": TextInputType.text
   };
 
+  // child handler that calls the API and then the parent handler.
+  void submitHandler(text) {
+    setState(() {
+      controller.text = text;
+      this.fieldData = text;
+    });
+    handler(this.title, text); //calling formHandler
+  }
+
   void dispose() {
     controller.dispose();
     super.dispose();
@@ -87,7 +100,6 @@ class _MyTextFieldState2 extends State<MyTextField2> {
 
   // The actual object iself.
   Widget build(BuildContext context) {
-    controller.text = this.fieldData;
     return Container(
       padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
       margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
@@ -135,7 +147,7 @@ class _MyTextFieldState2 extends State<MyTextField2> {
                   ),
                   // ########## We do not need this anymore, we're passing in a controller #####
                   // ### Keeping this comment temporarily
-                  // onSubmitted: (text) => submitHandler(text),
+                  onSubmitted: (text) => submitHandler(text),
                   // onChanged: (text) => submitHandler(text),
                 ),
               ),
