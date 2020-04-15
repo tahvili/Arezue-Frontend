@@ -1,3 +1,7 @@
+/// Job Creation Page
+///
+/// on this page the employer can create/edit/delete a job that can be used to find candidates later on in search.
+
 import 'dart:ui';
 import 'package:arezue/components/textField2.dart';
 import 'package:arezue/components/textfield.dart';
@@ -59,6 +63,7 @@ class _JobFormState extends State<JobForm> {
   bool isFieldEmpty;
   Requests request = new Requests();
   Map<String, String> finalEditList = new Map<String, String>();
+  Map<String, TextEditingController> controllers = new Map();
 
   @override
   initState() {
@@ -67,6 +72,13 @@ class _JobFormState extends State<JobForm> {
   }
 
   void submitHandler() async {
+    // saves and stores to database
+    controllers.forEach((k, v) {
+      if (v.text == "") {
+        isFieldEmpty = true;
+      }
+      objectList[k] = v.text;
+    });
     objectList.forEach((k, v) {
       if (v == "") {
         this.isFieldEmpty = true;
@@ -74,6 +86,8 @@ class _JobFormState extends State<JobForm> {
     });
     if (isFieldEmpty) {
       _showPasswordResetSentDialog();
+      this.isFieldEmpty =
+          false; //sets to default, assuming everything is perfect.
     } else {
       List<String> arr = new List<String>();
       for (var keys in objectList.keys) {
@@ -86,6 +100,7 @@ class _JobFormState extends State<JobForm> {
           Navigator.pop(context);
         }
       } else {
+        fillData(arr);
         if (await (request.jobPutRequest(
                 uid, this.jobId, this.finalEditList)) ==
             200) {
@@ -95,7 +110,19 @@ class _JobFormState extends State<JobForm> {
     }
   }
 
+  void fillData(List<String> arr) {
+    // form storage space before sending to server
+    finalEditList['title'] = arr[0].toString();
+    finalEditList['wage'] = arr[1].toString();
+    finalEditList['hours'] = arr[2].toString();
+    finalEditList['location'] = arr[3].toString();
+    finalEditList['status'] = arr[4].toString();
+    finalEditList['description'] = arr[5].toString();
+    finalEditList['max_candidate'] = arr[6].toString();
+  }
+
   void formHandler(key, value) {
+    // form storage space before sending to server
     setState(() {
       objectList[key] = value;
     });
@@ -120,24 +147,28 @@ class _JobFormState extends State<JobForm> {
   }
 
   List<Widget> listWidgets(Map<String, dynamic> map) {
+    // Text field for regular inputs
     List<Widget> list = new List<Widget>();
     map.forEach((key, value) {
+      controllers[key] = new TextEditingController(text: value);
       if (key == "Wage" || key == "Hours") {
         list.add(MyTextField(
             title: key,
             fieldId: key,
             fieldType: "numeric",
             fieldData: value.toString(),
-            handler: formHandler));
+            handler: formHandler,
+            controller: controllers[key]));
       } else {
         list.add(MyTextField2(
-            title: key, fieldData: value.toString(), handler: formHandler));
+            title: key,
+            fieldData: value.toString(),
+            controller: controllers[key]));
       }
     });
     return list;
   }
 
-  // The actual object itself.
   Widget build(BuildContext context) {
     //controller.text = this.fieldData as String;
     return Scaffold(
@@ -179,6 +210,7 @@ class _JobFormState extends State<JobForm> {
   }
 
   Widget deleteButton() {
+    // Delete button to remove job
     return (this.isNew == true)
         ? SizedBox(
             width: 1,

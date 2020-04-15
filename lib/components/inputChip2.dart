@@ -1,3 +1,5 @@
+/// Custom input chip used for skills in profile
+
 import 'dart:ui';
 import 'package:arezue/components/form.dart';
 import 'package:arezue/jobseeker/information.dart';
@@ -37,8 +39,8 @@ class InputChipBuilder2 extends StatefulWidget {
 }
 
 class _InputChipBuilderState2 extends State<InputChipBuilder2> {
-  _InputChipBuilderState2(this.title, this.uid, this.endpoint,
-      this.fieldData, this.fieldId, this.fieldType, this.handler);
+  _InputChipBuilderState2(this.title, this.uid, this.endpoint, this.fieldData,
+      this.fieldId, this.fieldType, this.handler);
 
   final String uid;
   final String
@@ -155,8 +157,8 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
               blurRadius: 10.0,
               spreadRadius: 5.0,
               offset: Offset(
-                0.0, // horizontal, move right 10
-                0.0, // vertical, move down 10
+                0.0,
+                0.0,
               ),
             ),
           ],

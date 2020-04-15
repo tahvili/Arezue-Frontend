@@ -1,3 +1,5 @@
+/// Search page when clicked on searching for anything, except the main candidate search
+
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';

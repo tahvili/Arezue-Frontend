@@ -1,3 +1,7 @@
+/// Resume Builder Page
+///
+/// The purpose of this page is to let the user create/edit/delete a resume and send the data to server
+
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/services/auth.dart';
@@ -36,25 +40,21 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
     update = true;
     if (endpoint == "/dream_career") {
       dreamCareer = list;
-    }
-    else if (endpoint == "/dream_company") {
+    } else if (endpoint == "/dream_company") {
       dreamCompany = list;
-    }
-    else if (endpoint == "/skill") {
+    } else if (endpoint == "/skill") {
       skill = list;
-    }
-    else if (endpoint == "/education") {
+    } else if (endpoint == "/education") {
       education = list;
-    }
-    else if (endpoint == "/exp") {
+    } else if (endpoint == "/exp") {
       experience = list;
-    }
-    else if (endpoint == "/certification") {
+    } else if (endpoint == "/certification") {
       certification = list;
     }
   }
 
   void _showErrorDialog(String type) {
+    // Error Dialog for when there is any error
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -79,6 +79,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   }
 
   Future<JobseekerInfo> fetchData() async {
+    // Fetching data from server and formatting it
     if (widget.resumeId != null && !update) {
       data = await request.resumeGetData(widget.uid, widget.resumeId);
       dreamCareer = (data['resume']['dream_career'])
@@ -104,7 +105,8 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
     return await request.profileGetRequest(widget.auth.currentUser());
   }
 
-  Widget resumeButton(String title, String endpoint, List<dynamic> original, List<dynamic> list) {
+  Widget resumeButton(String title, String endpoint, List<dynamic> original,
+      List<dynamic> list) {
     return SizedBox(
       width: MediaQuery.of(context).size.width - 100,
       child: RaisedButton(
@@ -126,12 +128,13 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
         color: ArezueColors.outSecondaryColor,
         child:
-        Text(title, style: TextStyle(color: ArezueColors.outPrimaryColor)),
+            Text(title, style: TextStyle(color: ArezueColors.outPrimaryColor)),
       ),
     );
   }
 
   Widget saveButton(String uid, String resumeId) {
+    // Saving the resume and sending to server
     return SizedBox(
       width: MediaQuery.of(context).size.width - 100,
       child: RaisedButton(
@@ -145,7 +148,8 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
 //            _showErrorDialog("Dream Career");
 //          } else if (dreamCompany.length==0 || (dreamCompany.length>0 && dreamCompany[0].length==0)) {
 //            _showErrorDialog("Dream Company");
-          } else if (skill.length==0 || (skill.length>0 && skill[0].length==0)) {
+          } else if (skill.length == 0 ||
+              (skill.length > 0 && skill[0].length == 0)) {
             _showErrorDialog("Skill");
 //          }else if (education.length==0 || (education.length>0 && education[0].length==0)) {
 //            _showErrorDialog("Education");
@@ -165,7 +169,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
             };
             if (resumeId != null) {
               Future<int> result =
-              request.resumePutRequest(uid, resumeId, finalData);
+                  request.resumePutRequest(uid, resumeId, finalData);
               if ((await result) == 200) {
                 Navigator.pop(context);
               }
@@ -180,12 +184,13 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
         color: ArezueColors.outSecondaryColor,
         child:
-        Text("Save", style: TextStyle(color: ArezueColors.outPrimaryColor)),
+            Text("Save", style: TextStyle(color: ArezueColors.outPrimaryColor)),
       ),
     );
   }
 
   Widget deleteButton(String uid, String resumeId) {
+    // Delete resume
     if (resumeId == null) {
       return SizedBox(
         width: MediaQuery.of(context).size.width - 100,
@@ -214,6 +219,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   }
 
   Widget resumeName() {
+    // Reume name input
     return Container(
         padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
         margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
@@ -269,6 +275,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Build function for this page
     return FutureBuilder<JobseekerInfo>(
       future: fetchData(),
       builder: (context, snapshot) {
@@ -325,8 +332,8 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
                   resumeButton(
                       "Choose Your Related Education",
                       "/education",
-                      List<dynamic>.from(snapshot
-                          .data.jobseeker.information.education),
+                      List<dynamic>.from(
+                          snapshot.data.jobseeker.information.education),
                       education),
                   resumeButton(
                       "Choose Your Related Experiences",

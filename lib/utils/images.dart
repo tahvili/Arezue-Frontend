@@ -1,3 +1,5 @@
+/// Main images used in the App
+
 import 'package:flutter/material.dart';
 
 class ArezueImages {

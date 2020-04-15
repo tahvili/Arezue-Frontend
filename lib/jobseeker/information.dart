@@ -1,3 +1,5 @@
+/// Jason deserialization of a jobseeker's profile information.
+
 class JobseekerInfo {
   final UserData jobseeker;
   JobseekerInfo({this.jobseeker});

@@ -1,3 +1,7 @@
+/// Candidate search section's main page
+///
+/// contains a list of all jobs that the employer can pick from to be able to start the search.
+
 import 'package:arezue/components/searchPage.dart';
 import 'package:arezue/employer/jobForm.dart';
 import 'package:arezue/employer/jobInformation.dart';
@@ -35,6 +39,7 @@ class _JobPageState extends State<SearchIntro> {
   }
 
   Future<Job> fetchData() async {
+    // Fetch jobs openings from employer account
     uid = await (widget.auth.currentUser());
     this.futureEmployer = request.employerGetRequest(widget.auth.currentUser());
     return await request.jobGetRequest(uid);
@@ -45,7 +50,7 @@ class _JobPageState extends State<SearchIntro> {
   }
 
   Widget selectJob(JobData job) {
-    //need to find a way to send the uid
+    // Goes to search page with the selected job
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 0.0),
       child: RaisedButton(
@@ -53,16 +58,15 @@ class _JobPageState extends State<SearchIntro> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () async {
-          //String c = (await futureEmployer).companyID.toString();
           sendList = sendEditListGenerator(job);
           Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => SearchPage(
-                  auth: widget.auth,
-                  uid: uid,
-                  jobId: job.jobId,
-                )),
+                      auth: widget.auth,
+                      uid: uid,
+                      jobId: job.jobId,
+                    )),
           );
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
@@ -106,6 +110,7 @@ class _JobPageState extends State<SearchIntro> {
   }
 
   Widget createButton() {
+    // Add a new job posting
     return FloatingActionButton(
       onPressed: () async {
         String c = (await futureEmployer).companyID.toString();
@@ -114,13 +119,13 @@ class _JobPageState extends State<SearchIntro> {
           context,
           MaterialPageRoute(
               builder: (context) => JobForm(
-                auth: widget.auth,
-                uid: this.uid,
-                objectList: this.sendList,
-                isNew: true,
-                companyName: c,
-                title: "Add a new Job Posting",
-              )),
+                    auth: widget.auth,
+                    uid: this.uid,
+                    objectList: this.sendList,
+                    isNew: true,
+                    companyName: c,
+                    title: "Add a new Job Posting",
+                  )),
         );
       },
       child: Icon(Icons.add),
@@ -130,6 +135,7 @@ class _JobPageState extends State<SearchIntro> {
 
   @override
   Widget build(BuildContext context) {
+    // Main build function for the page
     return FutureBuilder<Job>(
       future: fetchData(),
       builder: (context, snapshot) {
@@ -171,6 +177,7 @@ class _JobPageState extends State<SearchIntro> {
   }
 
   bodyContent(List<JobData> listJobs) {
+    // When there is no jobs available
     List<Widget> list = listWidgets(listJobs);
     if (list.length == 0) {
       return Center(

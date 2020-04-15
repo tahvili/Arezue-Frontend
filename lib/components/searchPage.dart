@@ -1,3 +1,7 @@
+/// Search page when looking for candidate
+///
+/// the purpose of this page is to ask for input from client and show a list of resumes based on the search items
+
 import 'dart:math';
 
 import 'package:arezue/jobseeker/resumeView.dart';
@@ -10,7 +14,7 @@ import '../loading.dart';
 import 'inputChip.dart';
 
 class SearchPage extends StatefulWidget {
-  SearchPage({this.auth,this.uid,this.jobId});
+  SearchPage({this.auth, this.uid, this.jobId});
   final BaseAuth auth;
   final String uid;
   final String jobId;
@@ -27,7 +31,9 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {});
   }
 
-  Widget selectResume(String resumeID, String name, Map<String,dynamic> data, String uid) {
+  Widget selectResume(
+      String resumeID, String name, Map<String, dynamic> data, String uid) {
+    // resume selector, which takes them to a page to view the resume
     Random random = new Random();
     int randomNumber = random.nextInt(1000000000) + 100000000;
     return Padding(
@@ -40,11 +46,8 @@ class _SearchPageState extends State<SearchPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ResumeView(
-                    data: data,
-                    resumeName: resumeID,
-                    uid: uid
-                )),
+                builder: (context) =>
+                    ResumeView(data: data, resumeName: resumeID, uid: uid)),
           );
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
@@ -56,59 +59,71 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<int> fetchData() async {
+    // fetching data from server
     minidata = await request.searchPostRequest(searchItems);
     widgetList = listWidgets(uid);
     return minidata.length;
   }
 
   List<Widget> listWidgets(String uid) {
+    // inputchip of skills needed for job
     List<Widget> widgetlist = new List<Widget>();
-    widgetlist.add(InputChipBuilder(
-      title: "Candidate's Skill: ",
-      fieldType: "text",
-      fieldData: searchItems,
-      handler: searchFieldHandler,
-    ),);
+    widgetlist.add(
+      InputChipBuilder(
+        title: "Candidate's Skill: ",
+        fieldType: "text",
+        fieldData: searchItems,
+        handler: searchFieldHandler,
+      ),
+    );
     var keys;
     var maps;
     //int counter=0;
 
-    if(minidata.length==0){
-      widgetlist.add(Center(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
-          child: Text(
-            "Start adding some search items by pressing the + button.",
-            style: TextStyle(
-              color: ArezueColors.outPrimaryColor,
-              fontSize: 16,
-              fontFamily: 'Arezue',
-              fontWeight: FontWeight.w700,
+    if (minidata.length == 0) {
+      // when nothing is searched yet
+      widgetlist.add(
+        Center(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
+            child: Text(
+              "Start adding some search items by pressing the + button.",
+              style: TextStyle(
+                color: ArezueColors.outPrimaryColor,
+                fontSize: 16,
+                fontFamily: 'Arezue',
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
         ),
-      ),);
+      );
       return widgetlist;
     }
 
-    widgetlist.add(Padding(
-      padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-      child: Text(
-        "we found ${minidata.length} candidate(s)!",
-        style: TextStyle(
-          color: ArezueColors.greyColor,
-          fontSize: 14,
-          fontFamily: 'Arezue',
-          fontWeight: FontWeight.w700,
+    widgetlist.add(
+      Padding(
+        // when results are back from server. we count and show the number of candidates
+        padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
+        child: Text(
+          "we found ${minidata.length} candidate(s)!",
+          style: TextStyle(
+            color: ArezueColors.greyColor,
+            fontSize: 14,
+            fontFamily: 'Arezue',
+            fontWeight: FontWeight.w700,
+          ),
+          textAlign: TextAlign.right,
         ),
-        textAlign: TextAlign.right,
       ),
-    ),);
-    for(maps in minidata){
-      widgetlist.add(Container(margin: const EdgeInsets.only(right: 50,
-          left: 50, bottom: 10, top: 0),child:selectResume(maps["resume_id"].toString(), maps["resume"]["name"],
-          maps["resume"], maps["uid"])));
+    );
+    for (maps in minidata) {
+      widgetlist.add(Container(
+          margin:
+              const EdgeInsets.only(right: 50, left: 50, bottom: 10, top: 0),
+          child: selectResume(maps["resume_id"].toString(),
+              maps["resume"]["name"], maps["resume"], maps["uid"])));
       //counter++;
     }
 
@@ -127,31 +142,29 @@ class _SearchPageState extends State<SearchPage> {
   String companyName;
   String uid;
 
-
   Widget build(BuildContext context) {
+    // the build function for the program
     return FutureBuilder<int>(
       future: fetchData(),
-    builder: (context, snapshot) {
-    if (snapshot.hasData) {
-        return new Scaffold(
-          appBar: AppBar(
-              backgroundColor: ArezueColors.secondaryColor,
-              title: const Text('Let\'s find a candidate!')),
-          body: SafeArea(
-            child: ListView(
-              padding: EdgeInsets.fromLTRB(0, 40, 0, 50),
-              children:widgetList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return new Scaffold(
+            appBar: AppBar(
+                backgroundColor: ArezueColors.secondaryColor,
+                title: const Text('Let\'s find a candidate!')),
+            body: SafeArea(
+              child: ListView(
+                padding: EdgeInsets.fromLTRB(0, 40, 0, 50),
+                children: widgetList,
+              ),
             ),
-          ),
-        );
-    }else if (snapshot.hasError) {
-      return Text("${snapshot.error}");
-    } else {
-      return Loading();
-    }
-    },
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        } else {
+          return Loading();
+        }
+      },
     );
-
   }
-
 }

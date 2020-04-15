@@ -1,3 +1,5 @@
+/// Custom input chip
+
 import 'dart:ui';
 import 'package:arezue/components/search.dart';
 import 'package:arezue/services/http.dart';
@@ -36,14 +38,8 @@ class InputChipBuilder extends StatefulWidget {
 }
 
 class _InputChipBuilderState extends State<InputChipBuilder> {
-  _InputChipBuilderState(
-      this.title,
-      this.uid,
-      this.endpoint,
-      this.fieldData,
-      this.fieldId,
-      this.fieldType,
-      this.handler);
+  _InputChipBuilderState(this.title, this.uid, this.endpoint, this.fieldData,
+      this.fieldId, this.fieldType, this.handler);
 
   final String uid;
   final String
@@ -65,6 +61,7 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
   void initState() {
     super.initState();
   }
+
   //keyboard map
   final Map<String, TextInputType> keyboards = {
     "numeric": TextInputType.numberWithOptions(decimal: true),
@@ -75,14 +72,18 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
   void submitHandler(String text, String preference, String command) {
     // Handle PUT request to the api here
     if (command == "add") {
-      if (uid != null) {serverRequest.profilePostRequest(
-          'jobseeker', uid, fieldId, text, preference, "1");}
+      if (uid != null) {
+        serverRequest.profilePostRequest(
+            'jobseeker', uid, fieldId, text, preference, "1");
+      }
       setState(() {
         this.fieldData.add(text);
       });
     } else if (command == "delete") {
       //make a delete request to API here
-      if (uid != null) {serverRequest.deleteRequest(uid, fieldId, text);}
+      if (uid != null) {
+        serverRequest.deleteRequest(uid, fieldId, text);
+      }
       setState(() {
         this.fieldData.remove(text);
       });
@@ -122,8 +123,8 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
               blurRadius: 10.0,
               spreadRadius: 5.0,
               offset: Offset(
-                0.0, // horizontal, move right 10
-                0.0, // vertical, move down 10
+                0.0,
+                0.0,
               ),
             ),
           ],
@@ -143,7 +144,7 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
                     )),
                 new Spacer(),
                 Container(
-                  width:50,
+                  width: 50,
                   child: MaterialButton(
                       padding: EdgeInsets.all(12),
                       shape: CircleBorder(),
@@ -154,9 +155,8 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
                       ),
                       color: ArezueColors.secondaryColor,
                       onPressed: () {
-                          _showSearchBar(context, fieldId, submitHandler);
-                        }),
-
+                        _showSearchBar(context, fieldId, submitHandler);
+                      }),
                 ),
               ],
             ),
@@ -178,6 +178,7 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
     });
     return widglist;
   }
+
   void _showSearchBar(BuildContext context, String id, Function handler) async {
     final result = await showSearch(
         context: context,
@@ -190,5 +191,3 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
     }
   }
 }
-
-

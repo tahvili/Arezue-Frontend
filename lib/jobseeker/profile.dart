@@ -1,3 +1,8 @@
+/// User Profile Page
+///
+/// the pupose of this page is to let the user create and edit their profile.
+/// the content store in this page is used to create the resumes.
+
 import 'package:arezue/components/inputChip2.dart';
 import 'package:arezue/components/inputChip3.dart';
 import 'package:arezue/components/switchTextField.dart';
@@ -21,8 +26,6 @@ class Profile extends StatefulWidget {
 
 class _ProfilePageState extends State<Profile> {
   Requests request = new Requests();
-
-  //State variable
   Map<String, dynamic> data;
   Future<JobseekerInfo> uData;
 
@@ -32,13 +35,10 @@ class _ProfilePageState extends State<Profile> {
   }
 
   Future<JobseekerInfo> fetchData() async {
+    // Fetch data from server
     return await request.profileGetRequest(widget.auth.currentUser());
   }
 
-  //This handler is passed into the stateless widgets of the profile page.
-  //The reason we create a handler in the parent (stateful class) and pass it down to the children
-  // is so that when the child changes, this method will be triggere which then updates state by calling
-  // setState()...
   void textFieldHandler(text, fieldId) {
     setState(() {
       build(context);
@@ -47,6 +47,7 @@ class _ProfilePageState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    // Build function for the page
     return FutureBuilder<JobseekerInfo>(
       future: fetchData(),
       builder: (context, snapshot) {
@@ -88,6 +89,7 @@ class _ProfilePageState extends State<Profile> {
                         .data.jobseeker.information.acceptanceWage
                         .toString(),
                     handler: textFieldHandler,
+                    controller: new TextEditingController(text: snapshot.data.jobseeker.information.acceptanceWage.toString()),
                   ),
                   MyTextField(
                     endpoint: "/api/jobseeker",
@@ -98,6 +100,7 @@ class _ProfilePageState extends State<Profile> {
                     fieldData:
                         snapshot.data.jobseeker.information.goalWage.toString(),
                     handler: textFieldHandler,
+                    controller: new TextEditingController(text: snapshot.data.jobseeker.information.goalWage.toString())
                   ),
                   MySwitchTextField(
                     endpoint: "/api/jobseeker",

@@ -1,3 +1,5 @@
+/// Main Color Codes used in App
+
 import 'package:flutter/material.dart';
 
 class ArezueColors {

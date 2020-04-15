@@ -1,4 +1,6 @@
-class Job{
+/// Jason deserialization of a job.
+
+class Job {
   final List<JobData> jobData;
   Job({this.jobData});
 
@@ -24,9 +26,19 @@ class JobData {
   final String maxCandidate;
   final String companyName;
 
-  JobData({this.jobId, this.title, this.wage, this.position, this.hours,
-    this.location, this.description, this.datePosted, this.expiryDate,
-    this.status, this.maxCandidate, this.companyName});
+  JobData(
+      {this.jobId,
+      this.title,
+      this.wage,
+      this.position,
+      this.hours,
+      this.location,
+      this.description,
+      this.datePosted,
+      this.expiryDate,
+      this.status,
+      this.maxCandidate,
+      this.companyName});
 
   factory JobData.fromJson(Map<String, dynamic> parsedJson) {
     return JobData(
@@ -41,7 +53,6 @@ class JobData {
         expiryDate: parsedJson['expiry_date'].toString(),
         status: parsedJson['status'].toString(),
         maxCandidate: parsedJson['max_candidate'].toString(),
-        companyName: parsedJson['company_name'].toString()
-    );
+        companyName: parsedJson['company_name'].toString());
   }
 }

@@ -1,3 +1,5 @@
+/// Custom input chip that lets you see multiple lines of text. used in profile view
+
 import 'dart:ui';
 import 'package:arezue/components/form2.dart';
 import 'package:arezue/jobseeker/information.dart';
@@ -8,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class InputChipBuilder3 extends StatefulWidget {
-
   InputChipBuilder3(
       {@required this.title,
       this.uid,
@@ -41,15 +42,8 @@ class InputChipBuilder3 extends StatefulWidget {
 }
 
 class _InputChipBuilderState3 extends State<InputChipBuilder3> {
-  _InputChipBuilderState3(
-      this.title,
-      this.id,
-      this.uid,
-      this.endpoint,
-      this.fieldData,
-      this.fieldId,
-      this.fieldType,
-      this.handler);
+  _InputChipBuilderState3(this.title, this.id, this.uid, this.endpoint,
+      this.fieldData, this.fieldId, this.fieldType, this.handler);
 
   final String uid;
   String id;
@@ -126,52 +120,55 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
         // creating the entity. Otherwise "this.id" would be undefined when
         // entering the edit view.
         setState(() {
-        if(this.fieldId == "education"){
-          this.id = (text as Education).edId;
-        }else  if(this.fieldId == "experience"){
-          this.id =  (text as Experience).expId;
-        }else {
-          this.id = (text as Certification).cId;
-        }
-      });
+          if (this.fieldId == "education") {
+            this.id = (text as Education).edId;
+          } else if (this.fieldId == "experience") {
+            this.id = (text as Experience).expId;
+          } else {
+            this.id = (text as Certification).cId;
+          }
+        });
       });
     } else if (command == "delete") {
       setState(() {
-        if(this.fieldId == "education"){
-        this.objectList.removeWhere((element) => (element as Education).edId == text.toString());
-      }else  if(this.fieldId == "experience"){
-          this.objectList.removeWhere((element) => (element as Experience).expId == text.toString());
-        }else {
-          this.objectList.removeWhere((element) => (element as Certification).cId == text.toString());
+        if (this.fieldId == "education") {
+          this.objectList.removeWhere(
+              (element) => (element as Education).edId == text.toString());
+        } else if (this.fieldId == "experience") {
+          this.objectList.removeWhere(
+              (element) => (element as Experience).expId == text.toString());
+        } else {
+          this.objectList.removeWhere(
+              (element) => (element as Certification).cId == text.toString());
         }
       });
     } else {
       List lst = List<String>.from(text);
       setState(() {
-        if(this.fieldId == "education"){
-          for(Object element in this.objectList){
+        if (this.fieldId == "education") {
+          for (Object element in this.objectList) {
             Education ed = (element as Education);
-            if(ed.edId == command.toString()){
+            if (ed.edId == command.toString()) {
               ed.schoolName = lst[0];
               ed.startDate = lst[1];
               ed.gradDate = lst[2];
               ed.program = lst[3];
             }
           }
-        }else  if(this.fieldId == "experience"){
-          for(Object element in this.objectList){
+        } else if (this.fieldId == "experience") {
+          for (Object element in this.objectList) {
             Experience exp = (element as Experience);
-            if(exp.expId == command.toString()){
+            if (exp.expId == command.toString()) {
               exp.title = lst[0];
               exp.startDate = lst[1];
               exp.endDate = lst[2];
               exp.description = lst[3];
             }
           }
-        }else {
-          for(Object element in this.objectList){
+        } else {
+          for (Object element in this.objectList) {
             Certification cert = (element as Certification);
-            if(cert.cId == command.toString()){
+            if (cert.cId == command.toString()) {
               cert.name = lst[0];
               cert.startDate = lst[1];
               cert.endDate = lst[2];
@@ -184,7 +181,6 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
     handler(text, command);
     // Once that's done, notify the parent so it knows to update its local state.
   }
-
 
   Widget getText(String text) {
     return Expanded(
@@ -201,12 +197,11 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
   }
 
   String getTextList(List<String> list) {
-    String text="";
-    for(int i = 0; i<list.length;i++){
-      if(i==2){
-        text+=" - ${list[i]}";
-      }
-      else {
+    String text = "";
+    for (int i = 0; i < list.length; i++) {
+      if (i == 2) {
+        text += " - ${list[i]}";
+      } else {
         text += "\n${list[i]}";
       }
     }
@@ -236,6 +231,14 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
   }
 
   Widget getContainer(Object elements) {
+    var id;
+    if (fieldId == "experience") {
+      id = (elements as Experience).expId;
+    } else if (fieldId == "education") {
+      id = (elements as Education).edId;
+    } else if (fieldId == "certification") {
+      id = (elements as Certification).cId;
+    }
     return Container(
       padding: EdgeInsets.fromLTRB(5, 5, 5, 25),
       margin: const EdgeInsets.only(bottom: 20.0),
@@ -250,34 +253,37 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
             children: <Widget>[
               Align(
                 alignment: Alignment.topRight,
-              child:
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () async {
-                  Map<String, dynamic> val = await (sendEditListGenerator(this.fieldId, elements));
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FormPage2(
-                              title: "Edit your $fieldId",
-                              isNew: "false",
-                              objectList: val,
-                              id: this.id,
-                              handler: submitHandler,
-                              uid: this.uid,
-                              fieldId: this.fieldId)));
-                },
+                child: IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () async {
+                    Map<String, dynamic> val =
+                        await (sendEditListGenerator(this.fieldId, elements));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FormPage2(
+                                title: "Edit your $fieldId",
+                                isNew: "false",
+                                objectList: val,
+                                id: id,
+                                handler: submitHandler,
+                                uid: this.uid,
+                                fieldId: this.fieldId)));
+                  },
+                ),
               ),
-    ),
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child:Text(getTextList(getStringList(elements)),style: TextStyle(
-                color: ArezueColors.outPrimaryColor,
-                fontSize: 18,
-                fontFamily: 'Arezue',
-                fontWeight: FontWeight.w600,
+                child: Text(
+                  getTextList(getStringList(elements)),
+                  style: TextStyle(
+                    color: ArezueColors.outPrimaryColor,
+                    fontSize: 18,
+                    fontFamily: 'Arezue',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-              ),),
             ],
           ),
 
@@ -307,8 +313,8 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
               blurRadius: 10.0,
               spreadRadius: 5.0,
               offset: Offset(
-                0.0, // horizontal, move right 10
-                0.0, // vertical, move down 10
+                0.0,
+                0.0,
               ),
             ),
           ],
@@ -322,7 +328,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
                 getText(this.title),
                 new Spacer(),
                 Container(
-                  width:50,
+                  width: 50,
                   child: MaterialButton(
                       padding: EdgeInsets.all(12),
                       shape: CircleBorder(),
@@ -333,19 +339,18 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
                       ),
                       color: ArezueColors.secondaryColor,
                       onPressed: () {
-                          sendList = sendListGenerator(this.fieldId);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FormPage2(
-                                      title: "Add your $fieldId",
-                                      isNew: "true",
-                                      objectList: sendList,
-                                      handler: submitHandler,
-                                      uid: this.uid,
-                                      fieldId: this.fieldId)));
-                        }),
-
+                        sendList = sendListGenerator(this.fieldId);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FormPage2(
+                                    title: "Add your $fieldId",
+                                    isNew: "true",
+                                    objectList: sendList,
+                                    handler: submitHandler,
+                                    uid: this.uid,
+                                    fieldId: this.fieldId)));
+                      }),
                 ),
               ],
             ),
@@ -392,12 +397,16 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
     }
     return sendList;
   }
-  Future<Map<String, dynamic>> sendEditListGenerator(String fieldId, Object element) async {
-    if (await(fetchData()) == 200) {
+
+  Future<Map<String, dynamic>> sendEditListGenerator(
+      String fieldId, Object element) async {
+    if (await (fetchData()) == 200) {
       print("arr is: $arr");
       Map<String, dynamic> value;
       if (fieldId == "education") {
-        value = arr.singleWhere((val) => val['ed_id'].toString() == ((element as Education).edId).toString());
+        value = arr.singleWhere((val) =>
+            val['ed_id'].toString() ==
+            ((element as Education).edId).toString());
         sendList = {
           "Name of Institution": value['school_name'],
           "Start Date": value['start_date'],
@@ -406,17 +415,21 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
           // "ed_id": value['ed_id'],
         };
       } else if (fieldId == "experience") {
-        value = arr.singleWhere((val) => val['exp_id'].toString() == ((element as Experience).expId).toString());
+        value = arr.singleWhere((val) =>
+            val['exp_id'].toString() ==
+            ((element as Experience).expId).toString());
         print("the value of value is: $value");
         sendList = {
           "Job Title": value['title'],
           "Start Date": value['start_date'],
           "End Date": value['end_date'],
           "Description": value['description'],
-         // "exp_id": value['exp_id'],
+          // "exp_id": value['exp_id'],
         };
       } else {
-        value = arr.singleWhere((val) => val['c_id'].toString() == ((element as Certification).cId).toString());
+        value = arr.singleWhere((val) =>
+            val['c_id'].toString() ==
+            ((element as Certification).cId).toString());
         sendList = {
           "Name": value['cert_name'],
           "Start Date": value['start_date'],
@@ -426,7 +439,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
         };
       }
       return sendList;
-    }else{
+    } else {
       return {};
     }
   }
