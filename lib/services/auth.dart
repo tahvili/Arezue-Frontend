@@ -1,3 +1,7 @@
+/// Auth file that contains all verifications and connections with firebase
+///
+/// the purpose of this file is so that we can use the functions in this file to communicate with firebase
+
 import 'package:arezue/employer/employer.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/jobseeker/jobseeker.dart';
@@ -7,13 +11,17 @@ import 'dart:async';
 import 'dart:convert';
 
 abstract class BaseAuth {
-  //Stream<String> get OnAuthStateChanged;
   Future signInWithEmailAndPassword(
     String email,
     String password,
   );
   Future createUserWithEmailAndPassword(
-      String name, String email, String password, String company, String type);
+      // Create user with the email and password
+      String name,
+      String email,
+      String password,
+      String company,
+      String type);
   Future<String> currentUser();
   Future<void> signOut();
   Future sendPasswordResetEmail(String email);
@@ -26,15 +34,10 @@ class Auth implements BaseAuth {
   String dbID, userType;
   final FirebaseAuth _firebaseAuth =
       FirebaseAuth.instance; //this will get FirebaseAuth from a
-  // singleton instance
   Requests request = new Requests();
 
-  //create user obj based on FirebaseUser
-//  User userFromFirebaseUser(FirebaseUser user){
-//    return user != null ? User(uid: user.uid) : null;
-//  }
-
   Future sendPasswordResetEmail(String email) async {
+    // Sends password reset email
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
       return "Done";
@@ -45,21 +48,18 @@ class Auth implements BaseAuth {
   }
 
   Future<void> sendEmailVerification() async {
+    // Sends email verification email
     var user = await _firebaseAuth.currentUser();
     user.sendEmailVerification();
   }
 
-//  @override
-//  // TODO: implement OnAuthStateChanged
-//  Stream<String> get OnAuthStateChanged => _firebaseAuth.onAuthStateChanged.map(
-//      (FirebaseUser user) => userFromFirebaseUser(user)
-//          ?.uid); //to tell us whether or not the user is signed in to firebase
-
   @override
   Future createUserWithEmailAndPassword(String name, String email,
       String password, String company, String type) async {
+    // Creates user if the email does not exist
     FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
-            email: email, password: password)).user;
+            email: email, password: password))
+        .user;
     try {
       await user.sendEmailVerification();
       Future<int> status;
@@ -88,6 +88,7 @@ class Auth implements BaseAuth {
   }
 
   Future<bool> checkEmailVerification() async {
+    // Checks to see if user verified their email or not
     FirebaseUser user = await _firebaseAuth.currentUser();
     bool flag;
     if (user == null) {
@@ -98,30 +99,31 @@ class Auth implements BaseAuth {
     return flag;
   }
 
-  Future<String> currentUser() async { // returns the current users database ID
+  Future<String> currentUser() async {
+    // returns the current users database ID
     FirebaseUser user = await _firebaseAuth.currentUser();
     return user != null ? dbID : null;
   }
 
   @override
   Future signInWithEmailAndPassword(String email, String password) async {
+    // Signs the user with the email and password
     FirebaseUser user = (await _firebaseAuth.signInWithEmailAndPassword(
-            email: email, password: password)).user;
+            email: email, password: password))
+        .user;
     try {
       if (user.isEmailVerified) {
         var url = 'https://api.daffychuy.com/api/v1/init';
-        var response = await http.post(url,
-            body: {'firebaseID': user.uid});
+        var response = await http.post(url, body: {'firebaseID': user.uid});
         var parsedResponse = json.decode(response.body);
         dbID = parsedResponse['payload']['uid'];
         userType = parsedResponse['payload']['user_type'];
         int statusCode = response.statusCode;
         if ((statusCode) == 200) {
           print(userType);
-          if(userType == "employer"){
+          if (userType == "employer") {
             return Employer.fromJson(parsedResponse);
-          }
-          else {
+          } else {
             return Jobseeker.fromJson(parsedResponse);
           }
         } else if (statusCode == 400) {
@@ -142,6 +144,7 @@ class Auth implements BaseAuth {
   }
 
   Future<void> signOut() async {
+    // Signs the user out
     return _firebaseAuth.signOut();
   }
 

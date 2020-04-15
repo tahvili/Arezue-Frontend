@@ -1,3 +1,5 @@
+/// Custom text field used for searches
+
 import 'dart:ui';
 import 'package:arezue/components/search.dart';
 import 'package:arezue/utils/colors.dart';
@@ -113,8 +115,8 @@ class _MySearchTextFieldState extends State<MySearchTextField> {
             blurRadius: 10.0,
             spreadRadius: 5.0,
             offset: Offset(
-              0.0, // horizontal, move right 10
-              0.0, // vertical, move down 10
+              0.0,
+              0.0,
             ),
           ),
         ],

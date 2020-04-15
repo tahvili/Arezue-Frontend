@@ -1,3 +1,7 @@
+/// Job section's main page
+///
+/// contains a list of all jobs that the employer made and can create new ones.
+
 import 'package:arezue/employer/jobForm.dart';
 import 'package:arezue/employer/jobInformation.dart';
 import 'package:arezue/utils/colors.dart';
@@ -34,6 +38,7 @@ class _JobPageState extends State<JobPage> {
   }
 
   Future<Job> fetchData() async {
+    // Fetch data from server
     uid = await (widget.auth.currentUser());
     this.futureEmployer = request.employerGetRequest(widget.auth.currentUser());
     return await request.jobGetRequest(uid);
@@ -44,7 +49,7 @@ class _JobPageState extends State<JobPage> {
   }
 
   Widget selectJob(JobData job) {
-    //need to find a way to send the uid
+    // Choose a job to edit or delete
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 0.0),
       child: RaisedButton(
@@ -109,6 +114,7 @@ class _JobPageState extends State<JobPage> {
   }
 
   Widget createButton() {
+    // Create a new job
     return FloatingActionButton(
       onPressed: () async {
         String c = (await futureEmployer).companyID.toString();
@@ -133,6 +139,7 @@ class _JobPageState extends State<JobPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Build function of the page
     return FutureBuilder<Job>(
       future: fetchData(),
       builder: (context, snapshot) {
@@ -174,6 +181,7 @@ class _JobPageState extends State<JobPage> {
   }
 
   bodyContent(List<JobData> listJobs) {
+    // when there is not jobs at the moment
     List<Widget> list = listWidgets(listJobs);
     if (list.length == 0) {
       return Center(

@@ -1,3 +1,5 @@
+/// Jason deserialization of an employer user.
+
 import 'package:json_annotation/json_annotation.dart';
 part 'employer.g.dart';
 
@@ -8,11 +10,11 @@ class Employer extends Object {
   final String fbId;
   final String name;
   @JsonKey(name: 'phone_number', nullable: true)
-  final String phoneNumber; // = '6479950165';
+  final String phoneNumber;
   @JsonKey(nullable: true)
-  final String location; // = 'Mississauga, Ontario, Canada';
+  final String location;
   @JsonKey(name: 'profile_picture', nullable: true)
-  final String profilePicture; // = 'assets/profile.jpg';
+  final String profilePicture;
   @JsonKey(name: 'active_states')
   bool activeStates;
   @JsonKey(name: 'date_created')

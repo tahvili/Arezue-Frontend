@@ -1,8 +1,13 @@
+/// Verification before submits
+///
+/// Used to validate the inputs before sending to the server
+
 import 'package:arezue/utils/texts.dart';
 
 enum FormType { login, register, reset }
 
 class EmailValidator {
+  // Email Validator
   static String validate(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -15,6 +20,7 @@ class EmailValidator {
 }
 
 class PasswordValidator {
+  // Password Validator
   static String validate(String value) {
     if (value.isEmpty) {
       return ArezueTexts.passwordError;
@@ -26,6 +32,7 @@ class PasswordValidator {
 }
 
 class NameValidator {
+  // Name Validator
   static String validate(String value) {
     if (value.isEmpty) {
       return "Name can't be empty";
@@ -38,6 +45,7 @@ class NameValidator {
 }
 
 class NumberValidator {
+  // Number Validator
   static String validate(String value) {
     RegExp float =
         RegExp(r'^(?:-?(?:[0-9]+))?(?:\.[0-9]*)?(?:[eE][\+\-]?(?:[0-9]+))?$');

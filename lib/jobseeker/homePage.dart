@@ -1,3 +1,7 @@
+/// Jobseeker's Home Page
+///
+/// Here is the user dashboard, where they may navigate to any section that they want
+
 import 'package:arezue/Settings.dart';
 import 'package:arezue/jobseeker/profile.dart';
 import 'package:arezue/jobseeker/resumes.dart';
@@ -30,19 +34,20 @@ class _HomePageState extends State<HomePage> {
   Requests serverRequest = new Requests();
 
   @override
-  void initState() {   //calling the appropriate http get request
+  void initState() {
+    //calling the appropriate http get request
     super.initState();
-    if(this.formType == FormType3.jobseeker) {
+    if (this.formType == FormType3.jobseeker) {
       futureUser = request.jobseekerGetRequest(widget.auth.currentUser());
     }
   }
 
   Widget lookingButton() {
+    //checking if they still want a job
     return FutureBuilder<Jobseeker>(
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          // ignore: unrelated_type_equality_checks
           activelyLooking = snapshot.data.activeStates;
           if (activelyLooking) {
             return Padding(
@@ -72,7 +77,10 @@ class _HomePageState extends State<HomePage> {
                       topLeft: const Radius.circular(10),
                       bottomLeft: const Radius.circular(10)),
                 ),
-                onPressed: () => setState(() {changeStatus(snapshot.data.uid);snapshot.data.activeStates=activelyLooking;}),
+                onPressed: () => setState(() {
+                  changeStatus(snapshot.data.uid);
+                  snapshot.data.activeStates = activelyLooking;
+                }),
                 padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
                 color: ArezueColors.primaryColor,
                 child: Text(ArezueTexts.lookingForJob,
@@ -91,6 +99,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget notLookingButton() {
+    // checking to see if they are not looking for a job
     return FutureBuilder<Jobseeker>(
       future: futureUser,
       builder: (context, snapshot) {
@@ -108,7 +117,10 @@ class _HomePageState extends State<HomePage> {
                 ),
                 padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
                 color: ArezueColors.primaryColor,
-                onPressed: () => setState(() {changeStatus(snapshot.data.uid);snapshot.data.activeStates=activelyLooking;}),
+                onPressed: () => setState(() {
+                  changeStatus(snapshot.data.uid);
+                  snapshot.data.activeStates = activelyLooking;
+                }),
                 child: Text(ArezueTexts.notLookingAnymore,
                     style: TextStyle(
                         color: ArezueColors.secondaryColor, fontSize: 14)),
@@ -143,14 +155,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _getProfile() {
+    // Profile picture
     return FutureBuilder<Jobseeker>(
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var fullName = snapshot.data.name.split(" ");
           var name = "";
-          for (int i = 0; i < fullName.length;i++){
-            if(fullName[i].length>0) {
+          for (int i = 0; i < fullName.length; i++) {
+            if (fullName[i].length > 0) {
               name += fullName[i][0];
             }
           }
@@ -188,6 +201,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget userProfile() {
+    // Borders of the profile picture
     return FutureBuilder<Jobseeker>(
       future: futureUser,
       builder: (context, snapshot) {
@@ -223,8 +237,8 @@ class _HomePageState extends State<HomePage> {
                   blurRadius: 10.0,
                   spreadRadius: 5.0,
                   offset: Offset(
-                    0.0, // horizontal, move right 10
-                    0.0, // vertical, move down 10
+                    0.0,
+                    0.0,
                   ),
                 ),
               ],
@@ -240,7 +254,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   final middleSection = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+      // mid section of the tri-section
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 25.0),
       decoration: BoxDecoration(
         color: ArezueColors.primaryColor,
         boxShadow: [
@@ -249,62 +264,83 @@ class _HomePageState extends State<HomePage> {
             blurRadius: 10.0,
             spreadRadius: 5.0,
             offset: Offset(
-              0.0, // horizontal, move right 10
-              0.0, // vertical, move down 10
+              0.0,
+              0.0,
             ),
           ),
         ],
       ),
-      child: Column(
+      child: Wrap(
         children: <Widget>[
-          Text("0",style: TextStyle(
-            color: ArezueColors.outPrimaryColor,
-            fontSize: 20,
-            fontFamily: 'Arezue',
-            fontWeight: FontWeight.w400,
-          ), textAlign: TextAlign.center),
+          Center(
+            child: Text(
+              "0",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: ArezueColors.outPrimaryColor,
+                fontSize: 20,
+                fontFamily: 'Arezue',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
           Text("pending interview requests", textAlign: TextAlign.center),
         ],
       ));
   final leftSection = Container(
+      // left section of the tri-section
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
       decoration: BoxDecoration(
         borderRadius: new BorderRadius.only(
             topLeft: const Radius.circular(10),
             bottomLeft: const Radius.circular(10)),
       ),
-      child: Column(
+      child: Wrap(
         children: <Widget>[
-          Text("0",style: TextStyle(
-            color: ArezueColors.outPrimaryColor,
-            fontSize: 20,
-            fontFamily: 'Arezue',
-            fontWeight: FontWeight.w400,
-          ), textAlign: TextAlign.center),
+          Center(
+            child: Text(
+              "0",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: ArezueColors.outPrimaryColor,
+                fontSize: 20,
+                fontFamily: 'Arezue',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
           Text("employers scanned your account", textAlign: TextAlign.center),
         ],
       ));
   final rightSection = Container(
+    // right section of the tri-section
     padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
     decoration: BoxDecoration(
       borderRadius: new BorderRadius.only(
           topRight: const Radius.circular(10),
           bottomRight: const Radius.circular(10)),
     ),
-    child: Column(
+    child: Wrap(
       children: <Widget>[
-        Text("0",style: TextStyle(
-          color: ArezueColors.outPrimaryColor,
-          fontSize: 20,
-          fontFamily: 'Arezue',
-          fontWeight: FontWeight.w400,
-        ), textAlign: TextAlign.center),
+        Center(
+          child: Text(
+            "0",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: ArezueColors.outPrimaryColor,
+              fontSize: 20,
+              fontFamily: 'Arezue',
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
         Text("employers viewed your resume ", textAlign: TextAlign.center),
       ],
     ),
   );
 
   final activityBox = Container(
+    // latest changes to the account
     margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
     //height: 200,
     padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
@@ -317,8 +353,8 @@ class _HomePageState extends State<HomePage> {
           blurRadius: 10.0,
           spreadRadius: 5.0,
           offset: Offset(
-            0.0, // horizontal, move right 10
-            0.0, // vertical, move down 10
+            0.0,
+            0.0,
           ),
         ),
       ],
@@ -371,8 +407,8 @@ class _HomePageState extends State<HomePage> {
                     if (snapshot.hasData) {
                       var fullName = snapshot.data.name.split(" ");
                       var name = "";
-                      for (int i = 0; i < fullName.length;i++){
-                        if(fullName[i].length>0) {
+                      for (int i = 0; i < fullName.length; i++) {
+                        if (fullName[i].length > 0) {
                           name += " ";
                           name += fullName[i];
                         }
@@ -416,8 +452,8 @@ class _HomePageState extends State<HomePage> {
                       blurRadius: 10.0,
                       spreadRadius: 5.0,
                       offset: Offset(
-                        0.0, // horizontal, move right 10
-                        0.0, // vertical, move down 10
+                        0.0,
+                        0.0,
                       ),
                     ),
                   ],
@@ -447,12 +483,13 @@ class _HomePageState extends State<HomePage> {
                 Icons.create,
                 color: Colors.white,
               ),
-              onPressed: (){
-                Navigator.push(context,
+              onPressed: () {
+                Navigator.push(
+                  context,
                   MaterialPageRoute(
-                    builder: (context) => Profile(
-                      auth: widget.auth,
-                    )),
+                      builder: (context) => Profile(
+                            auth: widget.auth,
+                          )),
                 );
               },
             ),
@@ -466,7 +503,7 @@ class _HomePageState extends State<HomePage> {
                 Icons.center_focus_strong,
                 color: Colors.white,
               ),
-              onPressed: (){},
+              onPressed: () {},
             ),
           ),
           new Positioned(
@@ -480,8 +517,8 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ResumePage(
-                        auth: widget.auth,
-                      )),
+                            auth: widget.auth,
+                          )),
                 );
               },
             ),
@@ -515,14 +552,12 @@ class _HomePageState extends State<HomePage> {
         ];
         break;
       case FormType3.employer:
-        // TODO: Handle this case.
         break;
     }
     return null;
   }
 
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Container(
         child: Stack(
@@ -539,6 +574,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       activelyLooking = true;
     }
-    request.putRequest("jobseeker",uid,"active_States",activelyLooking.toString());
+    request.putRequest(
+        "jobseeker", uid, "active_States", activelyLooking.toString());
   }
 }

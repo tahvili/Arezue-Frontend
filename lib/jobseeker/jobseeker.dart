@@ -1,3 +1,5 @@
+/// Jason deserialization of a jobseeker user.
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'jobseeker.g.dart';
@@ -11,11 +13,11 @@ class Jobseeker extends Object {
   @JsonKey(name: 'email_address')
   final String email;
   @JsonKey(name: 'phone_number', nullable: true)
-  final String phoneNumber; // = '6479950165';
+  final String phoneNumber;
   @JsonKey(nullable: true)
-  final String location; // = 'Mississauga, Ontario, Canada';
+  final String location;
   @JsonKey(name: 'profile_picture', nullable: true)
-  final String profilePicture; // = 'assets/profile.jpg';
+  final String profilePicture;
   @JsonKey(name: 'active_states')
   bool activeStates;
   @JsonKey(name: 'date_created')
@@ -43,7 +45,8 @@ class Jobseeker extends Object {
       this.pendingInterest,
       this.potentialClient});
 
-  factory Jobseeker.fromJson(Map<String, dynamic> json) => _$JobseekerFromJson(json);
+  factory Jobseeker.fromJson(Map<String, dynamic> json) =>
+      _$JobseekerFromJson(json);
   Map<String, dynamic> toJson() => _$JobseekerToJson(this);
 
   String getProfilePicture() {

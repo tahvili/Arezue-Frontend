@@ -1,3 +1,8 @@
+/// Carousel Page / Slideshow Page
+///
+/// the purpose of this page is to let people know more about Arezue and
+/// give them the option to register or login.
+
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/login_page.dart';
 import 'package:arezue/utils/texts.dart';
@@ -6,6 +11,7 @@ import 'package:arezue/utils/colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 final List<String> slides = [
+  // slide images
   ArezueTexts.slide00,
   ArezueTexts.slide01,
   ArezueTexts.slide02,
@@ -14,6 +20,7 @@ final List<String> slides = [
 ];
 
 final List<String> slideTexts = [
+  // slide texts
   ArezueTexts.slide00Text,
   ArezueTexts.slide01Text,
   ArezueTexts.slide02Text,
@@ -68,16 +75,12 @@ class CarouselWithIndicator extends StatefulWidget {
   _CarouselWithIndicatorState createState() => _CarouselWithIndicatorState();
 }
 
-//enum AuthStatus {
-//  notSignedIn,
-//  signedIn,
-//}
-
 class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
   int _current = 0;
 
   @override
   Widget build(BuildContext context) {
+    // Page build function
     return Stack(children: <Widget>[
       CarouselSlider(
         items: child,
@@ -128,6 +131,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               RaisedButton(
+                // Signup Button
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                   side: BorderSide(color: ArezueColors.outSecondaryColor),
@@ -158,6 +162,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
               ),
               RaisedButton(
+                // Signin Button
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                   side: BorderSide(color: ArezueColors.outSecondaryColor),
@@ -200,8 +205,7 @@ class Intro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //Manually operated Carousel
-
+    // Page Build Function
     return MaterialApp(
       home: Scaffold(
         backgroundColor: ArezueColors.outPrimaryColor,

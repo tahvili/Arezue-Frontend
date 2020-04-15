@@ -1,3 +1,5 @@
+/// Main texts used in the App
+
 class ArezueTexts {
   static String companyNameRegularCase = 'Arezue';
   static String companyNameLowerCase = 'arezue';

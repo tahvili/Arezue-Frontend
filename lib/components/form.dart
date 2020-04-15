@@ -1,3 +1,5 @@
+/// Custom form used for skills in profile section
+
 import 'dart:ui';
 import 'package:arezue/components/radioButton.dart';
 import 'package:arezue/components/searchTextField.dart';

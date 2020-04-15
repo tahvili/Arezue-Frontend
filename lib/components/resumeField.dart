@@ -1,3 +1,7 @@
+/// inputChip used in Resume creation/edit
+///
+/// Used for picking skills from a list of skills &...
+
 import 'package:arezue/jobseeker/information.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,10 +15,8 @@ class ResumeField extends StatefulWidget {
       this.list,
       this.original,
       this.handler});
-  final String
-      title; // this goes before the textfield, i.e. what textfield is this.
-  final String
-      endpoint; // api endpoint, send the whole URL for now but we'll need to generalize this
+  final String title;
+  final String endpoint;
   final List<dynamic> list;
   final List<dynamic> original;
   final Function handler;
@@ -39,11 +41,9 @@ class _ResumeField extends State<ResumeField> {
   final List<dynamic> list;
   final List<dynamic> original;
   Function handler;
-  //Constructor of the child widget
   List<bool> itemsBoolSelect = [];
   var controller = TextEditingController();
 
-  //keyboard map
   final Map<String, TextInputType> keyboards = {
     "numeric": TextInputType.numberWithOptions(decimal: true),
     "text": TextInputType.text
@@ -68,6 +68,7 @@ class _ResumeField extends State<ResumeField> {
   }
 
   Widget saveButton() {
+    // save button to be able to exit
     return Padding(
       padding: EdgeInsets.fromLTRB(50, 20, 50, 25),
       child: RaisedButton(
@@ -85,8 +86,8 @@ class _ResumeField extends State<ResumeField> {
     );
   }
 
-  // The actual object iself.
   Widget build(BuildContext context) {
+    // the build function for the page
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ArezueColors.secondaryColor,
@@ -114,6 +115,7 @@ class _ResumeField extends State<ResumeField> {
   }
 
   Widget selectChip(String text, int i) {
+    // selector of chips
     return RawChip(
       padding: EdgeInsets.all(2.0),
       label: Text(text),
@@ -126,7 +128,7 @@ class _ResumeField extends State<ResumeField> {
           itemsBoolSelect[i] = isSelected;
         });
       },
-      showCheckmark: true, //this is what happens when the x is pressed
+      showCheckmark: true,
     );
   }
 
@@ -180,6 +182,7 @@ class _ResumeField extends State<ResumeField> {
   }
 
   List<Widget> listWidgets(List<dynamic> minilist) {
+    // listing all options based on endpoint
     List<Widget> widgetlist = new List<Widget>();
     if (endpoint == "/education") {
       for (int i = 0; i < minilist.length; i++) {

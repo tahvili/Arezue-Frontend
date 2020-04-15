@@ -1,3 +1,5 @@
+/// HTTP server requests
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:arezue/employer/employer.dart';
@@ -7,12 +9,6 @@ import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:http/http.dart' as http;
 
 class Requests {
-  /*
-   Standard HTTP requests
-   */
-
-  //get request for jobseeker
-
   Future<Jobseeker> jobseekerGetRequest(Future<String> uid) async {
     var response = await http
         .get('https://api.daffychuy.com/api/v1/jobseeker/${await uid}');
@@ -40,7 +36,9 @@ class Requests {
   Future<int> jobPostRequest(
       String uid, String companyName, List<String> lst) async {
     var url = 'https://api.daffychuy.com/api/v1/employer/$uid/jobs';
-    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
+    Map<String, String> headers = {
+      "Content-type": "application/x-www-form-urlencoded"
+    };
     var response = await http.post(url, headers: headers, body: {
       'company_name': companyName.toString(),
       'title': lst[0].toString(),
@@ -58,11 +56,11 @@ class Requests {
 
   Future<List<dynamic>> searchPostRequest(List<String> lst) async {
     var url = 'https://api.daffychuy.com/api/v1/search';
-    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
-    var response = await http.post(url, headers: headers, body: {
-      "skills": lst.join(',').toLowerCase()
-    });
-    int statusCode = response.statusCode;
+    Map<String, String> headers = {
+      "Content-type": "application/x-www-form-urlencoded"
+    };
+    var response = await http.post(url,
+        headers: headers, body: {"skills": lst.join(',').toLowerCase()});
     var _list = json.decode(response.body);
     return _list["payload"];
   }
@@ -205,31 +203,37 @@ class Requests {
     http.Response response;
     if (fieldId == "education") {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/education';
-      response = await http.put(url, headers: headers, body: json.encode({
-        'ed_id': id,
-        'school_name': firstVal,
-        'start_date': startDate,
-        'grad_date': endDate,
-        'program': secondVal
-      }));
+      response = await http.put(url,
+          headers: headers,
+          body: json.encode({
+            'ed_id': id,
+            'school_name': firstVal,
+            'start_date': startDate,
+            'grad_date': endDate,
+            'program': secondVal
+          }));
     } else if (fieldId == "experience") {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/exp';
-      response = await http.put(url, headers: headers, body: {
-        'exp_id': id,
-        'title': firstVal,
-        'start_date': startDate,
-        'end_date': endDate,
-        'description': secondVal
-      });
+      response = await http.put(url,
+          headers: headers,
+          body: json.encode({
+            'exp_id': id,
+            'title': firstVal,
+            'start_date': startDate,
+            'end_date': endDate,
+            'description': secondVal
+          }));
     } else {
       url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/certification';
-      response = await http.put(url, headers: headers, body: {
-        'c_id': id,
-        'cert_name': firstVal,
-        'start_date': startDate,
-        'end_date': endDate,
-        'issuer': secondVal
-      });
+      response = await http.put(url,
+          headers: headers,
+          body: json.encode({
+            'c_id': id,
+            'cert_name': firstVal,
+            'start_date': startDate,
+            'end_date': endDate,
+            'issuer': secondVal
+          }));
     }
     // the makes the PUT request
 
@@ -278,7 +282,7 @@ class Requests {
       Map<String, dynamic> returnList = new Map<String, dynamic>();
       for (int i = 0; i < (_list["data"]).length; i++) {
         returnList[(_list["data"][i]["resume_id"].toString())] =
-        (_list["data"][i]["resume"]);
+            (_list["data"][i]["resume"]);
       }
       // If the server did return a 200 OK response, then parse the JSON.
       return returnList;
@@ -304,8 +308,11 @@ class Requests {
 
   Future<int> resumePostRequest(String uid, Map<String, String> list) async {
     var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes';
-    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
-    var response = await http.post(url, headers:headers, body: {'resume': json.encode(list)});
+    Map<String, String> headers = {
+      "Content-type": "application/x-www-form-urlencoded"
+    };
+    var response = await http
+        .post(url, headers: headers, body: {'resume': json.encode(list)});
     int statusCode = response.statusCode;
     return statusCode;
   }
@@ -314,7 +321,9 @@ class Requests {
       String uid, String resumeId, Map<String, String> list) async {
     String url =
         'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes/$resumeId';
-    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
+    Map<String, String> headers = {
+      "Content-type": "application/x-www-form-urlencoded"
+    };
     http.Response response = await http
         .put(url, headers: headers, body: {'resume': json.encode(list)});
     int statusCode = response.statusCode;
@@ -334,8 +343,6 @@ class Requests {
     var url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$command';
     var response =
         await http.post(url, body: {command: value, preference: rank});
-
-//    Post p_response = Post.fromjson(json.decode(response.body));
     int statusCode = response.statusCode;
     return statusCode;
   }
@@ -348,12 +355,13 @@ class Requests {
 
   Future<int> putRequest(
       String userType, String uid, String command, String change) async {
-    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
+    Map<String, String> headers = {
+      "Content-type": "application/x-www-form-urlencoded"
+    };
     http.Response response;
     if (userType == "jobseeker") {
       String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid';
-      response =
-          await http.put(url, headers: headers, body: {command: change});
+      response = await http.put(url, headers: headers, body: {command: change});
     }
     return response.statusCode;
   }
@@ -394,33 +402,4 @@ class Requests {
 
     return response.statusCode;
   }
-
-//
-//  void patchRequest(String letter) async {
-//    // URL for testing;
-//    String url = 'http://www.mocky.io/v2/5e39ee2f320000cef5ddfdbf';
-//
-//    // this makes the patch request
-//    http.Response response =
-//        await http.patch(url, body: json.encode({'message': letter}));
-//
-//    // the updated post
-//    Post p_resonse = Post.fromjson(json.decode(response.body));
-//
-//    // status code for the result of the function
-//    int statusCode = response.statusCode;
-//  }
-//
-//
-//// Mock post information from the site
-//class Post {
-//  final String message = "";
-//  //final int name;
-//  //final int email;
-//
-//  Post({message});
-//
-//  factory Post.fromjson(Map<String, dynamic> json) {
-//    return Post(message: json['message']);
-//  }
 }

@@ -1,3 +1,8 @@
+/// Login/Registration Form Page
+///
+/// the purpose of this page is to build the login, and register forms.
+/// giving users the ability to create and login to their accounts and connect to firebase.
+
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:arezue/utils/texts.dart';
@@ -28,7 +33,7 @@ enum AuthStatus {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Requests request = new Requests(); //instance of http class
+  Requests request = new Requests();
   _LoginPageState({this.formType});
   AuthStatus authStatus = AuthStatus.notSignedIn;
   FormType formType;
@@ -38,7 +43,6 @@ class _LoginPageState extends State<LoginPage> {
   String _email, _name, _password, _errorMessage, _company;
   bool loading;
   String userId;
-  //String _authHint = '';
 
   bool validateAndSave() {
     final form = _formKey.currentState;
@@ -64,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void validateAndSubmit() async {
+    // Validate and login or register user
     setState(() {
       loading = true;
       _errorMessage = "";
@@ -75,11 +80,11 @@ class _LoginPageState extends State<LoginPage> {
               await widget.auth.signInWithEmailAndPassword(_email, _password);
 
           if (value != null) {
-            //setState(() => loading = true);
+            // if user exists
             setState(() {
-              //_authHint = 'Signed In';
               Navigator.pop(context);
               if (value is Employer) {
+                // if user is employer
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -93,6 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                 );
               }
               if (value is Jobseeker) {
+                // if user is jobseeker
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -109,19 +115,22 @@ class _LoginPageState extends State<LoginPage> {
             widget.onSignIn();
           }
         } else if (formType == FormType.jobseekerRegister) {
+          // If registering jobseeker
           if (await widget.auth.createUserWithEmailAndPassword(
                   _name, _email, _password, null, "jobseeker") !=
               null) {
             _showVerifyEmailSentDialog();
           }
         } else if (formType == FormType.employerRegister) {
+          // if registering employer
           if (await widget.auth.createUserWithEmailAndPassword(
                   _name, _email, _password, _company, "employer") !=
               null) {
             _showVerifyEmailSentDialog();
           }
         }
-        if(!await widget.auth.checkEmailVerification()){
+        if (!await widget.auth.checkEmailVerification()) {
+          // if validating email didn't go right
           _errorMessage = "Something didn't go as plan!";
         }
         setState(() {
@@ -144,10 +153,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void forgotSubmit() async {
+    // Forgot Password Submit Button
     if (validateAndSave()) {
       try {
         if (await widget.auth.sendPasswordResetEmail(_email) != null) {
-          //setState(() => loading = true);
           _showPasswordResetSentDialog();
         } else {
           setState(() {
@@ -170,42 +179,43 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void moveToJobseekerRegister() {
+    // Move to jobseeker registration page
     _formKey.currentState.reset();
     setState(() {
       _errorMessage = "";
       formType = FormType.jobseekerRegister;
-      //_authHint = '';
     });
   }
 
   void moveToEmployerRegister() {
+    // Move to employer registration page
     _formKey.currentState.reset();
     setState(() {
       _errorMessage = "";
       formType = FormType.employerRegister;
-      //_authHint = '';
     });
   }
 
   void moveToLogin() {
+    // Move to login page
     _formKey.currentState.reset();
     setState(() {
       _errorMessage = "";
       formType = FormType.login;
-      //_authHint = '';
     });
   }
 
   void moveToForgotPassword() {
+    // Move to forget page
     _formKey.currentState.reset();
     setState(() {
       _errorMessage = "";
       formType = FormType.forgot;
-      //_authHint = '';
     });
   }
 
   Widget welcomeText() {
+    // Jobseeker Welcome Text
     return Text(ArezueTexts.employeeRegistrationHeader,
         textAlign: TextAlign.center,
         style: new TextStyle(
@@ -216,6 +226,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget sloganText() {
+    // Jobseeker Slogan Text
     return Padding(
         padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 100),
         child: Text(ArezueTexts.employeeSlogan,
@@ -228,6 +239,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget employerButton() {
+    // Employer Register Button
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
@@ -247,6 +259,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget createButton() {
+    // Create Account
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
@@ -263,6 +276,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget name() {
+    // Name Input
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 12),
       child: TextFormField(
@@ -302,6 +316,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget company() {
+    // Company Input
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 12),
       child: TextFormField(
@@ -346,6 +361,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget email() {
+    // Email Input
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 5),
       child: TextFormField(
@@ -385,6 +401,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget password() {
+    // Password Input
     return Padding(
       padding: const EdgeInsets.only(
         left: 20,
@@ -428,6 +445,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget signInLabel() {
+    // Signin Button
     return FlatButton(
       child: Text(
         ArezueTexts.existingAccount,
@@ -440,6 +458,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget employerWelcomeText() {
+    // Employer Page Welcome Text
     return Text(ArezueTexts.employerRegistrationHeader,
         textAlign: TextAlign.center,
         style: new TextStyle(
@@ -450,6 +469,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget employerSloganText() {
+    // Employer Page Slogan
     return Padding(
         padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 100),
         child: Text(ArezueTexts.employeeSlogan,
@@ -462,6 +482,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget jobSeekerButton() {
+    // Jobseeker Registration Button
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
@@ -481,6 +502,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget backLabel() {
+    // Go Back Button
     return FlatButton(
       child: Text(
         ArezueTexts.back,
@@ -493,6 +515,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget loginForgotPasswordText() {
+    // Forgot Password Page Welcome Text
     return Text(ArezueTexts.forgotPasswordHeader,
         textAlign: TextAlign.center,
         style: new TextStyle(
@@ -503,6 +526,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget loginForgotText() {
+    // Forgot Password Page Slogan
     return Padding(
         padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 100),
         child: Text(ArezueTexts.forgotPasswordSlogan,
@@ -515,6 +539,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget loginWelcomeText() {
+    // Login Page Welcome Text
     return Text(ArezueTexts.signInHeader,
         textAlign: TextAlign.center,
         style: new TextStyle(
@@ -525,6 +550,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget loginSloganText() {
+    // Login Page Slogan
     return Padding(
         padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 100),
         child: Text(ArezueTexts.signInSlogan,
@@ -537,6 +563,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget forgotButton() {
+    // Forgot Password Button
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 110.0),
       child: RaisedButton(
@@ -556,6 +583,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget loginButton() {
+    // Login Button
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 110.0),
       child: RaisedButton(
@@ -575,6 +603,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget forgotLabel() {
+    // Forgot Password Button
     return FlatButton(
       child: Text(
         ArezueTexts.forgotPassword,
@@ -587,6 +616,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget signUpLabel() {
+    // Signup Button
     return FlatButton(
       child: Text(
         ArezueTexts.registerPrompt,
@@ -600,7 +630,7 @@ class _LoginPageState extends State<LoginPage> {
 
   List<Widget> submitWidgets() {
     switch (formType) {
-      case FormType.login:
+      case FormType.login: // If user trying to login
         return [
           loginWelcomeText(),
           loginSloganText(),
@@ -621,7 +651,7 @@ class _LoginPageState extends State<LoginPage> {
           _showErrorMessage(),
           signUpLabel(),
         ];
-      case FormType.forgot:
+      case FormType.forgot: // If pressed forgot password
         return [
           loginForgotPasswordText(),
           loginForgotText(),
@@ -637,7 +667,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ];
-      case FormType.employerRegister:
+      case FormType.employerRegister: // If want to register as an employer
         return [
           employerWelcomeText(),
           employerSloganText(),
@@ -672,7 +702,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ];
-      case FormType.jobseekerRegister:
+      case FormType.jobseekerRegister: // If want to register as a jobseeker
         return [
           welcomeText(),
           sloganText(),
@@ -713,6 +743,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Page Builder
     return loading
         ? Loading()
         : new Form(
@@ -745,13 +776,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showVerifyEmailSentDialog() {
+    // Verification Email Success Prompt
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: new Text("Check your Email!"),
-            content:
-                new Text("We have sent you the verification link to be able to active your account."),
+            content: new Text(
+                "We have sent you the verification link to be able to active your account."),
             actions: <Widget>[
               new FlatButton(
                   onPressed: () {
@@ -765,13 +797,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showPasswordResetSentDialog() {
+    // Password Reset Success Prompt
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: new Text("Check your Email!"),
-            content:
-                new Text("A Password Reset link has been sent to you."),
+            content: new Text("A Password Reset link has been sent to you."),
             actions: <Widget>[
               new FlatButton(
                   onPressed: () {
@@ -785,6 +817,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _showErrorMessage() {
+    // Error Message Trigger
     return new Text(
       _errorMessage,
       style: TextStyle(fontSize: 14.0, color: Colors.red),

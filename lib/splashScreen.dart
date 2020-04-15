@@ -1,3 +1,8 @@
+/// Splash Screen
+///
+/// The purpose of this page is to check if there is any form of internet connection.
+/// Then it will check to see if user is already logged in or not, and act accordingly.
+
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/introduction.dart';
 import 'package:arezue/jobseeker/homePage.dart';
@@ -22,88 +27,79 @@ enum AuthStatus {
   signedIn,
 }
 
-enum ConnectivityStatus {
-  Wifi,
-  Cell,
-  Offline
-}
+enum ConnectivityStatus { Wifi, Cell, Offline }
 
 class _SplashScreenState extends State<Splash> {
-
   AuthStatus authStatus = AuthStatus.notSignedIn;
   StreamSubscription<DataConnectionStatus> listener;
   Timer timer;
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
-    widget.auth.currentUser().then((userId) async{
+    widget.auth.currentUser().then((userId) async {
       bool flag = (await widget.auth.checkEmailVerification()) == true;
-      setState((){
-        authStatus = (userId != null) && flag ? AuthStatus.signedIn : AuthStatus.notSignedIn;
-        print(authStatus);
+      setState(() {
+        authStatus = (userId != null) && flag
+            ? AuthStatus.signedIn
+            : AuthStatus
+                .notSignedIn; // Checks to see if a user is logged in or not
       });
     });
-    timer = new Timer(Duration(seconds: 5), () => _checkNetwork());
-
+    timer = new Timer(
+        Duration(seconds: 5),
+        () =>
+            _checkNetwork()); // Waits for 5 seconds and checks the network connection
   }
 
   @override
   void dispose() {
     super.dispose();
-    listener.cancel(); //i added this, dont know its exact purpose
+    listener.cancel();
     timer.cancel();
   }
 
-  void check(){
+  void check() {
+    // Based on the user status the program will send them to the corresponding pages
     switch (authStatus) {
-        case AuthStatus.notSignedIn:
-          Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Intro(
-              auth: widget.auth,
-              onSignIn: () => _updateAuthStatus(AuthStatus.signedIn),
-            ), fullscreenDialog: true),
-          );
-          break;
+      case AuthStatus
+          .notSignedIn: // If user is not logged in, they will get sent to [Intro]
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Intro(
+                    auth: widget.auth,
+                    onSignIn: () => _updateAuthStatus(AuthStatus.signedIn),
+                  ),
+              fullscreenDialog: true),
+        );
+        break;
 
-        case AuthStatus.signedIn:
-          Navigator.push(context,
-            MaterialPageRoute(builder: (context) => HomePage(
-              auth: widget.auth,
-              onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn),
-            ), fullscreenDialog: true),
-          );
-          break;
-
-      }
+      case AuthStatus
+          .signedIn: // If user is logged in and it is the jobseeker, they will get sent to [HomePage]
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomePage(
+                    auth: widget.auth,
+                    onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn),
+                  ),
+              fullscreenDialog: true),
+        );
+        break;
+    }
   }
 
   _checkInternet() async {
-
-    print("The statement 'this machine is connected to the Internet' is: ");
-    print(await DataConnectionChecker().hasConnection);
-    // returns a bool
-
-    // We can also get an enum value instead of a bool
-    print("Current status: ${await DataConnectionChecker().connectionStatus}");
-    // prints either DataConnectionStatus.connected
-    // or DataConnectionStatus.disconnected
-
-    // This returns the last results from the last call
-    // to either hasConnection or connectionStatus
-    print("Last results: ${DataConnectionChecker().lastTryResults}");
-
-
     listener = DataConnectionChecker().onStatusChange.listen((status) {
-      switch (status) {// actively listen for status updates
-      // this will cause DataConnectionChecker to check periodically
-      // with the interval specified in DataConnectionChecker().checkInterval
-      // until listener.cancel() is called
+      switch (status) {
+        // actively listen for status updates
+        // this will cause DataConnectionChecker to check periodically
+        // with the interval specified in DataConnectionChecker().checkInterval
+        // until listener.cancel() is called
         case DataConnectionStatus.connected:
-          print('Data connection is available.');
           break;
         case DataConnectionStatus.disconnected:
-          print('You are disconnected from the internet.');
           break;
       }
     });
@@ -118,25 +114,19 @@ class _SplashScreenState extends State<Splash> {
     DataConnectionStatus intStatus = await _checkInternet();
 
     if (connectionStatus == ConnectivityStatus.Offline) {
-      _showDialog('No Internet',
-          "No connection to internat established");
+      _showDialog('No Internet', "No connection to internat established");
     } else if (connectionStatus == ConnectivityStatus.Wifi) {
-
-      if (intStatus == DataConnectionStatus.connected){
+      if (intStatus == DataConnectionStatus.connected) {
         check();
-      }else {
-        _showDialog("No Internet",
-            "Cannot reach database");
+      } else {
+        _showDialog("No Internet", "Cannot reach database");
       }
     } else if (connectionStatus == ConnectivityStatus.Cell) {
-      if(intStatus == DataConnectionStatus.connected) {
+      if (intStatus == DataConnectionStatus.connected) {
         check();
+      } else {
+        _showDialog("No Internet", "Cannot reach database");
       }
-      else {
-        _showDialog("No Internet",
-            "Cannot reach database");
-      }
-
     }
   }
 
@@ -158,12 +148,10 @@ class _SplashScreenState extends State<Splash> {
               )
             ],
           );
-        }
-    );
+        });
   }
 
   ConnectivityStatus _getStatus(ConnectivityResult result) {
-
     switch (result) {
       case ConnectivityResult.mobile:
         return ConnectivityStatus.Cell;
@@ -185,36 +173,32 @@ class _SplashScreenState extends State<Splash> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return view();
   }
 
-
-    Widget view() {
-      return new Scaffold(
-        backgroundColor: ArezueColors.outPrimaryColor,
-        body: Center(
-            child: Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    ArezueImages.logo,
-                    Text(ArezueTexts.companyNameLowerCase,
-                        style: new TextStyle(
-                          color: ArezueColors.outSecondaryColor,
-                          fontSize: 50,
-                          fontFamily: 'Arezue',
-                          fontWeight: FontWeight.w300,
-                        )),
-
-                  ],
-                ))),
-      );
-
-    }
-
+  Widget view() {
+    // The view of the splash screen
+    return new Scaffold(
+      backgroundColor: ArezueColors.outPrimaryColor,
+      body: Center(
+          child: Container(
+              child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          ArezueImages.logo,
+          Text(ArezueTexts.companyNameLowerCase,
+              style: new TextStyle(
+                color: ArezueColors.outSecondaryColor,
+                fontSize: 50,
+                fontFamily: 'Arezue',
+                fontWeight: FontWeight.w300,
+              )),
+        ],
+      ))),
+    );
+  }
 }

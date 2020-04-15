@@ -1,3 +1,8 @@
+/// User Settings Page
+///
+/// The purpose of this page is to let the user view/modify their personal settings.
+/// They may also logout only from this page.
+
 import 'package:arezue/employer/employer.dart';
 import 'package:arezue/loading.dart';
 import 'package:arezue/login_page.dart';
@@ -40,15 +45,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   void initState() {
-    //calling the appropriate http get request
     super.initState();
     loading = false;
   }
 
-//  Future<Object> fetchData() async {
-//    return await request.profileGetRequest(widget.auth.currentUser());
-//  }
   Future<Object> fetchData() async {
+    // Get's user data
     if (this.formType == FormType2.jobseeker) {
       return await request.jobseekerGetRequest(widget.auth.currentUser());
     } else {
@@ -57,6 +59,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _signOut() async {
+    // Signout function
     try {
       setState(() {
         loading = true;
@@ -80,6 +83,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget nameField(String text) {
+    // User's full name
     return Container(
       width: 40,
       height: 40,
@@ -109,6 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget phoneNumberField(String number) {
+    // User's phone number
     var phone;
     if (number == null) {
       phone = '--';
@@ -145,6 +150,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   final Widget appLanguageField = Container(
+    // Language Option
     width: 40,
     height: 40,
     //color: Colors.redAccent,
@@ -172,6 +178,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   final Widget changePasswordButton = Padding(
+    // Change Password Button
     padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
     child: RaisedButton(
       shape: RoundedRectangleBorder(
@@ -185,6 +192,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   final Widget billingButton = Padding(
+    // Billing Button
     padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
     child: RaisedButton(
       shape: RoundedRectangleBorder(
@@ -198,6 +206,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   final Widget premiumButton = Padding(
+    // Upgrade to Premium Button (to be used by employer)
     padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
     child: RaisedButton(
       shape: RoundedRectangleBorder(
@@ -211,6 +220,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   final Widget downloadResume = Padding(
+    // Download Resume Button (to be used by jobseeker)
     padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
     child: RaisedButton(
       shape: RoundedRectangleBorder(
@@ -224,6 +234,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   final Widget connectedAccounts = Padding(
+    // Connected Accounts (to be used by company only)
     padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
     child: RaisedButton(
       shape: RoundedRectangleBorder(
@@ -237,6 +248,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   final Widget agreementButton = Padding(
+    // Legal and Agreements
     padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
     child: RaisedButton(
       shape: RoundedRectangleBorder(
@@ -250,6 +262,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   final Widget helpCenterButton = Padding(
+    // Help Centre
     padding: EdgeInsets.fromLTRB(50.0, 10.0, 0.0, 10.0),
     child: RaisedButton(
       shape: RoundedRectangleBorder(
@@ -263,6 +276,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   final Widget privacyButton = Padding(
+    // Privacy Information
     padding: EdgeInsets.fromLTRB(35.0, 10.0, 0.0, 10.0),
     child: RaisedButton(
       shape: RoundedRectangleBorder(
@@ -276,6 +290,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   final Widget versionButton = Padding(
+    // App Version
     padding: EdgeInsets.fromLTRB(50.0, 10.0, 0, 10.0),
     child: RaisedButton(
       shape: RoundedRectangleBorder(
@@ -289,6 +304,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   Widget signOutButton() {
+    // Signout Button
     return Padding(
       padding: EdgeInsets.fromLTRB(23.0, 0.0, 0.0, 0.0),
       child: RaisedButton(
@@ -317,6 +333,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   List<Widget> submitWidgetsEmployer(String name) {
+    // Employer Template
     return [
       nameField(name),
       appLanguageField,
@@ -337,6 +354,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   List<Widget> submitWidgetsJobseeker(String name, String phoneNumber) {
+    // Jobseeker Template
     return [
       nameField(name),
       phoneNumberField(phoneNumber),
@@ -360,9 +378,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Object>(
-      future: fetchData(), // function where you call your api
+      future: fetchData(),
       builder: (BuildContext context, AsyncSnapshot<Object> snapshot) {
-        // AsyncSnapshot<Your object type>
         switch (snapshot.connectionState) {
           case ConnectionState.none:
             return new Text('Press button to start');

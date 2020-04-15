@@ -1,3 +1,7 @@
+/// Employer's Home Page
+///
+/// Here is the user dashboard, where they may navigate to any section that they want
+
 import 'package:arezue/Settings.dart';
 import 'package:arezue/employer/employer.dart';
 import 'package:arezue/employer/searchIntroduction.dart';
@@ -16,7 +20,8 @@ class EmployerHomePage extends StatefulWidget {
   final VoidCallback onSignOut;
 
   @override
-  _EmployerPageState createState() => new _EmployerPageState(formType: this.formType, auth: this.auth);
+  _EmployerPageState createState() =>
+      new _EmployerPageState(formType: this.formType, auth: this.auth);
 }
 
 enum FormType4 { employer, jobseeker }
@@ -45,6 +50,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
   }
 
   Widget _getProfile() {
+    // Profile picture
     return FutureBuilder<Employer>(
       future: futureEmployer,
       builder: (context, snapshot) {
@@ -55,9 +61,10 @@ class _EmployerPageState extends State<EmployerHomePage> {
               backgroundColor: ArezueColors.primaryColor,
               foregroundColor: ArezueColors.secondaryColor,
               radius: 50,
-              child: Text(companyName[0][0] + companyName[companyName.length - 1][0],
+              child: Text(
+                  companyName[0][0] + companyName[companyName.length - 1][0],
                   style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
             );
           } else {
             return CircleAvatar(
@@ -84,6 +91,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
   }
 
   Widget companyProfile() {
+    // Profile area + border
     return FutureBuilder<Employer>(
       future: futureEmployer,
       builder: (context, snapshot) {
@@ -119,8 +127,8 @@ class _EmployerPageState extends State<EmployerHomePage> {
                   blurRadius: 10.0,
                   spreadRadius: 5.0,
                   offset: Offset(
-                    0.0, // horizontal, move right 10
-                    0.0, // vertical, move down 10
+                    0.0,
+                    0.0,
                   ),
                 ),
               ],
@@ -134,8 +142,10 @@ class _EmployerPageState extends State<EmployerHomePage> {
       },
     );
   }
+
   final middleSectionEmployer = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+      // mid section of the tri-section
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 25.0),
       decoration: BoxDecoration(
         color: ArezueColors.primaryColor,
         boxShadow: [
@@ -144,62 +154,75 @@ class _EmployerPageState extends State<EmployerHomePage> {
             blurRadius: 10.0,
             spreadRadius: 5.0,
             offset: Offset(
-              0.0, // horizontal, move right 10
-              0.0, // vertical, move down 10
+              0.0,
+              0.0,
             ),
           ),
         ],
       ),
-      child: Column(
+      child: Wrap(
         children: <Widget>[
-          Text("0",style: TextStyle(
-            color: ArezueColors.outPrimaryColor,
-            fontSize: 20,
-            fontFamily: 'Arezue',
-            fontWeight: FontWeight.w400,
-          ), textAlign: TextAlign.center),
+          Center(
+            child: Text("0",
+                style: TextStyle(
+                  color: ArezueColors.outPrimaryColor,
+                  fontSize: 20,
+                  fontFamily: 'Arezue',
+                  fontWeight: FontWeight.w400,
+                ),
+                textAlign: TextAlign.center),
+          ),
           Text("accepted interview requests", textAlign: TextAlign.center),
         ],
       ));
   final leftSectionEmployer = Container(
+      // left section of the tri-section
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
       decoration: BoxDecoration(
         borderRadius: new BorderRadius.only(
             topLeft: const Radius.circular(10),
             bottomLeft: const Radius.circular(10)),
       ),
-      child: Column(
+      child: Wrap(
         children: <Widget>[
-          Text("0",style: TextStyle(
-            color: ArezueColors.outPrimaryColor,
-            fontSize: 20,
-            fontFamily: 'Arezue',
-            fontWeight: FontWeight.w400,
-          ), textAlign: TextAlign.center),
+          Center(
+            child: Text("0",
+                style: TextStyle(
+                  color: ArezueColors.outPrimaryColor,
+                  fontSize: 20,
+                  fontFamily: 'Arezue',
+                  fontWeight: FontWeight.w400,
+                ),
+                textAlign: TextAlign.center),
+          ),
           Text("successful job searches made", textAlign: TextAlign.center),
         ],
       ));
   final rightSectionEmployer = Container(
+    // right section of the tri-section
     padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
     decoration: BoxDecoration(
       borderRadius: new BorderRadius.only(
           topRight: const Radius.circular(10),
           bottomRight: const Radius.circular(10)),
     ),
-    child: Column(
+    child: Wrap(
       children: <Widget>[
-        Text("0",style: TextStyle(
-          color: ArezueColors.outPrimaryColor,
-          fontSize: 20,
-          fontFamily: 'Arezue',
-          fontWeight: FontWeight.w400,
-        ), textAlign: TextAlign.center),
+        Center(
+          child: Text("0",
+              style: TextStyle(
+                color: ArezueColors.outPrimaryColor,
+                fontSize: 20,
+                fontFamily: 'Arezue',
+                fontWeight: FontWeight.w400,
+              ),
+              textAlign: TextAlign.center),
+        ),
         Text("interview requests sent", textAlign: TextAlign.center),
       ],
     ),
   );
   final activityBox = Container(
-
     margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
     //height: 200,
     decoration: BoxDecoration(
@@ -211,8 +234,8 @@ class _EmployerPageState extends State<EmployerHomePage> {
           blurRadius: 10.0,
           spreadRadius: 5.0,
           offset: Offset(
-            0.0, // horizontal, move right 10
-            0.0, // vertical, move down 10
+            0.0,
+            0.0,
           ),
         ),
       ],
@@ -244,6 +267,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
     ),
   );
   final activityBoxEmployer = Container(
+    // activity box of latest changes
     padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
     margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
     //height: 200,
@@ -256,8 +280,8 @@ class _EmployerPageState extends State<EmployerHomePage> {
           blurRadius: 10.0,
           spreadRadius: 5.0,
           offset: Offset(
-            0.0, // horizontal, move right 10
-            0.0, // vertical, move down 10
+            0.0,
+            0.0,
           ),
         ),
       ],
@@ -294,152 +318,155 @@ class _EmployerPageState extends State<EmployerHomePage> {
     onPressed: () {},
   );
 
-  List<Widget> submitWidgets(){
-        return [
-          ListView(
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(
-                    right: 50, left: 50, bottom: 20, top: 230),
-                alignment: Alignment.center,
-                child: FutureBuilder<Employer>(
-                  future: futureEmployer,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      var fullName = snapshot.data.name.split(" ");
-                      var name = "";
-                      for (int i = 0; i < fullName.length;i++){
-                        if(fullName[i].length>0) {
-                          name += " ";
-                          name += fullName[i];
-                        }
-                      }
-                      return Text(
-                        "Hey," + name + "!",
-                        style: TextStyle(
-                          color: ArezueColors.outPrimaryColor,
-                          fontSize: 25,
-                          fontFamily: 'Arezue',
-                          fontWeight: FontWeight.w400,
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text("${snapshot.error}");
-                    } // By default, show a loading spinner.
-                    return CircularProgressIndicator();
-                  },
-                ),
-              ),
-
-              Container(
-                margin: const EdgeInsets.only(
-                    right: 50, left: 50, bottom: 20, top: 0),
-                height: 125,
-                decoration: BoxDecoration(
-                  color: ArezueColors.primaryColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: ArezueColors.shadowColor,
-                      blurRadius: 10.0,
-                      spreadRadius: 5.0,
-                      offset: Offset(
-                        0.0, // horizontal, move right 10
-                        0.0, // vertical, move down 10
-                      ),
+  List<Widget> submitWidgets() {
+    return [
+      ListView(
+        children: <Widget>[
+          Container(
+            margin: const EdgeInsets.only(
+                right: 50, left: 50, bottom: 20, top: 230),
+            alignment: Alignment.center,
+            child: FutureBuilder<Employer>(
+              future: futureEmployer,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var fullName = snapshot.data.name.split(" ");
+                  var name = "";
+                  for (int i = 0; i < fullName.length; i++) {
+                    if (fullName[i].length > 0) {
+                      name += " ";
+                      name += fullName[i];
+                    }
+                  }
+                  return Text(
+                    "Hey," + name + "!",
+                    style: TextStyle(
+                      color: ArezueColors.outPrimaryColor,
+                      fontSize: 25,
+                      fontFamily: 'Arezue',
+                      fontWeight: FontWeight.w400,
                     ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Expanded(child: leftSectionEmployer),
-                    Expanded(child: middleSectionEmployer),
-                    Expanded(child: rightSectionEmployer),
-                  ],
-                ),
-              ),
-              activityBoxEmployer,
-            ],
-          ),
-          new Container(
-            color: ArezueColors.appBarColor,
-            height: 150,
-          ),
-          new Positioned(
-            top: (155 / 2) + 10,
-            left: 15,
-            child: IconButton(
-              color: Colors.white,
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchIntro(
-                      auth: widget.auth,
-                    )),
-                );
-              },
-            ),
-          ),new Positioned(
-            top: (155 / 2) + 10,
-            left: 65,
-            child: IconButton(
-              color: Colors.white,
-              icon: Icon(
-                Icons.edit,
-                color: Colors.white,
-              ),
-              onPressed: (){
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => JobPage(auth: this.auth,
-                    ))
-                );
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                } // By default, show a loading spinner.
+                return CircularProgressIndicator();
               },
             ),
           ),
-          new Positioned(
-            top: (155 / 2) + 10,
-            left: MediaQuery.of(context).size.width - 115,
-            child: IconButton(
-              color: Colors.white,
-              icon: Icon(Icons.layers, color: Colors.white),
-              onPressed: () {},
-            ),
-          ),
-          new Positioned(
-            top: (155 / 2) + 10,
-            left: MediaQuery.of(context).size.width - 65,
-            child: IconButton(
-              color: Colors.white,
-              icon: Icon(Icons.settings, color: Colors.white),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SettingsPage(
-                            auth: widget.auth,
-                            onSignOut: widget.onSignOut,
-                            formType: FormType2.employer,
-                          ),
+          Container(
+            margin:
+                const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
+            height: 125,
+            decoration: BoxDecoration(
+              color: ArezueColors.primaryColor,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              boxShadow: [
+                BoxShadow(
+                  color: ArezueColors.shadowColor,
+                  blurRadius: 10.0,
+                  spreadRadius: 5.0,
+                  offset: Offset(
+                    0.0,
+                    0.0,
                   ),
-                );
-              },
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Expanded(child: leftSectionEmployer),
+                Expanded(child: middleSectionEmployer),
+                Expanded(child: rightSectionEmployer),
+              ],
             ),
           ),
-          new Positioned(
-            top: (155 / 2),
-            left: (MediaQuery.of(context).size.width / 2) - (155 / 2),
-            height: 155,
-            width: 155,
-            child: Center(child: companyProfile()),
+          activityBoxEmployer,
+        ],
+      ),
+      new Container(
+        color: ArezueColors.appBarColor,
+        height: 150,
+      ),
+      new Positioned(
+        top: (155 / 2) + 10,
+        left: 15,
+        child: IconButton(
+          color: Colors.white,
+          icon: Icon(
+            Icons.search,
+            color: Colors.white,
           ),
-        ];
-    }
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SearchIntro(
+                        auth: widget.auth,
+                      )),
+            );
+          },
+        ),
+      ),
+      new Positioned(
+        top: (155 / 2) + 10,
+        left: 65,
+        child: IconButton(
+          color: Colors.white,
+          icon: Icon(
+            Icons.edit,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => JobPage(
+                          auth: this.auth,
+                        )));
+          },
+        ),
+      ),
+      new Positioned(
+        top: (155 / 2) + 10,
+        left: MediaQuery.of(context).size.width - 115,
+        child: IconButton(
+          color: Colors.white,
+          icon: Icon(Icons.layers, color: Colors.white),
+          onPressed: () {},
+        ),
+      ),
+      new Positioned(
+        top: (155 / 2) + 10,
+        left: MediaQuery.of(context).size.width - 65,
+        child: IconButton(
+          color: Colors.white,
+          icon: Icon(Icons.settings, color: Colors.white),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SettingsPage(
+                  auth: widget.auth,
+                  onSignOut: widget.onSignOut,
+                  formType: FormType2.employer,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+      new Positioned(
+        top: (155 / 2),
+        left: (MediaQuery.of(context).size.width / 2) - (155 / 2),
+        height: 155,
+        width: 155,
+        child: Center(child: companyProfile()),
+      ),
+    ];
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(

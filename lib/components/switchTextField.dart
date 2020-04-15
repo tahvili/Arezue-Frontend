@@ -1,3 +1,5 @@
+/// Custom switch on and off based on when pressing on it
+
 import 'dart:ui';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +89,6 @@ class _MySwitchTextFieldState extends State<MySwitchTextField> {
   }
 
   Widget build(BuildContext context) {
-//    controller.text = this.fieldData;
     return Container(
         padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
         margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
