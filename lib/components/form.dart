@@ -159,26 +159,35 @@ class _FormPageState extends State<FormPage> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          //width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 35,
-              ),
-              MySearchTextField(title: "Skills", skill: this.skill, handler: formHandler, uid: this.uid),
-              SliderWidget(
-                  numExperience: this.numExperience, handler: formHandler),
-              RadioWidget(numExpertise: this.numExpertise, handler: formHandler),
-              RaisedButton(
-                onPressed: () {
-                  submitHandler('ranking');
-                },
-                child: Text("Submit",
-                    style: TextStyle(color: ArezueColors.outPrimaryColor)),
-              ),
-            ],
+      body: GestureDetector(
+        onTap: (){
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: SingleChildScrollView(
+          child: Container(
+            //width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 35,
+                ),
+                MySearchTextField(title: "Skills", skill: this.skill, handler: formHandler, uid: this.uid),
+                SliderWidget(
+                    numExperience: this.numExperience, handler: formHandler),
+                RadioWidget(numExpertise: this.numExpertise, handler: formHandler),
+                RaisedButton(
+                  onPressed: () {
+                    submitHandler('ranking');
+                  },
+                  child: Text("Submit",
+                      style: TextStyle(color: ArezueColors.outPrimaryColor)),
+                ),
+              ],
+            ),
           ),
         ),
       ),
