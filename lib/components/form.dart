@@ -82,7 +82,6 @@ class _FormPageState extends State<FormPage> {
   }
 
   void submitHandler(preference) async {
-
     if (this.skill == null){
       _showPasswordResetSentDialog();
     }else {
@@ -93,6 +92,9 @@ class _FormPageState extends State<FormPage> {
           handler(oldSkill, "delete");
           handler(skill, "add");
           Navigator.pop(context);
+        }else{
+          handler(skill, "error");
+          Navigator.pop(context);
         }
       } else {
         if (await (request.profileSkillPostRequest('jobseeker',
@@ -100,11 +102,13 @@ class _FormPageState extends State<FormPage> {
             200) {
           handler(skill, "add");
           Navigator.pop(context);
+        }else{
+          handler(skill, "error");
+          Navigator.pop(context);
         }
       }
     }
   }
-
 
   void _showPasswordResetSentDialog() {
     showDialog(
@@ -155,26 +159,35 @@ class _FormPageState extends State<FormPage> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          //width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 35,
-              ),
-              MySearchTextField(title: "Skills", skill: this.skill, handler: formHandler),
-              SliderWidget(
-                  numExperience: this.numExperience, handler: formHandler),
-              RadioWidget(numExpertise: this.numExpertise, handler: formHandler),
-              RaisedButton(
-                onPressed: () {
-                  submitHandler('ranking');
-                },
-                child: Text("Submit",
-                    style: TextStyle(color: ArezueColors.outPrimaryColor)),
-              ),
-            ],
+      body: GestureDetector(
+        onTap: (){
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: SingleChildScrollView(
+          child: Container(
+            //width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 35,
+                ),
+                MySearchTextField(title: "Skills", skill: this.skill, handler: formHandler, uid: this.uid),
+                SliderWidget(
+                    numExperience: this.numExperience, handler: formHandler),
+                RadioWidget(numExpertise: this.numExpertise, handler: formHandler),
+                RaisedButton(
+                  onPressed: () {
+                    submitHandler('ranking');
+                  },
+                  child: Text("Submit",
+                      style: TextStyle(color: ArezueColors.outPrimaryColor)),
+                ),
+              ],
+            ),
           ),
         ),
       ),

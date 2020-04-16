@@ -91,9 +91,11 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
       });
     } else if (command == "delete") {
       setState(() {
-        serverRequest.skillDeleteRequest(this.uid, text);
+        //serverRequest.skillDeleteRequest(this.uid, text);
         this.objectList.remove(text);
       });
+    } else if (command == "error"){
+      _showExisitingMessage(text);
     } else {
       setState(() {});
     }
@@ -119,7 +121,6 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
       ),
       onPressed: () async {
         if (await (fetchData()) == 200) {
-          print(arr);
           Map<String, dynamic> value = arr.singleWhere(
               (element) => element['skill'] == text.toString().toLowerCase());
           Navigator.push(
@@ -221,5 +222,23 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
       widglist.add(inputChips(element));
     });
     return widglist;
+  }
+
+  void _showExisitingMessage(String text) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Oops!"),
+            content: new Text("$text already exits!"),
+            actions: <Widget>[
+              new FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Dismiss")),
+            ],
+          );
+        });
   }
 }

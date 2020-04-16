@@ -72,14 +72,19 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
   void submitHandler(String text, String preference, String command) {
     // Handle PUT request to the api here
     if (command == "add") {
-      if (uid != null) {
-        serverRequest.profilePostRequest(
-            'jobseeker', uid, fieldId, text, preference, "1");
+      if (this.fieldData.contains(text)) {
+        _showExistingMessage(text);
       }
-      setState(() {
-        this.fieldData.add(text);
-      });
-    } else if (command == "delete") {
+      else {
+        if (uid != null) {
+          serverRequest.profilePostRequest(
+              'jobseeker', uid, fieldId, text, preference, "1");
+        }
+        setState(() {
+          this.fieldData.add(text);
+        });
+      }
+    }else if (command == "delete") {
       //make a delete request to API here
       if (uid != null) {
         serverRequest.deleteRequest(uid, fieldId, text);
@@ -88,7 +93,6 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
         this.fieldData.remove(text);
       });
     } else {}
-    print("child handler triggered: $text");
 
     handler(text, command);
     // Once that's done, notify the parent so it knows to update its local state.
@@ -155,7 +159,7 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
                       ),
                       color: ArezueColors.secondaryColor,
                       onPressed: () {
-                        _showSearchBar(context, fieldId, submitHandler);
+                        _showSearchBar(context, fieldId, submitHandler, this.uid, "skill");
                       }),
                 ),
               ],
@@ -179,15 +183,37 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
     return widglist;
   }
 
-  void _showSearchBar(BuildContext context, String id, Function handler) async {
+  void _showSearchBar(BuildContext context, String id, Function handler,
+      String uid, String category) async {
     final result = await showSearch(
         context: context,
         delegate: Search(
           fieldId: id,
           handler: handler,
+          uid: uid,
+          category: category,
         ));
     if (result != null) {
       handler(result, 'ranking', 'add');
     }
+  }
+
+
+  void _showExistingMessage(String text) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Oops!"),
+            content: new Text("$text already exits!"),
+            actions: <Widget>[
+              new FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Dismiss")),
+            ],
+          );
+        });
   }
 }
