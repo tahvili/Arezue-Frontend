@@ -127,7 +127,7 @@ class _FormPageState2 extends State<FormPage2> {
           } else if (fieldId == "experience") {
             Experience exp = new Experience();
             // ###There is a bug in the response value of experience's post response body.###
-            // exp.expId = postResponse["body"]["exp_id"].toString();
+            exp.expId = postResponse["body"]["exp_id"].toString();
             exp.description = secondVal;
             exp.title = firstVal;
             exp.startDate = startDate;
