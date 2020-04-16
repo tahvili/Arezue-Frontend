@@ -1,6 +1,7 @@
 /// Custom form used for education section
 
 import 'dart:ui';
+import 'package:arezue/components/datePicker.dart';
 import 'package:arezue/components/textField2.dart';
 import 'package:arezue/jobseeker/information.dart';
 import 'package:arezue/services/http.dart';
@@ -161,12 +162,15 @@ class _FormPageState2 extends State<FormPage2> {
     List<Widget> list = new List<Widget>();
     map.forEach((key, value) {
       controllers[key] = new TextEditingController(text: value);
-      list.add(MyTextField2(
-          title: key,
-          fieldData: value.toString(),
-          controller: controllers[key]));
+      if(key == "Start Date" || key == "End Date"){
+        list.add(DatePickerField(key, value.toString(), controllers[key]));
+      }else {
+        list.add(MyTextField2(
+            title: key,
+            fieldData: value.toString(),
+            controller: controllers[key]));
+      }
     });
-
     return list;
   }
 
@@ -185,27 +189,36 @@ class _FormPageState2 extends State<FormPage2> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 25,
-            ),
-            Container(
-              //width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: listWidgets(this.objectList),
+      body: GestureDetector(
+        onTap: (){
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 25,
               ),
-            ),
-            RaisedButton(
-              onPressed: () {
-                submitHandler();
-              },
-              child: Text("Submit",
-                  style: TextStyle(color: ArezueColors.outPrimaryColor)),
-            ),
-            deleteButton(),
-          ],
+              Container(
+                //width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: listWidgets(this.objectList),
+                ),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  submitHandler();
+                },
+                child: Text("Submit",
+                    style: TextStyle(color: ArezueColors.outPrimaryColor)),
+              ),
+              deleteButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -218,7 +231,6 @@ class _FormPageState2 extends State<FormPage2> {
           )
         : RaisedButton(
             onPressed: () async {
-              print(this.id.toString() + " " + uid.toString());
               if (await (request.edExCertDeleteRequest(
                       this.fieldId, uid, this.id)) ==
                   200) {

@@ -286,12 +286,6 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
               ),
             ],
           ),
-
-//          Expanded(
-//            child: Column(
-//              children: getTextList(getStringList(elements)),
-//            ),
-//          ),
         ],
       ),
     );
@@ -401,7 +395,6 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
   Future<Map<String, dynamic>> sendEditListGenerator(
       String fieldId, Object element) async {
     if (await (fetchData()) == 200) {
-      print("arr is: $arr");
       Map<String, dynamic> value;
       if (fieldId == "education") {
         value = arr.singleWhere((val) =>
@@ -418,7 +411,6 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
         value = arr.singleWhere((val) =>
             val['exp_id'].toString() ==
             ((element as Experience).expId).toString());
-        print("the value of value is: $value");
         sendList = {
           "Job Title": value['title'],
           "Start Date": value['start_date'],
