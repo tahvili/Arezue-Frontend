@@ -11,10 +11,11 @@ import '../loading.dart';
 
 class ResumeView extends StatefulWidget {
   @override
-  ResumeView({this.data, this.resumeName, this.uid});
+  ResumeView({this.data, this.resumeName, this.uid, this.preview});
   final Map<String, dynamic> data;
   final String uid;
   final String resumeName;
+  final bool preview;
 
   @override
   _ResumeView createState() => new _ResumeView();
@@ -42,6 +43,14 @@ class _ResumeView extends State<ResumeView> {
   void initState() {
     super.initState();
     uData = fetchData();
+  }
+
+  Function _buttonPress() {
+    if (widget.preview) {
+      return null;
+    } else {
+      return () {};
+    }
   }
 
   @override
@@ -114,7 +123,7 @@ class _ResumeView extends State<ResumeView> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24),
                               ),
-                              onPressed: () => {},
+                              onPressed: _buttonPress(),
                               padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
                               color: ArezueColors.secondaryColor,
                               child: Text("REQUEST INTERVIEW",

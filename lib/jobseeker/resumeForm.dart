@@ -26,6 +26,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   Map<String, dynamic> data;
   Requests request = new Requests();
   Future<JobseekerInfo> uData;
+  List<Skill> skillsTrueList;
   List<String> dreamCareer = [];
   List<String> dreamCompany = [];
   List<String> skill = [];
@@ -43,6 +44,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
     } else if (endpoint == "/dream_company") {
       dreamCompany = list;
     } else if (endpoint == "/skill") {
+      decodeSkill(list);
       skill = list;
     } else if (endpoint == "/education") {
       education = list;
@@ -51,6 +53,18 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
     } else if (endpoint == "/certification") {
       certification = list;
     }
+  }
+
+  void decodeSkill(List list){
+    List<dynamic> temp = new List();
+    skillsTrueList.forEach((skill) {
+      for (int i = 0;i<list.length;i++){
+        if(list[i]==skill.skill){
+          temp.add({'skill':skill.skill,'years':skill.yearsOfExperience,'level':skill.levelOfExperience});
+        }
+      }
+    });
+    print(temp);
   }
 
   void _showErrorDialog(String type) {
@@ -182,9 +196,9 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
           }
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
-        color: ArezueColors.outSecondaryColor,
+        color: ArezueColors.secondaryColor,
         child:
-            Text("Save", style: TextStyle(color: ArezueColors.outPrimaryColor)),
+            Text("Save", style: TextStyle(color: ArezueColors.primaryColor)),
       ),
     );
   }
@@ -210,9 +224,9 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
             }
           },
           padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
-          color: ArezueColors.outSecondaryColor,
+          color: ArezueColors.secondaryColor,
           child: Text("Delete",
-              style: TextStyle(color: ArezueColors.outPrimaryColor)),
+              style: TextStyle(color: ArezueColors.primaryColor)),
         ),
       );
     }
@@ -259,6 +273,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   }
 
   List<String> generateListSkills(List<Skill> skills) {
+    skillsTrueList = skills;
     List<String> skillsList = new List();
     skills.forEach((skill) {
       skillsList.add(skill.skill);

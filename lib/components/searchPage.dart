@@ -47,7 +47,7 @@ class _SearchPageState extends State<SearchPage> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    ResumeView(data: data, resumeName: resumeID, uid: uid)),
+                    ResumeView(data: data, resumeName: resumeID, uid: uid, preview:false)),
           );
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),

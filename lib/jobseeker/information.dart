@@ -157,7 +157,7 @@ class Skill {
     return Skill(
         skill: parsedJson['skill'],
         ranking: parsedJson['ranking'],
-        yearsOfExperience: parsedJson['years_of_expertise'],
-        levelOfExperience: parsedJson['level_expertise']);
+        yearsOfExperience: parsedJson['years'],
+        levelOfExperience: parsedJson['level']);
   }
 }

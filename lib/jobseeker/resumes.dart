@@ -1,3 +1,4 @@
+import 'package:arezue/jobseeker/resumeView.dart';
 /// Resume section's main page
 ///
 /// contains a list of all resumes and have access to edit/remove or add a new resume.
@@ -33,27 +34,97 @@ class _ResumePageState extends State<ResumePage> {
       String resumeID, String name, Map<String, dynamic> data, String uid) {
     // Resume selector
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0.0),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
+      padding: EdgeInsets.symmetric(vertical: 5.0),
+
+      child: Row(
+        children: <Widget>[
+        Expanded(
+        flex: 2,
+            child: Container(
+              margin: const EdgeInsets.only(right: 0, left: 0, bottom: 0, top: 0),
+              decoration: new BoxDecoration(
+                color: ArezueColors.outSecondaryColor, // border color
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: ArezueColors.shadowColor,
+                    blurRadius: 0.0,
+                    spreadRadius: 1.0,
+                    offset: Offset(
+                      1.0, // horizontal, move right 10
+                      1.0, // vertical, move down 10
+                    ),
+                  ),
+                ],
+              ),
+              child: IconButton(
+              icon: Icon(
+                Icons.remove_red_eye,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ResumeView(data: data, resumeName: resumeID, uid: uid, preview:true)),
+                );
+              },
+            ),
+          )
         ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ResumeFormPage(
-                    auth: widget.auth,
-                    resumeId: resumeID,
-                    resumeName: name,
-                    uid: uid)),
-          );
-        },
-        padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
-        color: ArezueColors.outSecondaryColor,
-        child:
-            Text(name, style: TextStyle(color: ArezueColors.outPrimaryColor)),
-      ),
+          Expanded(
+            flex:6,
+            child:RaisedButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              onPressed: () {},
+              padding: EdgeInsets.fromLTRB(35, 15, 35, 15),
+              color: ArezueColors.outSecondaryColor,
+              child:
+              Text(name, style: TextStyle(color: ArezueColors.outPrimaryColor)),
+            ),
+          ),
+          Expanded(
+              flex: 2,
+              child: Container(
+                margin: const EdgeInsets.only(right: 0, left: 0, bottom: 0, top: 0),
+                decoration: new BoxDecoration(
+                  color: ArezueColors.outSecondaryColor, // border color
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: ArezueColors.shadowColor,
+                      blurRadius: 0.0,
+                      spreadRadius: 1.0,
+                      offset: Offset(
+                        1.0, // horizontal, move right 10
+                        1.0, // vertical, move down 10
+                      ),
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ResumeFormPage(
+                              auth: widget.auth,
+                              resumeId: resumeID,
+                              resumeName: name,
+                              uid: uid)),
+                    );
+                  },
+                ),
+              )
+          ),
+        ],
+      )
     );
   }
 
