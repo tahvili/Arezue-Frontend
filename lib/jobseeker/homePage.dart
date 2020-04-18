@@ -574,7 +574,9 @@ class _HomePageState extends State<HomePage> {
     } else {
       activelyLooking = true;
     }
-    request.putRequest(
-        "jobseeker", uid, "active_States", activelyLooking.toString());
+//    request.putRequest(
+//        "jobseeker", uid, "active_States", activelyLooking.toString());
+    request.putRequest("jobseeker/$uid", "x-www-form-urlencoded" ,
+        {"active_States" : activelyLooking.toString()}, false);
   }
 }

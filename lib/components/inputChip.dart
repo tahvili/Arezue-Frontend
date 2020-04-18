@@ -77,8 +77,8 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
       }
       else {
         if (uid != null) {
-          serverRequest.profilePostRequest(
-              'jobseeker', uid, fieldId, text, preference, "1");
+          serverRequest.postRequest("jobseeker/$uid/$fieldId",
+              {this.fieldId : text, preference : "1"});
         }
         setState(() {
           this.fieldData.add(text);
@@ -87,7 +87,7 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
     }else if (command == "delete") {
       //make a delete request to API here
       if (uid != null) {
-        serverRequest.deleteRequest(uid, fieldId, text);
+        serverRequest.deleteRequest(uid, "$fieldId/$text");
       }
       setState(() {
         this.fieldData.remove(text);

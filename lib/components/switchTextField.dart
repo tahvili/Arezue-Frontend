@@ -84,7 +84,8 @@ class _MySwitchTextFieldState extends State<MySwitchTextField> {
   // child handler that calls the API and then the parent handler.
   void submitHandler(String fieldId, text) {
     // Handle PUT request to the api here
-    serverRequest.putRequest('jobseeker', uid, fieldId, text);
+    serverRequest.putRequest("jobseeker/${this.uid}", "x-www-form-urlencoded" ,
+        {fieldId : text}, false);
     // Once that's done, notify the parent so it knows to update its local state.
   }
 

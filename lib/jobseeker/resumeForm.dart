@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Resume Builder Page
 ///
 /// The purpose of this page is to let the user create/edit/delete a resume and send the data to server
@@ -169,12 +171,14 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
             };
             if (resumeId != null) {
               Future<int> result =
-                  request.resumePutRequest(uid, resumeId, finalData);
+                  request.putRequest("jobseeker/$uid/resumes/$resumeId", "x-www-form-urlencoded",
+                      {'resume' : json.encode(finalData)}, false);
               if ((await result) == 200) {
                 Navigator.pop(context);
               }
             } else {
-              Future<int> result = request.resumePostRequest(uid, finalData);
+              Future<int> result = request.postRequest("jobseeker/$uid/resumes",
+                  {'resume' : json.encode(finalData)});
               if ((await result) == 200) {
                 Navigator.pop(context);
               }
@@ -204,7 +208,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
           ),
           onPressed: () async {
             //List<List<String>> finalData = new List<List<String>>();
-            Future<int> result = request.resumeDeleteRequest(uid, resumeId);
+            Future<int> result = request.deleteRequest(uid, "/resumes/$resumeId");
             if ((await result) == 200) {
               Navigator.pop(context);
             }

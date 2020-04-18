@@ -91,12 +91,16 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
       });
     } else if (command == "delete") {
       setState(() {
-        //serverRequest.skillDeleteRequest(this.uid, text);
+        serverRequest.deleteRequest(this.uid, "skill/$text");
         this.objectList.remove(text);
       });
     } else if (command == "error"){
       _showExisitingMessage(text);
-    } else {
+    } else if(command == "edit") {
+      setState(() {
+        this.objectList.remove(text);
+      });
+    }else {
       setState(() {});
     }
     handler(text, command);

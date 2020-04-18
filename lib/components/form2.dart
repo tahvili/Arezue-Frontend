@@ -148,12 +148,35 @@ class _FormPageState2 extends State<FormPage2> {
         }
       } else {
         //make a put request here
-        if (await (request.profileEdExCertPutRequest(this.fieldId, uid, id,
-                firstVal, startDate, endDate, secondVal)) ==
-            200) {
-          handler([firstVal, startDate, endDate, secondVal], id);
-          Navigator.pop(context);
-        }
+          Map<String, String> map =  new Map();
+          String endpoint;
+          if(this.fieldId == "education"){
+            map = {'ed_id': id, 'school_name': firstVal, 'start_date':
+            startDate, 'grad_date': endDate, 'program': secondVal};
+            endpoint = "jobseeker/$uid/education";
+          }else if(this.fieldId == "experience"){
+            map = {
+              'exp_id': id,
+              'title': firstVal,
+              'start_date': startDate,
+              'end_date': endDate,
+              'description': secondVal
+            };
+            endpoint = "jobseeker/$uid/exp";
+          }else{
+            map = {
+              'c_id': id,
+              'cert_name': firstVal,
+              'start_date': startDate,
+              'end_date': endDate,
+              'issuer': secondVal
+            };
+            endpoint = "jobseeker/$uid/certification";
+          }
+          if (await (request.putRequest(endpoint, "json", map, true)) == 200) {
+            handler([firstVal, startDate, endDate, secondVal], id);
+            Navigator.pop(context);
+          }
       }
     }
   }
@@ -231,13 +254,24 @@ class _FormPageState2 extends State<FormPage2> {
           )
         : RaisedButton(
             onPressed: () async {
-              if (await (request.edExCertDeleteRequest(
-                      this.fieldId, uid, this.id)) ==
-                  200) {
-                Navigator.pop(context);
-                handler(this.id, "delete");
-              } else {
-                _showPasswordResetSentDialog();
+              if(this.fieldId == "experience"){
+                if (await (request.deleteRequest(
+                    this.uid, "exp/${this.id}")) ==
+                    200) {
+                  Navigator.pop(context);
+                  handler(this.id, "delete");
+                } else {
+                  _showPasswordResetSentDialog();
+                }
+              } else{
+                if (await (request.deleteRequest(
+                    this.uid, "${this.fieldId}/${this.id}")) ==
+                    200) {
+                  Navigator.pop(context);
+                  handler(this.id, "delete");
+                } else {
+                  _showPasswordResetSentDialog();
+                }
               }
             },
             child: Text("Delete",

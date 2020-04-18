@@ -95,14 +95,27 @@ class _JobFormState extends State<JobForm> {
         arr.add(element);
       }
       if (isNew == true) {
-        if (await (request.jobPostRequest(this.uid, this.companyName, arr)) ==
+        Map<String, String> map = new Map();
+        map = {
+          'company_name': this.companyName.toString(),
+          'title': arr[0].toString(),
+          'wage': arr[1].toString(),
+          'position': arr[0].toString(),
+          'hours': arr[2].toString(),
+          'location': arr[3].toString(),
+          'description': arr[5].toString(),
+          'status': arr[4].toString(),
+          'max_candidate': arr[6].toString()
+        };
+
+        if (await (request.postRequest("employer/${this.uid}/jobs", map)) ==
             200) {
           Navigator.pop(context);
         }
       } else {
         fillData(arr);
-        if (await (request.jobPutRequest(
-                uid, this.jobId, this.finalEditList)) ==
+        if (await (request.putRequest("employer/$uid/jobs/${this.jobId}",
+                "json", this.finalEditList, true)) ==
             200) {
           Navigator.pop(context);
         }
@@ -184,7 +197,7 @@ class _JobFormState extends State<JobForm> {
         ],
       ),
       body: GestureDetector(
-        onTap: (){
+        onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
 
           if (!currentFocus.hasPrimaryFocus) {
@@ -226,7 +239,8 @@ class _JobFormState extends State<JobForm> {
           )
         : RaisedButton(
             onPressed: () async {
-              if (await (request.jobDeleteRequest(uid, this.jobId)) == 200) {
+              if (await (request.deleteRequest(uid, "/jobs/${this.jobId}")) ==
+                  200) {
                 Navigator.pop(context);
               } else {
                 _showPasswordResetSentDialog();

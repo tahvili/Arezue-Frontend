@@ -89,7 +89,7 @@ class _FormPageState extends State<FormPage> {
         if (await (request.profileSkillPutRequest(
             uid, oldSkill, skill, '$numExperience', '$numExpertise')) ==
             200) {
-          handler(oldSkill, "delete");
+          handler(oldSkill, "edit");
           handler(skill, "add");
           Navigator.pop(context);
         }else{
@@ -97,9 +97,9 @@ class _FormPageState extends State<FormPage> {
           Navigator.pop(context);
         }
       } else {
-        if (await (request.profileSkillPostRequest('jobseeker',
-            uid, skill, '$numExpertise', '$numExperience')) ==
-            200) {
+        if (await (request.postRequest("jobseeker/$uid/skill",
+            {'skill' : skill, 'level' : '$numExpertise', 'years' : '$numExperience'}))
+            == 200) {
           handler(skill, "add");
           Navigator.pop(context);
         }else{
