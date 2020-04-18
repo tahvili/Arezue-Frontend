@@ -10,30 +10,29 @@ import 'package:arezue/loading.dart';
 import 'package:arezue/services/http.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:arezue/services/auth.dart';
 
 class EmployerHomePage extends StatefulWidget {
-  EmployerHomePage({this.auth, this.onSignOut, this.formType});
+  EmployerHomePage({this.auth, this.onSignOut});
   final BaseAuth auth;
-  final FormType4 formType;
+  //final FormType4 formType;
   final VoidCallback onSignOut;
 
   @override
   _EmployerPageState createState() =>
-      new _EmployerPageState(formType: this.formType, auth: this.auth);
+      new _EmployerPageState(auth: this.auth);
 }
 
-enum FormType4 { employer, jobseeker }
+//enum FormType4 { employer, jobseeker }
 
 class _EmployerPageState extends State<EmployerHomePage> {
-  FormType4 formType;
+  //FormType4 formType;
 
-  _EmployerPageState({this.formType, this.auth});
+  _EmployerPageState({this.auth});
 
-  Future<Jobseeker> futureUser;
+  //Future<Jobseeker> futureUser;
   final BaseAuth auth;
-  Future<Employer> futureEmployer;
+  Future<Object> futureEmployer;
   Requests request = new Requests();
   bool activelyHiring = false;
   Requests serverRequest = new Requests();
@@ -42,21 +41,21 @@ class _EmployerPageState extends State<EmployerHomePage> {
   void initState() {
     //calling the appropriate http get request
     super.initState();
-    if (this.formType == FormType4.jobseeker) {
-      futureUser = request.jobseekerGetRequest(widget.auth.currentUser());
-    } else {
-      futureEmployer = request.employerGetRequest(widget.auth.currentUser());
-    }
+//    if (this.formType == FormType4.jobseeker) {
+//      futureUser = (request.getRequest(widget.auth.currentUser(), 'jobseeker')) as Future<Jobseeker>;
+//    } else {
+    futureEmployer = (request.getRequest(widget.auth.currentUser(), 'employer'));
+//    }
   }
 
   Widget _getProfile() {
     // Profile picture
-    return FutureBuilder<Employer>(
+    return FutureBuilder<Object>(
       future: futureEmployer,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var companyName = snapshot.data.name.split(" ");
-          if (snapshot.data.profilePicture == null) {
+          var companyName = (snapshot.data as Employer).name.split(" ");
+          if ((snapshot.data as Employer).profilePicture == null) {
             return CircleAvatar(
               backgroundColor: ArezueColors.primaryColor,
               foregroundColor: ArezueColors.secondaryColor,
@@ -75,7 +74,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
                 child: new SizedBox(
                   width: 130,
                   height: 130,
-                  child: new Image.asset(snapshot.data.profilePicture,
+                  child: new Image.asset((snapshot.data as Employer).profilePicture,
                       fit: BoxFit.cover),
                 ),
               ),
@@ -92,7 +91,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
 
   Widget companyProfile() {
     // Profile area + border
-    return FutureBuilder<Employer>(
+    return FutureBuilder<Object>(
       future: futureEmployer,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -326,11 +325,11 @@ class _EmployerPageState extends State<EmployerHomePage> {
             margin: const EdgeInsets.only(
                 right: 50, left: 50, bottom: 20, top: 230),
             alignment: Alignment.center,
-            child: FutureBuilder<Employer>(
+            child: FutureBuilder<Object>(
               future: futureEmployer,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  var fullName = snapshot.data.name.split(" ");
+                  var fullName = (snapshot.data as Employer).name.split(" ");
                   var name = "";
                   for (int i = 0; i < fullName.length; i++) {
                     if (fullName[i].length > 0) {
@@ -404,7 +403,8 @@ class _EmployerPageState extends State<EmployerHomePage> {
               MaterialPageRoute(
                   builder: (context) => SearchIntro(
                         auth: widget.auth,
-                      )),
+                      )
+              ),
             );
           },
         ),
@@ -424,7 +424,9 @@ class _EmployerPageState extends State<EmployerHomePage> {
                 MaterialPageRoute(
                     builder: (context) => JobPage(
                           auth: this.auth,
-                        )));
+                        )
+                )
+            );
           },
         ),
       ),

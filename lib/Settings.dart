@@ -52,9 +52,9 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<Object> fetchData() async {
     // Get's user data
     if (this.formType == FormType2.jobseeker) {
-      return await request.jobseekerGetRequest(widget.auth.currentUser());
+      return await request.getRequest(widget.auth.currentUser(), 'jobseeker');
     } else {
-      return await request.employerGetRequest(widget.auth.currentUser());
+      return await request.getRequest(widget.auth.currentUser(), 'employer');
     }
   }
 

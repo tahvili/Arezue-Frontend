@@ -35,7 +35,7 @@ class _ResumeView extends State<ResumeView> {
   bool update = false;
 
   Future<JobseekerInfo> fetchData() async {
-    return await request.profileGetRequest2(widget.uid);
+    return await request.profileGetRequest(widget.uid);
   }
 
   @override

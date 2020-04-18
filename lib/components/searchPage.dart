@@ -23,13 +23,27 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+
   _SearchPageState(this.auth);
   List<String> searchItems = new List<String>();
   List<dynamic> minidata = new List<dynamic>();
   List<Widget> widgetList = new List<Widget>();
+
   void searchFieldHandler(String text, String command) {
     setState(() {});
   }
+
+  @override
+  void initState() {
+    super.initState();
+    widgetList = listWidgets(uid);
+  }
+
+  final BaseAuth auth;
+  Map<String, dynamic> sendList = new Map<String, dynamic>();
+  Requests request = new Requests();
+  String companyName;
+  String uid;
 
   Widget selectResume(
       String resumeID, String name, Map<String, dynamic> data, String uid) {
@@ -52,7 +66,7 @@ class _SearchPageState extends State<SearchPage> {
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
         color: ArezueColors.outSecondaryColor,
-        child: Text("#${uid.substring(0, 8)}${resumeID}",
+        child: Text("#${uid.substring(0, 8)}$resumeID",
             style: TextStyle(color: ArezueColors.outPrimaryColor)),
       ),
     );
@@ -71,14 +85,13 @@ class _SearchPageState extends State<SearchPage> {
     widgetlist.add(
       InputChipBuilder(
         title: "Candidate's Skill: ",
+        fieldId: "skill",
         fieldType: "text",
         fieldData: searchItems,
         handler: searchFieldHandler,
       ),
     );
-    var keys;
     var maps;
-    //int counter=0;
 
     if (minidata.length == 0) {
       // when nothing is searched yet
@@ -130,17 +143,7 @@ class _SearchPageState extends State<SearchPage> {
     return widgetlist;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    widgetList = listWidgets(uid);
-  }
 
-  final BaseAuth auth;
-  Map<String, dynamic> sendList = new Map<String, dynamic>();
-  Requests request = new Requests();
-  String companyName;
-  String uid;
 
   Widget build(BuildContext context) {
     // the build function for the program

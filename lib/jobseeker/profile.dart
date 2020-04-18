@@ -36,7 +36,7 @@ class _ProfilePageState extends State<Profile> {
 
   Future<JobseekerInfo> fetchData() async {
     // Fetch data from server
-    return await request.profileGetRequest(widget.auth.currentUser());
+    return await request.profileGetRequest(await widget.auth.currentUser());
   }
 
   void textFieldHandler(text, fieldId) {

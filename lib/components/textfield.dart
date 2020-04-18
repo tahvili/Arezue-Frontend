@@ -86,7 +86,8 @@ class _MyTextFieldState extends State<MyTextField> {
       // Do nothing
     } else {
       // Handle PUT request to the api here
-      serverRequest.putRequest('jobseeker', uid, fieldId, text);
+      serverRequest.putRequest("jobseeker/${this.uid}", "x-www-form-urlencoded",
+          {fieldId: text}, false);
     }
     // Once that's done, notify the parent so it knows to update its local state.
   }
@@ -199,7 +200,8 @@ class _MyTextFieldState extends State<MyTextField> {
             FlatButton(
               child: Text('Save'),
               onPressed: () {
-                serverRequest.putRequest('jobseeker', uid, fieldId, teamName);
+                serverRequest.putRequest("jobseeker/${this.uid}", "x-www-form-urlencoded",
+                    {fieldId: teamName}, false);
                 Navigator.of(context).pop(teamName);
               },
             ),

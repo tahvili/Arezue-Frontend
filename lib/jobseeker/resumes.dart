@@ -25,8 +25,9 @@ class _ResumePageState extends State<ResumePage> {
 
   Future<JobseekerInfo> fetchData() async {
     // Fetches data from server
-    minidata = await request.resumeGetList(widget.auth.currentUser());
-    return await request.profileGetRequest(widget.auth.currentUser());
+    minidata = await request.resumeGetRequest('${await widget.auth.
+    currentUser()}/resumes', 'resume_list');
+    return await request.profileGetRequest(await widget.auth.currentUser());
   }
 
   Widget selectResume(

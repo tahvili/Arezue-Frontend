@@ -31,7 +31,7 @@ class _JobPageState extends State<SearchIntro> {
   Requests request = new Requests();
   List<String> resumeData;
   String companyName;
-  Future<Employer> futureEmployer;
+  Future<Object> futureEmployer;
 
   @override
   void initState() {
@@ -41,13 +41,13 @@ class _JobPageState extends State<SearchIntro> {
   Future<Job> fetchData() async {
     // Fetch jobs openings from employer account
     uid = await (widget.auth.currentUser());
-    this.futureEmployer = request.employerGetRequest(widget.auth.currentUser());
+    this.futureEmployer = (request.getRequest(widget.auth.currentUser(), 'employer'));
     return await request.jobGetRequest(uid);
   }
 
-  getCompanyName() async {
-    return (await futureEmployer).companyID;
-  }
+//  getCompanyName() async {
+//    return ((await futureEmployer) as Employer).companyID;
+//  }
 
   Widget selectJob(JobData job) {
     // Goes to search page with the selected job
@@ -58,7 +58,7 @@ class _JobPageState extends State<SearchIntro> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () async {
-          sendList = sendEditListGenerator(job);
+          //sendList = sendEditListGenerator(job);
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -66,7 +66,8 @@ class _JobPageState extends State<SearchIntro> {
                       auth: widget.auth,
                       uid: uid,
                       jobId: job.jobId,
-                    )),
+                    )
+            ),
           );
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
@@ -80,7 +81,7 @@ class _JobPageState extends State<SearchIntro> {
   Map<String, dynamic> sendListGenerator() {
     Map<String, dynamic> sendList = {
       "Title": "",
-      "Position": "",
+      //"Position": "",
       "Wage": "",
       "Hours": "",
       "Location": "",
@@ -95,7 +96,7 @@ class _JobPageState extends State<SearchIntro> {
   Map<String, dynamic> sendEditListGenerator(JobData job) {
     Map<String, dynamic> sendList = {
       "Title": job.title,
-      "Position": job.position,
+      //"Position": job.position,
       "Wage": job.wage,
       "Hours": job.hours,
       "Location": job.location,
@@ -113,7 +114,7 @@ class _JobPageState extends State<SearchIntro> {
     // Add a new job posting
     return FloatingActionButton(
       onPressed: () async {
-        String c = (await futureEmployer).companyID.toString();
+        String c = ((await futureEmployer) as Employer).companyID.toString();
         sendList = sendListGenerator();
         Navigator.push(
           context,

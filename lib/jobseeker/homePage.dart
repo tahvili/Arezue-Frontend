@@ -14,21 +14,21 @@ import 'package:arezue/services/auth.dart';
 import 'package:arezue/utils/texts.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({this.auth, this.onSignOut, this.formType});
+  HomePage({this.auth, this.onSignOut});
   final BaseAuth auth;
-  final FormType3 formType;
+  //final FormType3 formType;
   final VoidCallback onSignOut;
 
   @override
-  _HomePageState createState() => new _HomePageState(formType: this.formType);
+  _HomePageState createState() => new _HomePageState();
 }
 
-enum FormType3 { employer, jobseeker }
+//enum FormType3 { employer, jobseeker }
 
 class _HomePageState extends State<HomePage> {
-  FormType3 formType;
-  _HomePageState({this.formType});
-  Future<Jobseeker> futureUser;
+  //FormType3 formType;
+  _HomePageState();
+  Future<Object> futureUser;
   Requests request = new Requests();
   bool activelyLooking = true;
   Requests serverRequest = new Requests();
@@ -37,18 +37,16 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     //calling the appropriate http get request
     super.initState();
-    if (this.formType == FormType3.jobseeker) {
-      futureUser = request.jobseekerGetRequest(widget.auth.currentUser());
-    }
+    futureUser = (request.getRequest(widget.auth.currentUser(), 'jobseeker'));
   }
 
   Widget lookingButton() {
     //checking if they still want a job
-    return FutureBuilder<Jobseeker>(
+    return FutureBuilder<Object>(
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          activelyLooking = snapshot.data.activeStates;
+          activelyLooking = (snapshot.data as Jobseeker).activeStates;
           if (activelyLooking) {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
@@ -78,8 +76,8 @@ class _HomePageState extends State<HomePage> {
                       bottomLeft: const Radius.circular(10)),
                 ),
                 onPressed: () => setState(() {
-                  changeStatus(snapshot.data.uid);
-                  snapshot.data.activeStates = activelyLooking;
+                  changeStatus((snapshot.data as Jobseeker).uid);
+                  (snapshot.data as Jobseeker).activeStates = activelyLooking;
                 }),
                 padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
                 color: ArezueColors.primaryColor,
@@ -100,7 +98,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget notLookingButton() {
     // checking to see if they are not looking for a job
-    return FutureBuilder<Jobseeker>(
+    return FutureBuilder<Object>(
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -118,8 +116,8 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.fromLTRB(22, 15, 22, 15),
                 color: ArezueColors.primaryColor,
                 onPressed: () => setState(() {
-                  changeStatus(snapshot.data.uid);
-                  snapshot.data.activeStates = activelyLooking;
+                  changeStatus((snapshot.data as Jobseeker).uid);
+                  (snapshot.data as Jobseeker).activeStates = activelyLooking;
                 }),
                 child: Text(ArezueTexts.notLookingAnymore,
                     style: TextStyle(
@@ -156,18 +154,18 @@ class _HomePageState extends State<HomePage> {
 
   Widget _getProfile() {
     // Profile picture
-    return FutureBuilder<Jobseeker>(
+    return FutureBuilder<Object>(
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var fullName = snapshot.data.name.split(" ");
+          var fullName = (snapshot.data as Jobseeker).name.split(" ");
           var name = "";
           for (int i = 0; i < fullName.length; i++) {
             if (fullName[i].length > 0) {
               name += fullName[i][0];
             }
           }
-          if (snapshot.data.profilePicture == null) {
+          if ((snapshot.data as Jobseeker).profilePicture == null) {
             return CircleAvatar(
               backgroundColor: ArezueColors.primaryColor,
               foregroundColor: ArezueColors.secondaryColor,
@@ -185,7 +183,7 @@ class _HomePageState extends State<HomePage> {
                 child: new SizedBox(
                   width: 130,
                   height: 130,
-                  child: new Image.asset(snapshot.data.profilePicture,
+                  child: new Image.asset((snapshot.data as Jobseeker).profilePicture,
                       fit: BoxFit.cover),
                 ),
               ),
@@ -202,7 +200,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget userProfile() {
     // Borders of the profile picture
-    return FutureBuilder<Jobseeker>(
+    return FutureBuilder<Object>(
       future: futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -392,8 +390,6 @@ class _HomePageState extends State<HomePage> {
   );
 
   List<Widget> submitWidgets() {
-    switch (formType) {
-      case FormType3.jobseeker:
         return [
           ListView(
             children: <Widget>[
@@ -401,11 +397,11 @@ class _HomePageState extends State<HomePage> {
                 margin: const EdgeInsets.only(
                     right: 50, left: 50, bottom: 20, top: 230),
                 alignment: Alignment.center,
-                child: FutureBuilder<Jobseeker>(
+                child: FutureBuilder<Object>(
                   future: futureUser,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      var fullName = snapshot.data.name.split(" ");
+                      var fullName = (snapshot.data as Jobseeker).name.split(" ");
                       var name = "";
                       for (int i = 0; i < fullName.length; i++) {
                         if (fullName[i].length > 0) {
@@ -489,7 +485,8 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(
                       builder: (context) => Profile(
                             auth: widget.auth,
-                          )),
+                          )
+                  ),
                 );
               },
             ),
@@ -518,7 +515,8 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(
                       builder: (context) => ResumePage(
                             auth: widget.auth,
-                          )),
+                          )
+                  ),
                 );
               },
             ),
@@ -537,7 +535,8 @@ class _HomePageState extends State<HomePage> {
                             auth: widget.auth,
                             onSignOut: widget.onSignOut,
                             formType: FormType2.jobseeker,
-                          )),
+                          )
+                  ),
                 );
               },
             ),
@@ -550,11 +549,6 @@ class _HomePageState extends State<HomePage> {
             child: Center(child: userProfile()),
           ),
         ];
-        break;
-      case FormType3.employer:
-        break;
-    }
-    return null;
   }
 
   Widget build(BuildContext context) {
@@ -574,7 +568,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       activelyLooking = true;
     }
-    request.putRequest(
-        "jobseeker", uid, "active_States", activelyLooking.toString());
+    request.putRequest("jobseeker/$uid", "x-www-form-urlencoded" ,
+        {"active_States" : activelyLooking.toString()}, false);
   }
 }

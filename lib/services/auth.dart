@@ -64,9 +64,11 @@ class Auth implements BaseAuth {
       await user.sendEmailVerification();
       Future<int> status;
       if (type == "employer") {
-        status = request.employerPostRequest(user.uid, email, name, company);
+        status = request.postRequest("employer", {'firebaseID' : user.uid,
+        'email' : email, 'name' : name, 'company' : company});
       } else {
-        status = request.jobseekerPostRequest(user.uid, email, name);
+        status = request.postRequest("jobseeker", {'firebaseID' : user.uid,
+          'email' : email, 'name' : name});
       }
       if ((await status) == 200) {
         signOut();

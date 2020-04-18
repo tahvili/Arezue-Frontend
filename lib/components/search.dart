@@ -48,7 +48,7 @@ class Search extends SearchDelegate<String> {
   }
 
    getList() async{
-    this.suggestionList = List<String>.from(await serverRequest.searchListGetRequest(this.uid, this.category, query));
+    this.suggestionList = List<String>.from(await serverRequest.searchListGetRequest(this.category, query));
     if(this.suggestionList.isEmpty && query.isNotEmpty){
       this.suggestionList.add(query);
     }
