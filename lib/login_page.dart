@@ -92,7 +92,6 @@ class _LoginPageState extends State<LoginPage> {
                             auth: widget.auth,
                             onSignOut: () =>
                                 _updateAuthStatus(AuthStatus.notSignedIn),
-                            formType: FormType4.employer,
                           ),
                       fullscreenDialog: true),
                 );
@@ -106,7 +105,6 @@ class _LoginPageState extends State<LoginPage> {
                             auth: widget.auth,
                             onSignOut: () =>
                                 _updateAuthStatus(AuthStatus.notSignedIn),
-                            formType: FormType3.jobseeker,
                           ),
                       fullscreenDialog: true),
                 );

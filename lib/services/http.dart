@@ -9,15 +9,19 @@ import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:http/http.dart' as http;
 
 class Requests {
-  Future<Jobseeker> jobseekerGetRequest(Future<String> uid) async {
-    var response = await http
-        .get('https://api.daffychuy.com/api/v1/jobseeker/${await uid}');
+  Future<Object> getRequest(Future<String> uid, String userType) async {
+    var response = await http.get('https://api.daffychuy.com/api/v1/$userType/'
+        '${await uid}');
     if (response.statusCode == 200) {
-      // If the server did return a 200 OK response, then parse the JSON.
-      return Jobseeker.fromJson(json.decode(response.body));
+      if (userType == 'jobseeker') {
+        return Jobseeker.fromJson(json.decode(response.body));
+      } else if (userType == 'employer') {
+        return Employer.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Illegal User Type');
+      }
     } else {
-      // If the server did not return a 200 OK response, then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Failed to load user');
     }
   }
 
@@ -33,38 +37,14 @@ class Requests {
     }
   }
 
-  Future<Map<String, dynamic>> resumeGetList(Future<String> uid) async {
-    var response = await http
-        .get('https://api.daffychuy.com/api/v1/jobseeker/${await uid}/resumes');
-    if (response.statusCode == 200) {
-      var _list = json.decode(response.body);
-      Map<String, dynamic> returnList = new Map<String, dynamic>();
-      for (int i = 0; i < (_list["data"]).length; i++) {
-        returnList[(_list["data"][i]["resume_id"].toString())] =
-            (_list["data"][i]["resume"]);
-      }
-      // If the server did return a 200 OK response, then parse the JSON.
-      return returnList;
-    } else {
-      // If the server did not return a 200 OK response, then throw an exception.
-      return {};
-    }
+  searchListGetRequest(String category, String query) async {
+    var response = await http.get(
+        'http://api.daffychuy.com/api/v1/search/$category?q=$query&limit=10');
+    var _list = (json.decode(response.body))["data"];
+    return _list;
   }
 
-  Future<JobseekerInfo> profileGetRequest(Future<String> uid) async {
-    var response = await http
-        .get('https://api.daffychuy.com/api/v1/jobseeker/${await uid}/profile');
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response, then parse the JSON.
-      return new JobseekerInfo.fromJson(json.decode(response.body));
-    } else {
-      // If the server did not return a 200 OK response, then throw an exception.
-      throw Exception('Failed to load album');
-    }
-  }
-
-  Future<JobseekerInfo> profileGetRequest2(String uid) async {
+  Future<JobseekerInfo> profileGetRequest(String uid) async {
     var response = await http
         .get('https://api.daffychuy.com/api/v1/jobseeker/$uid/profile');
 
@@ -94,55 +74,35 @@ class Requests {
     }
   }
 
-  Future<Map<String, dynamic>> resumeGetList2(String uid) async {
-    var response = await http
-        .get('https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes');
-    if (response.statusCode == 200) {
-      var _list = json.decode(response.body);
-      Map<String, dynamic> returnList = new Map<String, dynamic>();
-      for (int i = 0; i < (_list["data"]).length; i++) {
-        returnList[(_list["data"][i]["resume_id"].toString())] =
-            (_list["data"][i]["resume"]);
+  Future<Map<String, dynamic>> resumeGetRequest(
+      String endpoint, String requestType) async {
+    var response =
+        await http.get('https://api.daffychuy.com/api/v1/jobseeker/$endpoint');
+    if (requestType == 'resume_list') {
+      if (response.statusCode == 200) {
+        var _list = json.decode(response.body);
+        Map<String, dynamic> returnList = new Map<String, dynamic>();
+        for (int i = 0; i < (_list["data"]).length; i++) {
+          returnList[(_list["data"][i]["resume_id"].toString())] =
+              (_list["data"][i]["resume"]);
+        }
+        // If the server did return a 200 OK response, then parse the JSON.
+        return returnList;
+      } else {
+        // If the server did not return a 200 OK response, then throw an exception.
+        return {};
       }
-      // If the server did return a 200 OK response, then parse the JSON.
-      return returnList;
+    } else if (requestType == 'resume_data') {
+      if (response.statusCode == 200) {
+        var _list = json.decode(response.body);
+        // If the server did return a 200 OK response, then parse the JSON.
+        return _list;
+      } else {
+        // If the server did not return a 200 OK response, then throw an exception.
+        return {};
+      }
     } else {
-      // If the server did not return a 200 OK response, then throw an exception.
-      return {};
-    }
-  }
-
-  Future<Map<String, dynamic>> resumeGetData(
-      String uid, String resumeId) async {
-    var response = await http.get(
-        'https://api.daffychuy.com/api/v1/jobseeker/$uid/resumes/$resumeId');
-    if (response.statusCode == 200) {
-      var _list = json.decode(response.body);
-      // If the server did return a 200 OK response, then parse the JSON.
-      return _list;
-    } else {
-      // If the server did not return a 200 OK response, then throw an exception.
-      return {};
-    }
-  }
-
-  searchListGetRequest(String uid, String category, String query) async {
-    var response = await http.get(
-        'http://api.daffychuy.com/api/v1/jobseeker/$uid/$category/search?q=$query&limit=10');
-    var _list = (json.decode(response.body))["data"];
-    return _list;
-  }
-
-  Future<Employer> employerGetRequest(Future<String> uid) async {
-    var response = await http
-        .get('https://api.daffychuy.com/api/v1/employer/${await uid}');
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response, then parse the JSON.
-      return Employer.fromJson(json.decode(response.body));
-    } else {
-      // If the server did not return a 200 OK response, then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Illegal Request');
     }
   }
 
@@ -158,7 +118,6 @@ class Requests {
     } else {
       response = await http.put(url, headers: headers, body: json.encode(map));
     }
-    print(response.statusCode);
     return response.statusCode;
   }
 
@@ -193,18 +152,13 @@ class Requests {
     };
     var response = await http.post(url, headers: headers, body: map);
     int statusCode = response.statusCode;
-    print(url);
-    print(response.statusCode);
     return statusCode;
   }
 
   Future<List<dynamic>> searchPostRequest(List<String> lst) async {
-    var url = 'https://api.daffychuy.com/api/v1/search';
-    Map<String, String> headers = {
-      "Content-type": "application/x-www-form-urlencoded"
-    };
-    var response = await http.post(url,
-        headers: headers, body: {"skills": lst.join(',').toLowerCase()});
+    var url = 'https://api.daffychuy.com/api/v1/search/candidates';
+    var response = await http
+        .post(url, body: {"skills": lst.join(',').toLowerCase().toString()});
     var _list = json.decode(response.body);
     return _list["payload"];
   }

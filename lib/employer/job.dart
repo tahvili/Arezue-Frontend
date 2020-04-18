@@ -30,7 +30,7 @@ class _JobPageState extends State<JobPage> {
   Requests request = new Requests();
   List<String> resumeData;
   String companyName;
-  Future<Employer> futureEmployer;
+  Future<Object> futureEmployer;
 
   @override
   void initState() {
@@ -40,12 +40,13 @@ class _JobPageState extends State<JobPage> {
   Future<Job> fetchData() async {
     // Fetch data from server
     uid = await (widget.auth.currentUser());
-    this.futureEmployer = request.employerGetRequest(widget.auth.currentUser());
+    this.futureEmployer =
+        (request.getRequest(widget.auth.currentUser(), 'employer'));
     return await request.jobGetRequest(uid);
   }
 
   getCompanyName() async {
-    return (await futureEmployer).companyID;
+    return ((await futureEmployer) as Employer).companyID;
   }
 
   Widget selectJob(JobData job) {
@@ -57,7 +58,7 @@ class _JobPageState extends State<JobPage> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () async {
-          String c = (await futureEmployer).companyID.toString();
+          String c = ((await futureEmployer) as Employer).companyID.toString();
           sendList = sendEditListGenerator(job);
           Navigator.push(
             context,
@@ -117,7 +118,7 @@ class _JobPageState extends State<JobPage> {
     // Create a new job
     return FloatingActionButton(
       onPressed: () async {
-        String c = (await futureEmployer).companyID.toString();
+        String c = ((await futureEmployer) as Employer).companyID.toString();
         sendList = sendListGenerator();
         Navigator.push(
           context,

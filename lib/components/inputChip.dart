@@ -159,7 +159,17 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
                       ),
                       color: ArezueColors.secondaryColor,
                       onPressed: () {
-                        _showSearchBar(context, fieldId, submitHandler, this.uid, "skill");
+                        String category = "";
+                        if(this.fieldId=="dream_career"){
+                          category = "career";
+                        }
+                        else if(this.fieldId=="dream_company"){
+                          category = "company";
+                        }
+                        else if(this.fieldId=="skill"){
+                          category = "skill";
+                        }
+                        _showSearchBar(context, fieldId, submitHandler, this.uid, category);
                       }),
                 ),
               ],

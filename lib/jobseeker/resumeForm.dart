@@ -83,7 +83,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   Future<JobseekerInfo> fetchData() async {
     // Fetching data from server and formatting it
     if (widget.resumeId != null && !update) {
-      data = await request.resumeGetData(widget.uid, widget.resumeId);
+      data = await request.resumeGetRequest("${widget.uid}/resumes/${widget.resumeId}", 'resume_data');
       dreamCareer = (data['resume']['dream_career'])
           .replaceAll(RegExp(r'[\[\]]'), '')
           .split(', ');
@@ -104,7 +104,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
           .split(', ');
     }
 
-    return await request.profileGetRequest(widget.auth.currentUser());
+    return await request.profileGetRequest(await widget.auth.currentUser());
   }
 
   Widget resumeButton(String title, String endpoint, List<dynamic> original,

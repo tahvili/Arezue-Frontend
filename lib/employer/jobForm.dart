@@ -126,6 +126,7 @@ class _JobFormState extends State<JobForm> {
   void fillData(List<String> arr) {
     // form storage space before sending to server
     finalEditList['title'] = arr[0].toString();
+    finalEditList['position'] = arr[0].toString();
     finalEditList['wage'] = arr[1].toString();
     finalEditList['hours'] = arr[2].toString();
     finalEditList['location'] = arr[3].toString();
@@ -163,21 +164,21 @@ class _JobFormState extends State<JobForm> {
     // Text field for regular inputs
     List<Widget> list = new List<Widget>();
     map.forEach((key, value) {
-      controllers[key] = new TextEditingController(text: value);
-      if (key == "Wage" || key == "Hours") {
-        list.add(MyTextField(
-            title: key,
-            fieldId: key,
-            fieldType: "numeric",
-            fieldData: value.toString(),
-            handler: formHandler,
-            controller: controllers[key]));
-      } else {
-        list.add(MyTextField2(
-            title: key,
-            fieldData: value.toString(),
-            controller: controllers[key]));
-      }
+        controllers[key] = new TextEditingController(text: value);
+        if (key == "Wage" || key == "Hours") {
+          list.add(MyTextField(
+              title: key,
+              fieldId: key,
+              fieldType: "numeric",
+              fieldData: value.toString(),
+              handler: formHandler,
+              controller: controllers[key]));
+        } else {
+          list.add(MyTextField2(
+              title: key,
+              fieldData: value.toString(),
+              controller: controllers[key]));
+        }
     });
     return list;
   }
