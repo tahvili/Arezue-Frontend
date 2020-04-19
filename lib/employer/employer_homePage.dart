@@ -19,126 +19,94 @@ class EmployerHomePage extends StatefulWidget {
   final VoidCallback onSignOut;
 
   @override
-  _EmployerPageState createState() =>
-      new _EmployerPageState(auth: this.auth);
+  _EmployerPageState createState() => new _EmployerPageState(auth: this.auth);
 }
 
-//enum FormType4 { employer, jobseeker }
-
 class _EmployerPageState extends State<EmployerHomePage> {
-  //FormType4 formType;
-
   _EmployerPageState({this.auth});
 
-  //Future<Jobseeker> futureUser;
   final BaseAuth auth;
   Future<Object> futureEmployer;
   Requests request = new Requests();
-  bool activelyHiring = false;
+  String name = "";
+  String initial = "";
+  String userUid = "";
+  String profilePicture = "";
   Requests serverRequest = new Requests();
 
   @override
   void initState() {
     //calling the appropriate http get request
     super.initState();
-//    if (this.formType == FormType4.jobseeker) {
-//      futureUser = (request.getRequest(widget.auth.currentUser(), 'jobseeker')) as Future<Jobseeker>;
-//    } else {
-    futureEmployer = (request.getRequest(widget.auth.currentUser(), 'employer'));
-//    }
+    futureEmployer =
+        (request.getRequest(widget.auth.currentUser(), 'employer'));
   }
 
   Widget _getProfile() {
     // Profile picture
-    return FutureBuilder<Object>(
-      future: futureEmployer,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          var companyName = (snapshot.data as Employer).name.split(" ");
-          if ((snapshot.data as Employer).profilePicture == null) {
-            return CircleAvatar(
-              backgroundColor: ArezueColors.primaryColor,
-              foregroundColor: ArezueColors.secondaryColor,
-              radius: 50,
-              child: Text(
-                  companyName[0][0] + companyName[companyName.length - 1][0],
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
-            );
-          } else {
-            return CircleAvatar(
-              backgroundColor: ArezueColors.primaryColor,
-              foregroundColor: ArezueColors.secondaryColor,
-              radius: 50,
-              child: ClipOval(
-                child: new SizedBox(
-                  width: 130,
-                  height: 130,
-                  child: new Image.asset((snapshot.data as Employer).profilePicture,
-                      fit: BoxFit.cover),
-                ),
-              ),
-            );
-          }
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        // By default, show a loading spinner.
-        return Loading();
-      },
-    );
+    if (profilePicture == null) {
+      return CircleAvatar(
+        backgroundColor: ArezueColors.primaryColor,
+        foregroundColor: ArezueColors.secondaryColor,
+        radius: 50,
+        child: Text(initial,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
+      );
+    } else {
+      return CircleAvatar(
+        backgroundColor: ArezueColors.primaryColor,
+        foregroundColor: ArezueColors.secondaryColor,
+        radius: 50,
+        child: ClipOval(
+          child: new SizedBox(
+            width: 130,
+            height: 130,
+            child: new Image.asset(profilePicture, fit: BoxFit.cover),
+          ),
+        ),
+      );
+    }
   }
 
   Widget companyProfile() {
     // Profile area + border
-    return FutureBuilder<Object>(
-      future: futureEmployer,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Container(
-            child: Container(
-              child: _getProfile(),
-              width: 140.0,
-              height: 140.0,
-              decoration: new BoxDecoration(
-                border: Border.all(
-                  color: ArezueColors
-                      .greenColor, //                   <--- border color
-                  width: 4.0,
-                ),
-                color: ArezueColors.primaryColor, // border color
-                shape: BoxShape.circle,
-              ),
+    return Container(
+      child: Container(
+        child: _getProfile(),
+        width: 140.0,
+        height: 140.0,
+        decoration: new BoxDecoration(
+          border: Border.all(
+            color:
+                ArezueColors.greenColor, //                   <--- border color
+            width: 4.0,
+          ),
+          color: ArezueColors.primaryColor, // border color
+          shape: BoxShape.circle,
+        ),
+      ),
+      width: 155.0,
+      height: 155.0,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color:
+              ArezueColors.primaryColor, //                   <--- border color
+          width: 4.0,
+        ),
+        color: ArezueColors.primaryColor, // border color
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: ArezueColors.shadowColor,
+            blurRadius: 10.0,
+            spreadRadius: 5.0,
+            offset: Offset(
+              0.0,
+              0.0,
             ),
-            width: 155.0,
-            height: 155.0,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: ArezueColors
-                    .primaryColor, //                   <--- border color
-                width: 4.0,
-              ),
-              color: ArezueColors.primaryColor, // border color
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: ArezueColors.shadowColor,
-                  blurRadius: 10.0,
-                  spreadRadius: 5.0,
-                  offset: Offset(
-                    0.0,
-                    0.0,
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        // By default, show a loading spinner.
-        return CircularProgressIndicator();
-      },
+          ),
+        ],
+      ),
     );
   }
 
@@ -322,37 +290,18 @@ class _EmployerPageState extends State<EmployerHomePage> {
       ListView(
         children: <Widget>[
           Container(
-            margin: const EdgeInsets.only(
-                right: 50, left: 50, bottom: 20, top: 230),
-            alignment: Alignment.center,
-            child: FutureBuilder<Object>(
-              future: futureEmployer,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  var fullName = (snapshot.data as Employer).name.split(" ");
-                  var name = "";
-                  for (int i = 0; i < fullName.length; i++) {
-                    if (fullName[i].length > 0) {
-                      name += " ";
-                      name += fullName[i];
-                    }
-                  }
-                  return Text(
-                    "Hey," + name + "!",
-                    style: TextStyle(
-                      color: ArezueColors.outPrimaryColor,
-                      fontSize: 25,
-                      fontFamily: 'Arezue',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                } // By default, show a loading spinner.
-                return CircularProgressIndicator();
-              },
-            ),
-          ),
+              margin: const EdgeInsets.only(
+                  right: 50, left: 50, bottom: 20, top: 230),
+              alignment: Alignment.center,
+              child: Text(
+                "Hey," + name + "!",
+                style: TextStyle(
+                  color: ArezueColors.outPrimaryColor,
+                  fontSize: 25,
+                  fontFamily: 'Arezue',
+                  fontWeight: FontWeight.w400,
+                ),
+              )),
           Container(
             margin:
                 const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
@@ -403,8 +352,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
               MaterialPageRoute(
                   builder: (context) => SearchIntro(
                         auth: widget.auth,
-                      )
-              ),
+                      )),
             );
           },
         ),
@@ -424,9 +372,7 @@ class _EmployerPageState extends State<EmployerHomePage> {
                 MaterialPageRoute(
                     builder: (context) => JobPage(
                           auth: this.auth,
-                        )
-                )
-            );
+                        )));
           },
         ),
       ),
@@ -470,13 +416,40 @@ class _EmployerPageState extends State<EmployerHomePage> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Stack(
-          overflow: Overflow.visible,
-          children: submitWidgets(),
-        ),
-      ),
+    return FutureBuilder<Object>(
+      future: (request.getRequest(widget.auth.currentUser(), 'employer')),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          setData((snapshot.data as Employer));
+          return Scaffold(
+            body: Container(
+              child: Stack(
+                overflow: Overflow.visible,
+                children: submitWidgets(),
+              ),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        // By default, show a loading spinner.
+        return Loading();
+      },
     );
+  }
+
+  void setData(Employer data) {
+    userUid = data.uid;
+    profilePicture = data.profilePicture;
+    name = "";
+    initial = "";
+    var fullName = data.name.split(" ");
+    for (int i = 0; i < fullName.length; i++) {
+      if (fullName[i].length > 0) {
+        name += " ";
+        name += fullName[i];
+        initial += fullName[i][0];
+      }
+    }
   }
 }

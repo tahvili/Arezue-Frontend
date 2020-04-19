@@ -59,7 +59,8 @@ class _JobFormState extends State<JobForm> {
   final String jobId;
   final bool isNew;
   final BaseAuth auth;
-  final Map<String, dynamic> objectList;
+  Map<String, dynamic> objects;
+  Map<String, dynamic> objectList;
   bool isFieldEmpty;
   Requests request = new Requests();
   Map<String, String> finalEditList = new Map<String, String>();
@@ -67,6 +68,7 @@ class _JobFormState extends State<JobForm> {
 
   @override
   initState() {
+    objects = objectList;
     this.isFieldEmpty = false;
     super.initState();
   }
@@ -74,16 +76,17 @@ class _JobFormState extends State<JobForm> {
   void submitHandler() async {
     // saves and stores to database
     controllers.forEach((k, v) {
+      print("$k:${v.text}");
       if (v.text == "") {
         isFieldEmpty = true;
       }
       objectList[k] = v.text;
     });
-    objectList.forEach((k, v) {
-      if (v == "") {
-        this.isFieldEmpty = true;
-      }
-    });
+//    objectList.forEach((k, v) {
+//      if (v == "") {
+//        this.isFieldEmpty = true;
+//      }
+//    });
     if (isFieldEmpty) {
       _showPasswordResetSentDialog();
       this.isFieldEmpty =
@@ -163,73 +166,128 @@ class _JobFormState extends State<JobForm> {
   List<Widget> listWidgets(Map<String, dynamic> map) {
     // Text field for regular inputs
     List<Widget> list = new List<Widget>();
-    map.forEach((key, value) {
-        controllers[key] = new TextEditingController(text: value);
-        if (key == "Wage" || key == "Hours") {
-          list.add(MyTextField(
-              title: key,
-              fieldId: key,
-              fieldType: "numeric",
-              fieldData: value.toString(),
-              handler: formHandler,
-              controller: controllers[key]));
-        } else {
-          list.add(MyTextField2(
-              title: key,
-              fieldData: value.toString(),
-              controller: controllers[key]));
-        }
+    objectList.forEach((key, value) {
+      controllers[key] = new TextEditingController(text: value);
+      if (key == "Wage" || key == "Hours") {
+        list.add(MyTextField(
+            title: key,
+            fieldId: key,
+            fieldType: "numeric",
+            fieldData: value.toString(),
+            handler: formHandler,
+            controller: controllers[key]));
+      } else {
+        list.add(MyTextField2(
+            title: key,
+            fieldData: value.toString(),
+            controller: controllers[key]));
+      }
     });
     return list;
   }
 
+  bool update() {
+    for (var key in objectList.keys) {
+      if (objects[key] != controllers[key].text) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> _onWillPop() async {
+    if (update()) {
+      return (await showDialog(
+            context: context,
+            builder: (context) => new AlertDialog(
+              title: new Text('Are you sure?'),
+              content: new Text('There are unsaved changes!'),
+              actions: <Widget>[
+                new FlatButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: new Text('No'),
+                ),
+                new FlatButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: new Text('Yes'),
+                ),
+              ],
+            ),
+          )) ??
+          false;
+    }
+    return true;
+  }
+
   Widget build(BuildContext context) {
     //controller.text = this.fieldData as String;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ArezueColors.secondaryColor,
-        title: Text(title),
-        actions: <Widget>[
-          IconButton(
-            color: Colors.white,
-            icon: Icon(Icons.help, color: Colors.white),
-            onPressed: null,
-          )
-        ],
-      ),
-      body: GestureDetector(
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
+    return new WillPopScope(
+        onWillPop: _onWillPop,
+        child: GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
 
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 25,
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: ArezueColors.secondaryColor,
+                title: Text(title),
+                actions: <Widget>[
+                  IconButton(
+                    color: Colors.white,
+                    icon: Icon(Icons.help, color: Colors.white),
+                    onPressed: null,
+                  )
+                ],
               ),
-              Container(
-                //width: MediaQuery.of(context).size.width,
-                child: Column(
-                  children: listWidgets(this.objectList),
+              body: GestureDetector(
+                onTap: () {
+                  FocusScopeNode currentFocus = FocusScope.of(context);
+
+                  if (!currentFocus.hasPrimaryFocus) {
+                    currentFocus.unfocus();
+                  }
+                },
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Container(
+                        //width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          children: listWidgets(this.objectList),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          deleteButton(),
+                          SizedBox(width: 10),
+                          RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            onPressed: () {
+                              submitHandler();
+                            },
+                            padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
+                            color: ArezueColors.secondaryColor,
+                            child: Text("Save",
+                                style: TextStyle(
+                                    color: ArezueColors.primaryColor)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              RaisedButton(
-                onPressed: () {
-                  submitHandler();
-                },
-                child: Text("Submit",
-                    style: TextStyle(color: ArezueColors.outPrimaryColor)),
-              ),
-              deleteButton(),
-            ],
-          ),
-        ),
-      ),
-    );
+            )));
   }
 
   Widget deleteButton() {
@@ -239,16 +297,22 @@ class _JobFormState extends State<JobForm> {
             width: 1,
           )
         : RaisedButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             onPressed: () async {
-              if (await (request.deleteRequest(uid, "/jobs/${this.jobId}")) ==
+              if (await (request.deleteRequest(
+                      "employer", uid, "/jobs/${this.jobId}")) ==
                   200) {
                 Navigator.pop(context);
               } else {
                 _showPasswordResetSentDialog();
               }
             },
+            padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
+            color: ArezueColors.greyColor,
             child: Text("Delete",
-                style: TextStyle(color: ArezueColors.outPrimaryColor)),
+                style: TextStyle(color: ArezueColors.primaryColor)),
           );
   }
 

@@ -5,6 +5,7 @@ import 'dart:convert';
 /// The purpose of this page is to let the user create/edit/delete a resume and send the data to server
 
 import 'package:arezue/utils/colors.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/services/auth.dart';
 import 'package:arezue/services/http.dart';
@@ -39,18 +40,25 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   bool update = false;
 
   void updateHandler(String endpoint, List list) {
-    update = true;
-    if (endpoint == "/dream_career") {
+    if (!listEquals(dreamCareer, list) && endpoint == "/dream_career") {
+      update = true;
       dreamCareer = list;
-    } else if (endpoint == "/dream_company") {
+    } else if (!listEquals(dreamCompany, list) &&
+        endpoint == "/dream_company") {
+      update = true;
       dreamCompany = list;
-    } else if (endpoint == "/skill") {
+    } else if (!listEquals(skill, list) && endpoint == "/skill") {
+      update = true;
       skill = list;
-    } else if (endpoint == "/education") {
+    } else if (!listEquals(education, list) && endpoint == "/education") {
+      update = true;
       education = list;
-    } else if (endpoint == "/exp") {
+    } else if (!listEquals(experience, list) && endpoint == "/exp") {
+      update = true;
       experience = list;
-    } else if (endpoint == "/certification") {
+    } else if (!listEquals(certification, list) &&
+        endpoint == "/certification") {
+      update = true;
       certification = list;
     }
   }
@@ -83,25 +91,26 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   Future<JobseekerInfo> fetchData() async {
     // Fetching data from server and formatting it
     if (widget.resumeId != null && !update) {
-      data = await request.resumeGetRequest("${widget.uid}/resumes/${widget.resumeId}", 'resume_data');
+      data = await request.resumeGetRequest(
+          "${widget.uid}/resumes/${widget.resumeId}", 'resume_data');
       dreamCareer = (data['resume']['dream_career'])
           .replaceAll(RegExp(r'[\[\]]'), '')
-          .split(', ');
+          .split(',');
       dreamCompany = (data['resume']['dream_company'])
           .replaceAll(RegExp(r'[\[\]]'), '')
-          .split(', ');
+          .split(',');
       skill = (data['resume']['skill'])
           .replaceAll(RegExp(r'[\[\]]'), '')
-          .split(', ');
+          .split(',');
       education = (data['resume']['education'])
           .replaceAll(RegExp(r'[\[\]]'), '')
-          .split(', ');
+          .split(',');
       experience = (data['resume']['experience'])
           .replaceAll(RegExp(r'[\[\]]'), '')
-          .split(', ');
+          .split(',');
       certification = (data['resume']['certification'])
           .replaceAll(RegExp(r'[\[\]]'), '')
-          .split(', ');
+          .split(',');
     }
 
     return await request.profileGetRequest(await widget.auth.currentUser());
@@ -138,7 +147,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   Widget saveButton(String uid, String resumeId) {
     // Saving the resume and sending to server
     return SizedBox(
-      width: MediaQuery.of(context).size.width - 100,
+      width: (MediaQuery.of(context).size.width / 2) - 55,
       child: RaisedButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -162,23 +171,25 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
           } else {
             var finalData = {
               "name": resumeNameController.text,
-              "dream_career": dreamCareer.toString(),
-              "dream_company": dreamCompany.toString(),
-              "skill": skill.toString(),
-              "education": education.toString(),
-              "certification": certification.toString(),
-              "experience": experience.toString(),
+              "dream_career": dreamCareer.toString().replaceAll(", ", ","),
+              "dream_company": dreamCompany.toString().replaceAll(", ", ","),
+              "skill": skill.toString().replaceAll(", ", ","),
+              "education": education.toString().replaceAll(", ", ","),
+              "certification": certification.toString().replaceAll(", ", ","),
+              "experience": experience.toString().replaceAll(", ", ","),
             };
             if (resumeId != null) {
-              Future<int> result =
-                  request.putRequest("jobseeker/$uid/resumes/$resumeId", "x-www-form-urlencoded",
-                      {'resume' : json.encode(finalData)}, false);
+              Future<int> result = request.putRequest(
+                  "jobseeker/$uid/resumes/$resumeId",
+                  "x-www-form-urlencoded",
+                  {'resume': json.encode(finalData)},
+                  false);
               if ((await result) == 200) {
                 Navigator.pop(context);
               }
             } else {
-              Future<int> result = request.postRequest("jobseeker/$uid/resumes",
-                  {'resume' : json.encode(finalData)});
+              Future<int> result = request.postRequest(
+                  "jobseeker/$uid/resumes", {'resume': json.encode(finalData)});
               if ((await result) == 200) {
                 Navigator.pop(context);
               }
@@ -186,9 +197,8 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
           }
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
-        color: ArezueColors.outSecondaryColor,
-        child:
-            Text("Save", style: TextStyle(color: ArezueColors.outPrimaryColor)),
+        color: ArezueColors.secondaryColor,
+        child: Text("Save", style: TextStyle(color: ArezueColors.primaryColor)),
       ),
     );
   }
@@ -197,26 +207,27 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
     // Delete resume
     if (resumeId == null) {
       return SizedBox(
-        width: MediaQuery.of(context).size.width - 100,
+        width: (MediaQuery.of(context).size.width / 2) - 55,
       );
     } else {
       return SizedBox(
-        width: MediaQuery.of(context).size.width - 100,
+        width: (MediaQuery.of(context).size.width / 2) - 55,
         child: RaisedButton(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
           onPressed: () async {
             //List<List<String>> finalData = new List<List<String>>();
-            Future<int> result = request.deleteRequest(uid, "/resumes/$resumeId");
+            Future<int> result =
+                request.deleteRequest("jobseeker", uid, "/resumes/$resumeId");
             if ((await result) == 200) {
               Navigator.pop(context);
             }
           },
           padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
-          color: ArezueColors.outSecondaryColor,
+          color: ArezueColors.greyColor,
           child: Text("Delete",
-              style: TextStyle(color: ArezueColors.outPrimaryColor)),
+              style: TextStyle(color: ArezueColors.primaryColor)),
         ),
       );
     }
@@ -252,6 +263,9 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
             Expanded(
               child: TextField(
                 controller: resumeNameController,
+                onChanged: (text) {
+                  update = true;
+                },
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: "Enter something",
@@ -277,6 +291,30 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
     resumeNameController = TextEditingController(text: widget.resumeName);
   }
 
+  Future<bool> _onWillPop() async {
+    if (update) {
+      return (await showDialog(
+            context: context,
+            builder: (context) => new AlertDialog(
+              title: new Text('Are you sure?'),
+              content: new Text('There are unsaved changes!'),
+              actions: <Widget>[
+                new FlatButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: new Text('No'),
+                ),
+                new FlatButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: new Text('Yes'),
+                ),
+              ],
+            ),
+          )) ??
+          false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build function for this page
@@ -284,79 +322,103 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
       future: fetchData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: ArezueColors.secondaryColor,
-              title: Text('Create Resume'),
-              actions: <Widget>[
-                IconButton(
-                  color: Colors.white,
-                  icon: Icon(Icons.help, color: Colors.white),
-                  onPressed: null,
-                )
-              ],
-            ),
-            body: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
-              child: Column(
-                children: <Widget>[
-                  //Make objects of the parent using the custom child widget created.
-                  Text(
-                    "Build your perfect resume!",
-                    style: TextStyle(
-                      color: ArezueColors.outPrimaryColor,
-                      fontSize: 20,
-                      fontFamily: 'Arezue',
-                      fontWeight: FontWeight.w700,
+          return new WillPopScope(
+              onWillPop: _onWillPop,
+              child: GestureDetector(
+                  onTap: () {
+                    FocusScopeNode currentFocus = FocusScope.of(context);
+
+                    if (!currentFocus.hasPrimaryFocus) {
+                      currentFocus.unfocus();
+                    }
+                  },
+                  child: Scaffold(
+                    appBar: AppBar(
+                      backgroundColor: ArezueColors.secondaryColor,
+                      title: Text('Create/Edit Resume'),
+                      actions: <Widget>[
+                        IconButton(
+                          color: Colors.white,
+                          icon: Icon(Icons.help, color: Colors.white),
+                          onPressed: null,
+                        )
+                      ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 18,
-                  ),
-                  resumeName(),
-                  resumeButton(
-                      "Choose Your Career",
-                      "/dream_career",
-                      List<String>.from(snapshot
-                          .data.jobseeker.information.dreamCareer.careers),
-                      dreamCareer),
-                  resumeButton(
-                      "Choose Your Dream Company",
-                      "/dream_company",
-                      List<String>.from(snapshot
-                          .data.jobseeker.information.dreamCompany.companies),
-                      dreamCompany),
-                  resumeButton(
-                      "Choose Your Skill Sets",
-                      "/skill",
-                      generateListSkills(
-                          snapshot.data.jobseeker.information.skills),
-                      skill),
-                  resumeButton(
-                      "Choose Your Related Education",
-                      "/education",
-                      List<dynamic>.from(
-                          snapshot.data.jobseeker.information.education),
-                      education),
-                  resumeButton(
-                      "Choose Your Related Experiences",
-                      "/exp",
-                      List<dynamic>.from(
-                          snapshot.data.jobseeker.information.experience),
-                      experience),
-                  resumeButton(
-                      "Choose Your Related Certificates",
-                      "/certification",
-                      List<dynamic>.from(
-                          snapshot.data.jobseeker.information.certification),
-                      certification),
-                  saveButton(snapshot.data.jobseeker.uid, widget.resumeId),
-                  deleteButton(snapshot.data.jobseeker.uid, widget.resumeId),
-                ],
-              ),
-            ),
-          );
+                    body: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
+                      child: Column(
+                        children: <Widget>[
+                          //Make objects of the parent using the custom child widget created.
+                          Text(
+                            "Build your perfect resume!",
+                            style: TextStyle(
+                              color: ArezueColors.outPrimaryColor,
+                              fontSize: 20,
+                              fontFamily: 'Arezue',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 18,
+                          ),
+                          resumeName(),
+                          resumeButton(
+                              "Choose Your Related Careers",
+                              "/dream_career",
+                              List<String>.from(snapshot.data.jobseeker
+                                  .information.dreamCareer.careers),
+                              dreamCareer),
+                          SizedBox(height: 5),
+                          resumeButton(
+                              "Choose Your Dream Company",
+                              "/dream_company",
+                              List<String>.from(snapshot.data.jobseeker
+                                  .information.dreamCompany.companies),
+                              dreamCompany),
+                          SizedBox(height: 5),
+                          resumeButton(
+                              "Choose Your Skill Sets",
+                              "/skill",
+                              generateListSkills(
+                                  snapshot.data.jobseeker.information.skills),
+                              skill),
+                          SizedBox(height: 5),
+                          resumeButton(
+                              "Choose Your Related Education",
+                              "/education",
+                              List<dynamic>.from(snapshot
+                                  .data.jobseeker.information.education),
+                              education),
+                          SizedBox(height: 5),
+                          resumeButton(
+                              "Choose Your Related Experiences",
+                              "/exp",
+                              List<dynamic>.from(snapshot
+                                  .data.jobseeker.information.experience),
+                              experience),
+                          SizedBox(height: 5),
+                          resumeButton(
+                              "Choose Your Related Certificates",
+                              "/certification",
+                              List<dynamic>.from(snapshot
+                                  .data.jobseeker.information.certification),
+                              certification),
+                          SizedBox(height: 15),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              deleteButton(
+                                  snapshot.data.jobseeker.uid, widget.resumeId),
+                              SizedBox(width: 10),
+                              saveButton(
+                                  snapshot.data.jobseeker.uid, widget.resumeId),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  )));
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         } else {

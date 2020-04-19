@@ -148,35 +148,40 @@ class _FormPageState2 extends State<FormPage2> {
         }
       } else {
         //make a put request here
-          Map<String, String> map =  new Map();
-          String endpoint;
-          if(this.fieldId == "education"){
-            map = {'ed_id': id, 'school_name': firstVal, 'start_date':
-            startDate, 'grad_date': endDate, 'program': secondVal};
-            endpoint = "jobseeker/$uid/education";
-          }else if(this.fieldId == "experience"){
-            map = {
-              'exp_id': id,
-              'title': firstVal,
-              'start_date': startDate,
-              'end_date': endDate,
-              'description': secondVal
-            };
-            endpoint = "jobseeker/$uid/exp";
-          }else{
-            map = {
-              'c_id': id,
-              'cert_name': firstVal,
-              'start_date': startDate,
-              'end_date': endDate,
-              'issuer': secondVal
-            };
-            endpoint = "jobseeker/$uid/certification";
-          }
-          if (await (request.putRequest(endpoint, "json", map, true)) == 200) {
-            handler([firstVal, startDate, endDate, secondVal], id);
-            Navigator.pop(context);
-          }
+        Map<String, String> map = new Map();
+        String endpoint;
+        if (this.fieldId == "education") {
+          map = {
+            'ed_id': id,
+            'school_name': firstVal,
+            'start_date': startDate,
+            'grad_date': endDate,
+            'program': secondVal
+          };
+          endpoint = "jobseeker/$uid/education";
+        } else if (this.fieldId == "experience") {
+          map = {
+            'exp_id': id,
+            'title': firstVal,
+            'start_date': startDate,
+            'end_date': endDate,
+            'description': secondVal
+          };
+          endpoint = "jobseeker/$uid/exp";
+        } else {
+          map = {
+            'c_id': id,
+            'cert_name': firstVal,
+            'start_date': startDate,
+            'end_date': endDate,
+            'issuer': secondVal
+          };
+          endpoint = "jobseeker/$uid/certification";
+        }
+        if (await (request.putRequest(endpoint, "json", map, true)) == 200) {
+          handler([firstVal, startDate, endDate, secondVal], id);
+          Navigator.pop(context);
+        }
       }
     }
   }
@@ -185,9 +190,9 @@ class _FormPageState2 extends State<FormPage2> {
     List<Widget> list = new List<Widget>();
     map.forEach((key, value) {
       controllers[key] = new TextEditingController(text: value);
-      if(key == "Start Date" || key == "End Date"){
+      if (key == "Start Date" || key == "End Date") {
         list.add(DatePickerField(key, value.toString(), controllers[key]));
-      }else {
+      } else {
         list.add(MyTextField2(
             title: key,
             fieldData: value.toString(),
@@ -213,7 +218,7 @@ class _FormPageState2 extends State<FormPage2> {
         ],
       ),
       body: GestureDetector(
-        onTap: (){
+        onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
 
           if (!currentFocus.hasPrimaryFocus) {
@@ -224,7 +229,7 @@ class _FormPageState2 extends State<FormPage2> {
           child: Column(
             children: [
               SizedBox(
-                height: 25,
+                height: 50,
               ),
               Container(
                 //width: MediaQuery.of(context).size.width,
@@ -232,14 +237,25 @@ class _FormPageState2 extends State<FormPage2> {
                   children: listWidgets(this.objectList),
                 ),
               ),
-              RaisedButton(
-                onPressed: () {
-                  submitHandler();
-                },
-                child: Text("Submit",
-                    style: TextStyle(color: ArezueColors.outPrimaryColor)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  deleteButton(),
+                  SizedBox(width: 10),
+                  RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    onPressed: () {
+                      submitHandler();
+                    },
+                    padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
+                    color: ArezueColors.secondaryColor,
+                    child: Text("Save",
+                        style: TextStyle(color: ArezueColors.primaryColor)),
+                  ),
+                ],
               ),
-              deleteButton(),
             ],
           ),
         ),
@@ -253,19 +269,22 @@ class _FormPageState2 extends State<FormPage2> {
             width: 1,
           )
         : RaisedButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             onPressed: () async {
-              if(this.fieldId == "experience"){
+              if (this.fieldId == "experience") {
                 if (await (request.deleteRequest(
-                    this.uid, "exp/${this.id}")) ==
+                        "jobseeker", this.uid, "exp/${this.id}")) ==
                     200) {
                   Navigator.pop(context);
                   handler(this.id, "delete");
                 } else {
                   _showPasswordResetSentDialog();
                 }
-              } else{
+              } else {
                 if (await (request.deleteRequest(
-                    this.uid, "${this.fieldId}/${this.id}")) ==
+                        "jobseeker", this.uid, "${this.fieldId}/${this.id}")) ==
                     200) {
                   Navigator.pop(context);
                   handler(this.id, "delete");
@@ -274,8 +293,10 @@ class _FormPageState2 extends State<FormPage2> {
                 }
               }
             },
+            padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
+            color: ArezueColors.greyColor,
             child: Text("Delete",
-                style: TextStyle(color: ArezueColors.outPrimaryColor)),
+                style: TextStyle(color: ArezueColors.primaryColor)),
           );
   }
 

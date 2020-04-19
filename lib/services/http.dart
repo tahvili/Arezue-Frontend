@@ -118,12 +118,13 @@ class Requests {
     } else {
       response = await http.put(url, headers: headers, body: json.encode(map));
     }
+    print(response.statusCode);
     return response.statusCode;
   }
 
   Future<int> profileSkillPutRequest(String uid, String oldSkill,
       String newSkill, String numExperience, String numExpertise) async {
-    if (await (deleteRequest(uid, "skill/$oldSkill")) == 200) {
+    if (await (deleteRequest("jobseeker", uid, "skill/$oldSkill")) == 200) {
       Future<int> response = postRequest("jobseeker/$uid/skill", {
         'skill': newSkill,
         'level': '$numExpertise',
@@ -137,8 +138,8 @@ class Requests {
 
   // Delete Requests
 
-  Future<int> deleteRequest(String uid, String endpoint) async {
-    String url = 'https://api.daffychuy.com/api/v1/jobseeker/$uid/$endpoint';
+  Future<int> deleteRequest(String user, String uid, String endpoint) async {
+    String url = 'https://api.daffychuy.com/api/v1/$user/$uid/$endpoint';
     http.Response response = await http.delete(url);
     return response.statusCode;
   }

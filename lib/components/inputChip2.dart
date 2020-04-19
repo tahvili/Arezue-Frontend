@@ -91,16 +91,16 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
       });
     } else if (command == "delete") {
       setState(() {
-        serverRequest.deleteRequest(this.uid, "skill/$text");
+        serverRequest.deleteRequest("jobseeker", this.uid, "skill/$text");
         this.objectList.remove(text);
       });
-    } else if (command == "error"){
+    } else if (command == "error") {
       _showExisitingMessage(text);
-    } else if(command == "edit") {
+    } else if (command == "edit") {
       setState(() {
         this.objectList.remove(text);
       });
-    }else {
+    } else {
       setState(() {});
     }
     handler(text, command);
@@ -131,7 +131,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
               context,
               MaterialPageRoute(
                   builder: (context) => FormPage(
-                      title: "Edit Your skill",
+                      title: "Edit Your Skill",
                       skill: value['skill'],
                       numExperience: value['years'],
                       numExpertise: value['level'],
@@ -198,7 +198,7 @@ class _InputChipBuilderState2 extends State<InputChipBuilder2> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => FormPage(
-                                    title: "Add a skill",
+                                    title: "Add New Skill",
                                     skill: null,
                                     numExperience: 0,
                                     numExpertise: 5,
