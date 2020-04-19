@@ -11,6 +11,7 @@ import 'package:arezue/jobseeker/jobseeker.dart';
 import 'package:arezue/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:arezue/services/auth.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({this.auth, this.onSignOut, this.formType});
@@ -31,7 +32,9 @@ enum AuthStatus {
 class _SettingsPageState extends State<SettingsPage> {
   FormType2 formType;
   bool loading = false;
+
   _SettingsPageState({this.formType});
+
   Future<Jobseeker> futureUser;
   Future<Employer> futureEmployer;
   AuthStatus authStatus = AuthStatus.notSignedIn;
@@ -226,7 +229,7 @@ class _SettingsPageState extends State<SettingsPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      onPressed: () {},
+      onPressed: null,
       padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
       color: ArezueColors.outSecondaryColor,
       child: Text('Download Resume', style: textStyle),
@@ -247,47 +250,60 @@ class _SettingsPageState extends State<SettingsPage> {
     ),
   );
 
-  final Widget agreementButton = Padding(
-    // Legal and Agreements
-    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
-    child: RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
+  Widget agreementButton() {
+    return Padding(
+      // Legal and Agreements
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        onPressed: () {
+          print("i got here!");
+          _launchURL('https://kiuloper.com/tos/');
+        },
+        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+        color: ArezueColors.outSecondaryColor,
+        child: Text('User Agreement', style: textStyle),
       ),
-      onPressed: () {},
-      padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
-      color: ArezueColors.outSecondaryColor,
-      child: Text('User Agreement', style: textStyle),
-    ),
-  );
+    );
+  }
 
-  final Widget helpCenterButton = Padding(
-    // Help Centre
-    padding: EdgeInsets.fromLTRB(50.0, 10.0, 0.0, 10.0),
-    child: RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
+  Widget helpCenterButton() {
+    return Padding(
+      // Help Centre
+      padding: EdgeInsets.fromLTRB(50.0, 10.0, 0.0, 10.0),
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        onPressed: () {
+          _launchURL('https://panel.kiuloper.com/submitticket.php');
+        },
+        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+        color: ArezueColors.outSecondaryColor,
+        child: Text('Help Center', style: textStyle),
       ),
-      onPressed: () {},
-      padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
-      color: ArezueColors.outSecondaryColor,
-      child: Text('Help Center', style: textStyle),
-    ),
-  );
+    );
+  }
 
-  final Widget privacyButton = Padding(
-    // Privacy Information
-    padding: EdgeInsets.fromLTRB(35.0, 10.0, 0.0, 10.0),
-    child: RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
+  Widget privacyButton() {
+    return Padding(
+      // Privacy Information
+      padding: EdgeInsets.fromLTRB(35.0, 10.0, 0.0, 10.0),
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        onPressed: () {
+          _launchURL('https://kiuloper.com/privacy-policy/');
+        },
+        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+        color: ArezueColors.outSecondaryColor,
+        child: Text('Privacy', style: textStyle),
       ),
-      onPressed: () {},
-      padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
-      color: ArezueColors.outSecondaryColor,
-      child: Text('Privacy', style: textStyle),
-    ),
-  );
+    );
+  }
 
   final Widget versionButton = Padding(
     // App Version
@@ -296,7 +312,7 @@ class _SettingsPageState extends State<SettingsPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      onPressed: () {},
+      onPressed: null,
       padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
       color: ArezueColors.outSecondaryColor,
       child: Text('Version: 1.0.1', style: textStyle),
@@ -340,9 +356,9 @@ class _SettingsPageState extends State<SettingsPage> {
       changePasswordButton,
       billingButton,
       premiumButton,
-      agreementButton,
+      agreementButton(),
       Row(
-        children: <Widget>[helpCenterButton, privacyButton],
+        children: <Widget>[helpCenterButton(), privacyButton()],
       ),
       Row(
         children: <Widget>[
@@ -360,11 +376,10 @@ class _SettingsPageState extends State<SettingsPage> {
       phoneNumberField(phoneNumber),
       appLanguageField,
       changePasswordButton,
-      connectedAccounts,
       downloadResume,
-      agreementButton,
+      agreementButton(),
       Row(
-        children: <Widget>[helpCenterButton, privacyButton],
+        children: <Widget>[helpCenterButton(), privacyButton()],
       ),
       Row(
         children: <Widget>[
@@ -430,5 +445,13 @@ class _SettingsPageState extends State<SettingsPage> {
         }
       },
     );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
