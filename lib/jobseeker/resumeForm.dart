@@ -40,23 +40,23 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   bool update = false;
 
   void updateHandler(String endpoint, List list) {
-    if (!listEquals(dreamCareer, list) && endpoint == "/dream_career") {
+    if (!((dreamCareer.isEmpty || dreamCareer[0].length==0) && (list.isEmpty || list[0].length==0)) && !listEquals(dreamCareer, list) && endpoint == "/dream_career") {
       update = true;
       dreamCareer = list;
-    } else if (!listEquals(dreamCompany, list) &&
+    } else if (!((dreamCompany.isEmpty || dreamCompany[0].length==0) && (list.isEmpty || list[0].length==0)) && !listEquals(dreamCompany, list) &&
         endpoint == "/dream_company") {
       update = true;
       dreamCompany = list;
-    } else if (!listEquals(skill, list) && endpoint == "/skill") {
+    } else if (!((skill.isEmpty || skill[0].length==0) && (list.isEmpty || list[0].length==0)) && !listEquals(skill, list) && endpoint == "/skill") {
       update = true;
       skill = list;
-    } else if (!listEquals(education, list) && endpoint == "/education") {
+    } else if (!((education.isEmpty || education[0].length==0) && (list.isEmpty || list[0].length==0)) && !listEquals(education, list) && endpoint == "/education") {
       update = true;
       education = list;
-    } else if (!listEquals(experience, list) && endpoint == "/exp") {
+    } else if (!((experience.isEmpty || experience[0].length==0) && (list.isEmpty || list[0].length==0)) && !listEquals(experience, list) && endpoint == "/exp") {
       update = true;
       experience = list;
-    } else if (!listEquals(certification, list) &&
+    } else if (!((certification.isEmpty || certification[0].length==0) && (list.isEmpty || list[0].length==0)) && !listEquals(certification, list) &&
         endpoint == "/certification") {
       update = true;
       certification = list;

@@ -70,13 +70,24 @@ class _JobFormState extends State<JobForm> {
   initState() {
     objects = objectList;
     this.isFieldEmpty = false;
+    disposer();
+    controllers = new Map();
+    objectList.forEach((key, value) {
+      controllers[key] = new TextEditingController(text: value);
+    });
     super.initState();
+  }
+
+  void disposer() {
+    controllers.forEach((k, v) {
+      controllers[k].dispose();
+    });
   }
 
   void submitHandler() async {
     // saves and stores to database
     controllers.forEach((k, v) {
-      print("$k:${v.text}");
+      //print("$k:${v.toString().substring(21,27)}   ${v.text}");
       if (v.text == "") {
         isFieldEmpty = true;
       }
@@ -111,6 +122,7 @@ class _JobFormState extends State<JobForm> {
           'max_candidate': arr[6].toString()
         };
 
+
         if (await (request.postRequest("employer/${this.uid}/jobs", map)) ==
             200) {
           Navigator.pop(context);
@@ -140,34 +152,33 @@ class _JobFormState extends State<JobForm> {
 
   void formHandler(key, value) {
     // form storage space before sending to server
-    setState(() {
-      objectList[key] = value;
-    });
-    if (!(this.isNew)) {
-      if (key == "Title") {
-        finalEditList['title'] = value.toString();
-      } else if (key == "Wage") {
-        finalEditList['wage'] = value.toString();
-      } else if (key == "Hours") {
-        finalEditList['hours'] = value.toString();
-      } else if (key == "Location") {
-        this.finalEditList['location'] = value.toString();
-      } else if (key == "Status") {
-        finalEditList['status'] = value.toString();
-      } else if (key == "Description") {
-        finalEditList['description'] = value.toString();
-      } else if (key == "Maximum Candidates") {
-        finalEditList['max_candidate'] = value.toString();
-      }
-    }
-    setState(() {});
+//    setState(() {
+//      objectList[key] = value;
+//    });
+//    if (!(this.isNew)) {
+//      if (key == "Title") {
+//        finalEditList['title'] = value.toString();
+//      } else if (key == "Wage") {
+//        finalEditList['wage'] = value.toString();
+//      } else if (key == "Hours") {
+//        finalEditList['hours'] = value.toString();
+//      } else if (key == "Location") {
+//        this.finalEditList['location'] = value.toString();
+//      } else if (key == "Status") {
+//        finalEditList['status'] = value.toString();
+//      } else if (key == "Description") {
+//        finalEditList['description'] = value.toString();
+//      } else if (key == "Maximum Candidates") {
+//        finalEditList['max_candidate'] = value.toString();
+//      }
+//    }
+//    setState(() {});
   }
 
   List<Widget> listWidgets(Map<String, dynamic> map) {
     // Text field for regular inputs
     List<Widget> list = new List<Widget>();
     objectList.forEach((key, value) {
-      controllers[key] = new TextEditingController(text: value);
       if (key == "Wage" || key == "Hours") {
         list.add(MyTextField(
             title: key,

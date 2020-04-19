@@ -74,13 +74,9 @@ class _MyTextFieldState2 extends State<MyTextField2> {
     "text": TextInputType.text
   };
 
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
   // The actual object iself.
   Widget build(BuildContext context) {
+    //print("inside is ${controller.toString().substring(21,27)}");
     return Container(
       padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
       margin: const EdgeInsets.only(right: 50, left: 50, bottom: 20, top: 0),
@@ -128,7 +124,7 @@ class _MyTextFieldState2 extends State<MyTextField2> {
                   ),
                   // ########## We do not need this anymore, we're passing in a controller #####
                   // ### Keeping this comment temporarily
-                  // onSubmitted: (text) => submitHandler(text),
+                  onSubmitted: (text){},
                   // onChanged: (text) => submitHandler(text),
                 ),
               ),

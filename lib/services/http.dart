@@ -118,7 +118,6 @@ class Requests {
     } else {
       response = await http.put(url, headers: headers, body: json.encode(map));
     }
-    print(response.statusCode);
     return response.statusCode;
   }
 
