@@ -122,7 +122,6 @@ class _JobFormState extends State<JobForm> {
           'max_candidate': arr[6].toString()
         };
 
-
         if (await (request.postRequest("employer/${this.uid}/jobs", map)) ==
             200) {
           Navigator.pop(context);
