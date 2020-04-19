@@ -11,10 +11,11 @@ import '../loading.dart';
 
 class ResumeView extends StatefulWidget {
   @override
-  ResumeView({this.data, this.resumeName, this.uid});
+  ResumeView({this.data, this.resumeName, this.uid, this.preview});
   final Map<String, dynamic> data;
   final String uid;
   final String resumeName;
+  final bool preview;
 
   @override
   _ResumeView createState() => new _ResumeView();
@@ -42,6 +43,14 @@ class _ResumeView extends State<ResumeView> {
   void initState() {
     super.initState();
     uData = fetchData();
+  }
+
+  Function _buttonPress() {
+    if (widget.preview) {
+      return null;
+    } else {
+      return () {};
+    }
   }
 
   @override
@@ -114,7 +123,7 @@ class _ResumeView extends State<ResumeView> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24),
                               ),
-                              onPressed: () => {},
+                              onPressed: _buttonPress(),
                               padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
                               color: ArezueColors.secondaryColor,
                               child: Text("REQUEST INTERVIEW",
@@ -161,7 +170,7 @@ class _ResumeView extends State<ResumeView> {
                         (widget.data["experience"])
                             .toString()
                             .replaceAll(RegExp(r'[\[\]]'), '')
-                            .split(', '),
+                            .split(','),
                         snapshot.data.jobseeker.information.experience,
                         MediaQuery.of(context).size.width),
                   ),
@@ -171,7 +180,7 @@ class _ResumeView extends State<ResumeView> {
                         (widget.data["skill"])
                             .toString()
                             .replaceAll(RegExp(r'[\[\]]'), '')
-                            .split(', '),
+                            .split(','),
                         MediaQuery.of(context).size.width),
                   ),
                   Container(
@@ -209,7 +218,7 @@ class _ResumeView extends State<ResumeView> {
                         (widget.data["education"])
                             .toString()
                             .replaceAll(RegExp(r'[\[\]]'), '')
-                            .split(', '),
+                            .split(','),
                         snapshot.data.jobseeker.information.education,
                         MediaQuery.of(context).size.width),
                   ),
@@ -248,7 +257,7 @@ class _ResumeView extends State<ResumeView> {
                         (widget.data["certification"])
                             .toString()
                             .replaceAll(RegExp(r'[\[\]]'), '')
-                            .split(', '),
+                            .split(','),
                         snapshot.data.jobseeker.information.certification,
                         MediaQuery.of(context).size.width),
                   ),
@@ -332,8 +341,14 @@ List<Widget> skillList(List<String> list, double width) {
 
 List<Widget> experienceList(
     List<String> list, List<Experience> experience, double width) {
-  // make experience list
   List<Widget> widgetList = new List();
+  if (list[0].length == 0) {
+    widgetList.add(Padding(
+        padding: EdgeInsets.fromLTRB(25, 10, 25, 25),
+        child: Text("I don't have any relevent experiences")));
+    return widgetList;
+  }
+  // make experience list
   experience.forEach((experience) {
     for (int i = 0; i < list.length; i++) {
       if (list[i] == experience.expId) {
@@ -379,6 +394,12 @@ List<Widget> educationList(
     List<String> list, List<Education> education, double width) {
   // make education list
   List<Widget> widgetList = new List();
+  if (list[0].length == 0) {
+    widgetList.add(Padding(
+        padding: EdgeInsets.fromLTRB(25, 10, 25, 25),
+        child: Text("I don't have any relevent educations")));
+    return widgetList;
+  }
   education.forEach((education) {
     for (int i = 0; i < list.length; i++) {
       if (list[i] == education.edId) {
@@ -424,6 +445,12 @@ List<Widget> certificateList(
     List<String> list, List<Certification> certification, double width) {
   // make certificates list
   List<Widget> widgetList = new List();
+  if (list[0].length == 0) {
+    widgetList.add(Padding(
+        padding: EdgeInsets.fromLTRB(25, 10, 25, 25),
+        child: Text("I don't have any relevent certificates")));
+    return widgetList;
+  }
   certification.forEach((certification) {
     for (int i = 0; i < list.length; i++) {
       if (list[i] == certification.cId) {

@@ -23,7 +23,6 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-
   _SearchPageState(this.auth);
   List<String> searchItems = new List<String>();
   List<dynamic> minidata = new List<dynamic>();
@@ -60,8 +59,12 @@ class _SearchPageState extends State<SearchPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    ResumeView(data: data, resumeName: resumeID, uid: uid)),
+                builder: (context) => ResumeView(
+                      data: data,
+                      resumeName: resumeID,
+                      uid: uid,
+                      preview: false,
+                    )),
           );
         },
         padding: EdgeInsets.fromLTRB(35, 12, 35, 12),
@@ -143,8 +146,6 @@ class _SearchPageState extends State<SearchPage> {
     return widgetlist;
   }
 
-
-
   Widget build(BuildContext context) {
     // the build function for the program
     return FutureBuilder<int>(
@@ -154,7 +155,7 @@ class _SearchPageState extends State<SearchPage> {
           return new Scaffold(
             appBar: AppBar(
                 backgroundColor: ArezueColors.secondaryColor,
-                title: const Text('Let\'s find a candidate!')),
+                title: const Text('Let\'s Find a Candidate!')),
             body: SafeArea(
               child: ListView(
                 padding: EdgeInsets.fromLTRB(0, 40, 0, 50),

@@ -262,7 +262,8 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => FormPage2(
-                                title: "Edit your $fieldId",
+                                title:
+                                    "Edit your ${fieldId[0].toUpperCase()}${fieldId.substring(1)}",
                                 isNew: "false",
                                 objectList: val,
                                 id: id,
@@ -278,7 +279,7 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
                   getTextList(getStringList(elements)),
                   style: TextStyle(
                     color: ArezueColors.outPrimaryColor,
-                    fontSize: 18,
+                    fontSize: 16,
                     fontFamily: 'Arezue',
                     fontWeight: FontWeight.w600,
                   ),
@@ -338,7 +339,8 @@ class _InputChipBuilderState3 extends State<InputChipBuilder3> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => FormPage2(
-                                    title: "Add your $fieldId",
+                                    title:
+                                        "Add your ${fieldId[0].toUpperCase()}${fieldId.substring(1)}",
                                     isNew: "true",
                                     objectList: sendList,
                                     handler: submitHandler,

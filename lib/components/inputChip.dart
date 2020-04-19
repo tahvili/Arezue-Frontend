@@ -74,20 +74,19 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
     if (command == "add") {
       if (this.fieldData.contains(text)) {
         _showExistingMessage(text);
-      }
-      else {
+      } else {
         if (uid != null) {
-          serverRequest.postRequest("jobseeker/$uid/$fieldId",
-              {this.fieldId : text, preference : "1"});
+          serverRequest.postRequest(
+              "jobseeker/$uid/$fieldId", {this.fieldId: text, preference: "1"});
         }
         setState(() {
           this.fieldData.add(text);
         });
       }
-    }else if (command == "delete") {
+    } else if (command == "delete") {
       //make a delete request to API here
       if (uid != null) {
-        serverRequest.deleteRequest(uid, "$fieldId/$text");
+        serverRequest.deleteRequest("jobseeker", uid, "$fieldId/$text");
       }
       setState(() {
         this.fieldData.remove(text);
@@ -160,16 +159,15 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
                       color: ArezueColors.secondaryColor,
                       onPressed: () {
                         String category = "";
-                        if(this.fieldId=="dream_career"){
+                        if (this.fieldId == "dream_career") {
                           category = "career";
-                        }
-                        else if(this.fieldId=="dream_company"){
+                        } else if (this.fieldId == "dream_company") {
                           category = "company";
-                        }
-                        else if(this.fieldId=="skill"){
+                        } else if (this.fieldId == "skill") {
                           category = "skill";
                         }
-                        _showSearchBar(context, fieldId, submitHandler, this.uid, category);
+                        _showSearchBar(context, fieldId, submitHandler,
+                            this.uid, category);
                       }),
                 ),
               ],
@@ -207,7 +205,6 @@ class _InputChipBuilderState extends State<InputChipBuilder> {
       handler(result, 'ranking', 'add');
     }
   }
-
 
   void _showExistingMessage(String text) {
     showDialog(
