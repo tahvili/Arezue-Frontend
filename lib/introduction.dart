@@ -1,4 +1,9 @@
-import 'package:arezue/jobseeker/Registration.dart';
+/// Carousel Page / Slideshow Page
+///
+/// the purpose of this page is to let people know more about Arezue and
+/// give them the option to register or login.
+
+import 'package:arezue/services/auth.dart';
 import 'package:arezue/login_page.dart';
 import 'package:arezue/utils/texts.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +11,7 @@ import 'package:arezue/utils/colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 final List<String> slides = [
+  // slide images
   ArezueTexts.slide00,
   ArezueTexts.slide01,
   ArezueTexts.slide02,
@@ -14,6 +20,7 @@ final List<String> slides = [
 ];
 
 final List<String> slideTexts = [
+  // slide texts
   ArezueTexts.slide00Text,
   ArezueTexts.slide01Text,
   ArezueTexts.slide02Text,
@@ -33,13 +40,13 @@ final List child = map<Widget>(
           children: <Widget>[
             Image.asset(i),
             Padding(
-              padding: new EdgeInsets.fromLTRB(40, 30, 40, 0),
+              padding: new EdgeInsets.fromLTRB(30, 30, 30, 0),
               child: Text(
                 slideTexts[index],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: ArezueColors.outSecondaryColor,
-                  fontSize: 24,
+                  fontSize: 22,
                   fontFamily: 'Arezue',
                   fontWeight: FontWeight.w400,
                 ),
@@ -59,6 +66,11 @@ List<T> map<T>(List list, Function handler) {
 }
 
 class CarouselWithIndicator extends StatefulWidget {
+  CarouselWithIndicator({Key key, this.auth, this.onSignIn}) : super(key: key);
+
+  final BaseAuth auth;
+  final VoidCallback onSignIn;
+
   @override
   _CarouselWithIndicatorState createState() => _CarouselWithIndicatorState();
 }
@@ -68,6 +80,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
 
   @override
   Widget build(BuildContext context) {
+    // Page build function
     return Stack(children: <Widget>[
       CarouselSlider(
         items: child,
@@ -118,6 +131,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               RaisedButton(
+                // Signup Button
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                   side: BorderSide(color: ArezueColors.outSecondaryColor),
@@ -126,7 +140,12 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => EmployeeRegistration()),
+                        builder: (context) => new LoginPage(
+                              auth: widget.auth,
+                              onSignIn: widget.onSignIn,
+                              formType: FormType.jobseekerRegister,
+                            ),
+                        fullscreenDialog: true),
                   );
                 },
                 padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
@@ -143,6 +162,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
               ),
               RaisedButton(
+                // Signin Button
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                   side: BorderSide(color: ArezueColors.outSecondaryColor),
@@ -150,7 +170,13 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Intermediate()),
+                    MaterialPageRoute(
+                        builder: (context) => LoginPage(
+                              auth: widget.auth,
+                              onSignIn: widget.onSignIn,
+                              formType: FormType.login,
+                            ),
+                        fullscreenDialog: true),
                   );
                 },
                 padding: EdgeInsets.fromLTRB(35, 10, 35, 10),
@@ -172,10 +198,14 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
 }
 
 class Intro extends StatelessWidget {
+  Intro({Key key, this.auth, this.onSignIn}) : super(key: key);
+
+  final BaseAuth auth;
+  final VoidCallback onSignIn;
+
   @override
   Widget build(BuildContext context) {
-    //Manually operated Carousel
-
+    // Page Build Function
     return MaterialApp(
       home: Scaffold(
         backgroundColor: ArezueColors.outPrimaryColor,
@@ -184,7 +214,10 @@ class Intro extends StatelessWidget {
             Padding(
                 padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                 child: Column(children: [
-                  CarouselWithIndicator(),
+                  CarouselWithIndicator(
+                    auth: auth,
+                    onSignIn: onSignIn,
+                  ),
                 ])),
           ],
         ),

@@ -1,3 +1,5 @@
+/// Main texts used in the App
+
 class ArezueTexts {
   static String companyNameRegularCase = 'Arezue';
   static String companyNameLowerCase = 'arezue';
@@ -21,15 +23,19 @@ class ArezueTexts {
   static String name = "Name";
   static String email = "Email";
   static String nameError = "But what is your name?";
+  static String back = "Accidently Pressed it? Back to Sign In";
   static String companyError = "But what is your company name?";
   static String emailError = "But we need your email!";
   static String emailValidError = "You sure this is correct?";
+  static String submit = "Submit";
   static String password = "Password";
   static String passwordError = "But we need your password!";
   static String passwordShort = "But it's not long enough!";
   static String registerPrompt = "New to Arezue? Create an Account";
   static String company = "Company";
   static String forgotPassword = "Forgot password?";
+  static String forgotPasswordHeader = "Forgot Password?";
+  static String forgotPasswordSlogan = "we all forget it some times";
   static String signInHeader = "Welcome Back!" ;
   static String signInSlogan = "The magic of Arezue awaits...";
   static String employeeRegistrationHeader = "Create Your Future!";
@@ -37,4 +43,6 @@ class ArezueTexts {
   static String employeeSlogan = "Your story begins with a wish...";
   static String employerSlogan = "A smooth hiring process is what we want...";
   static String existingAccount = "Already have an account? Sign in";
+  static String lookingForJob = "Looking for a job!";
+  static String notLookingAnymore = "No longer looking";
 }
