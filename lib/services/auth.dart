@@ -28,6 +28,9 @@ abstract class BaseAuth {
   Jobseeker userFromFirebaseUser(FirebaseUser user);
   Future<bool> checkEmailVerification();
   Future<void> sendEmailVerification();
+  Future<String> getEmail();
+  Future<FirebaseUser> onNetUser();
+  Future<void> updatePassword(String password);
 }
 
 class Auth implements BaseAuth {
@@ -107,6 +110,18 @@ class Auth implements BaseAuth {
     return user != null ? dbID : null;
   }
 
+  Future<FirebaseUser> onNetUser() async {
+
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    return user;
+  }
+
+  Future<String> getEmail() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    String retUser = user.email;
+    return retUser;
+  }
+
   @override
   Future signInWithEmailAndPassword(String email, String password) async {
     // Signs the user with the email and password
@@ -148,6 +163,17 @@ class Auth implements BaseAuth {
   Future<void> signOut() async {
     // Signs the user out
     return _firebaseAuth.signOut();
+  }
+
+  Future<void> updatePassword(String password) async {
+
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    try {
+      user.updatePassword(password);
+    }catch (Exception){
+      print("Failed saving");
+    }
+
   }
 
   @override

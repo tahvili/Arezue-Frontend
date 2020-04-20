@@ -1,9 +1,11 @@
+
 /// User Settings Page
 ///
 /// The purpose of this page is to let the user view/modify their personal settings.
 /// They may also logout only from this page.
 
 import 'package:arezue/employer/employer.dart';
+import 'package:arezue/employer/employerPasswordPage.dart';
 import 'package:arezue/loading.dart';
 import 'package:arezue/login_page.dart';
 import 'package:arezue/services/http.dart';
@@ -31,6 +33,7 @@ enum AuthStatus {
 class _SettingsPageState extends State<SettingsPage> {
   FormType2 formType;
   bool loading = false;
+  BaseAuth auth;
   _SettingsPageState({this.formType});
   Future<Jobseeker> futureUser;
   Future<Employer> futureEmployer;
@@ -177,19 +180,31 @@ class _SettingsPageState extends State<SettingsPage> {
     ),
   );
 
-  final Widget changePasswordButton = Padding(
-    // Change Password Button
-    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
-    child: RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
+  Widget changePasswordButton() {
+    return Padding(
+      // Change Password Button
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        onPressed: () {
+          Navigator.push(
+            this.context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    UpdateUserData(
+                        widget.auth,
+                        FormType5.jobseeker
+                    )),
+          );
+        },
+        padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
+        color: ArezueColors.outSecondaryColor,
+        child: Text("Change Password", style: textStyle),
       ),
-      onPressed: () {},
-      padding: EdgeInsets.fromLTRB(31, 10, 31, 10),
-      color: ArezueColors.outSecondaryColor,
-      child: Text("Change Password", style: textStyle),
-    ),
-  );
+    );
+  }
 
   final Widget billingButton = Padding(
     // Billing Button
@@ -313,10 +328,10 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         onPressed: () {
           _signOut();
-          Navigator.pop(context);
-          Navigator.pop(context);
+          Navigator.pop(this.context);
+          Navigator.pop(this.context);
           Navigator.push(
-            context,
+            this.context,
             MaterialPageRoute(
                 builder: (context) => LoginPage(
                       auth: widget.auth,
@@ -337,7 +352,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return [
       nameField(name),
       appLanguageField,
-      changePasswordButton,
+      changePasswordButton(),
       billingButton,
       premiumButton,
       agreementButton,
@@ -359,7 +374,7 @@ class _SettingsPageState extends State<SettingsPage> {
       nameField(name),
       phoneNumberField(phoneNumber),
       appLanguageField,
-      changePasswordButton,
+      changePasswordButton(),
       connectedAccounts,
       downloadResume,
       agreementButton,
