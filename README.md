@@ -15,7 +15,7 @@ This is the repo solely for the frontend of our DSC-arezue project. You may acce
 
 ## IDE
 
-We would recommend Android Studio as you will need it's visualizer to test your code
+We would recommend Android Studio or IntelliJ IDEA. 
 
 ## Getting Started
 
