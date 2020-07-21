@@ -1,4 +1,4 @@
-# Arezue
+# Arezue - Recruitment App - Frontend
 
 "get the career you wished for..."
 
